@@ -36,3 +36,37 @@ module.exports = {
     // Handle other specific errors here
   };
   
+
+  // export const createError = (message) => {
+  //   return {
+  //     success: false,
+  //     status: 0,
+  //     message,
+  //   };
+  // };
+  // export const createSuccess = (message, result) => {
+  //   return {
+  //     success: true,
+  //     status: 1,
+  //     message,
+  //     result,
+  //   };
+  // };
+  
+
+  // Error and success response creators
+exports.createError = (message) => ({
+  success: false,
+  message
+});
+
+exports.createSuccess = (message, data) => ({
+  success: true,
+  message,
+  data
+});
+
+// Custom messages
+exports.DataNull = "No data provided";
+exports.AlreadyExists = "Email already in use";
+exports.SavedSuccess = "Employee created successfully";

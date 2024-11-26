@@ -3,8 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../components/axiosInstance";
 
 const initialState = {
-
-  singleProduct: [],
+  singleEmployee: [],
   loading: false,
   error: null,
   access: [],
@@ -23,12 +22,11 @@ export const getAlEmployee = createAsyncThunk(
   }
 );
 
-export const createPorject = createAsyncThunk(
-  "createProject",
-  async (newproject, thunkAPI) => {
+export const createEmployee = createAsyncThunk(
+  "createEmployee",
+  async (newEmployee, thunkAPI) => {
     try {
-      const res = await axiosInstance.post("projects", newproject);
-
+      const res = await axiosInstance.post("employees", newEmployee);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -36,11 +34,11 @@ export const createPorject = createAsyncThunk(
   }
 );
 
-export const getprojectbyid = createAsyncThunk(
-  "getprojectbyid",
+export const getEmployeebyid = createAsyncThunk(
+  "getEmployeebyid",
   async (id, thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`projects/getByid/${id}`);
+      const response = await axiosInstance.get(`employees/getbyid/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -48,11 +46,11 @@ export const getprojectbyid = createAsyncThunk(
   }
 );
 
-export const updateProjects = createAsyncThunk(
-  "updateProjects",
+export const updateEmployee = createAsyncThunk(
+  "updateEmployee",
   async ({ id, newData }, thunkAPI) => {
     try {
-      const response = await axiosInstance.put(`projects/${id}`, newData);
+      const response = await axiosInstance.put(`employees/${id}`, newData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -60,11 +58,11 @@ export const updateProjects = createAsyncThunk(
   }
 );
 
-export const deleteProjects = createAsyncThunk(
-  "deleteProjects",
+export const deleteEmployee = createAsyncThunk(
+  "deleteEmployee",
   async (P_id, thunkAPI) => {
     try {
-      const response = await axiosInstance.delete(`projects/${P_id}`);
+      const response = await axiosInstance.delete(`employees/${P_id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -97,50 +95,50 @@ const Emplopyee_slice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getprojectbyid.pending, (state) => {
+      .addCase(getEmployeebyid.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getprojectbyid.fulfilled, (state, action) => {
+      .addCase(getEmployeebyid.fulfilled, (state, action) => {
         state.loading = false;
-        state.singleProduct = action.payload;
+        state.singleEmployee = action.payload;
       })
-      .addCase(getprojectbyid.rejected, (state, action) => {
+      .addCase(getEmployeebyid.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      .addCase(updateProjects.pending, (state) => {
+      .addCase(updateEmployee.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateProjects.fulfilled, (state, action) => {
+      .addCase(updateEmployee.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(updateProjects.rejected, (state, action) => {
+      .addCase(updateEmployee.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      .addCase(createPorject.pending, (state) => {
+      .addCase(createEmployee.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createPorject.fulfilled, (state, action) => {
+      .addCase(createEmployee.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(createPorject.rejected, (state, action) => {
+      .addCase(createEmployee.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteProjects.pending, (state) => {
+      .addCase(deleteEmployee.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteProjects.fulfilled, (state, action) => {
+      .addCase(deleteEmployee.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(deleteProjects.rejected, (state, action) => {
+      .addCase(deleteEmployee.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

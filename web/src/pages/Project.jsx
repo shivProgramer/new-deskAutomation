@@ -60,7 +60,6 @@ const Project = () => {
     } catch (error) {
       showToast(error, "error");
     }
-
     setIsEditMode(true);
     toggleModal();
   };

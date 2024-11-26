@@ -10,7 +10,7 @@ router.get("/getbyid/:id", verifyToken, employeeController.getEmployeeById);
 router.post("/", verifyToken, employeeController.createEmployee);
 // Update an employee
 router.put("/:id", verifyToken, employeeController.updateEmployee);
-
+router.delete("/:id", verifyToken, employeeController.deleteEmployee);
 // Deactivate or activate employee (soft delete)
 router.patch(
   "/:id",
