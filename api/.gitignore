@@ -1,0 +1,39 @@
+# Node.js modules
+node_modules/
+
+# npm log files
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# dotenv environment variables file
+.env
+
+# directory for test coverage reports
+coverage/
+
+# Build output
+dist/
+build/
+
+# Optional: Ignore system files (Mac/Linux/Windows)
+.DS_Store
+Thumbs.db
+
+# Optional: Ignore IDE files
+.idea/
+.vscode/
+
+# Optional: Ignore log files
+*.log
+
+# Ignore package-lock.json (if using yarn)
+package-lock.json
+
+# Ignore directories related to specific tools (e.g., Docker, etc.)
+.docker/
+.dockerignore
+
+# Ignore other custom files
+*.pid
+*.seed
