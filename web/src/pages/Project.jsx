@@ -21,13 +21,13 @@ const Project = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState();
   const [filterData, setFilterData] = useState();
-  console.log("filterData ---", filterData);
+
   // use selector -----------
-  console.log("formData ---", formData);
+ 
   const projects = useSelector((state) => state.projects?.allProjects);
   const singledata = useSelector((state) => state.projects?.singleProduct);
   const loading = useSelector((state) => state.projects?.loading);
-  console.log("projects ---", projects);
+  
   useEffect(() => {
     setFormData({
       project_name: singledata?.project_name,
@@ -112,6 +112,9 @@ const Project = () => {
     }
   }, [projects, searchTerm]);
 
+  const onClear = () =>{
+    setSearchTerm('')
+  }
   const columns = [
     { label: "ID", key: "id" },
     { label: "Name", key: "name" },
@@ -183,7 +186,7 @@ const Project = () => {
               className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
             />
             <button
-              //   onClick={onSearch}
+                onClick={onClear}
               className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-md"
             >
               Clear

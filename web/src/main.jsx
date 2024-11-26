@@ -1,5 +1,4 @@
 
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css"; // Global styles
 import App from "./App.jsx";
@@ -9,10 +8,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Toastify styles
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-      <ToastContainer /> {/* Correct placement */}
-    </Provider>
-  </StrictMode>
+  <Provider store={store}>
+    <App />
+    <ToastContainer />
+  </Provider>
 );

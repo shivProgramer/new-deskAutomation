@@ -1,7 +1,6 @@
 // Import necessary dependencies
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../components/axiosInstance";
-import { showToast } from "../../utils/config";
 
 const initialState = {
 
@@ -9,14 +8,14 @@ const initialState = {
   loading: false,
   error: null,
   access: [],
-  allProjects: [],
+  allEmployee: [],
 };
 
-export const getAllProjects = createAsyncThunk(
-  "getAllProjects",
-  async (thunkAPI) => {
+export const getAlEmployee = createAsyncThunk(
+  "getAlEmployee",
+  async (id, thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`projects`);
+      const response = await axiosInstance.get(`employees/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -73,7 +72,7 @@ export const deleteProjects = createAsyncThunk(
   }
 );
 
-const Project_cost_slice = createSlice({
+const Emplopyee_slice = createSlice({
   name: "Project_cost_slice",
   initialState,
   reducers: {
@@ -86,15 +85,15 @@ const Project_cost_slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllProjects.pending, (state) => {
+      .addCase(getAlEmployee.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllProjects.fulfilled, (state, action) => {
+      .addCase(getAlEmployee.fulfilled, (state, action) => {
         state.loading = false;
-        state.allProjects = action.payload;
+        state.allEmployee = action.payload;
       })
-      .addCase(getAllProjects.rejected, (state, action) => {
+      .addCase(getAlEmployee.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -150,5 +149,5 @@ const Project_cost_slice = createSlice({
   },
 });
 
-export default Project_cost_slice.reducer;
-export const { searchClient, acessModle } = Project_cost_slice.actions;
+export default Emplopyee_slice.reducer;
+export const { searchClient, acessModle } = Emplopyee_slice.actions;
