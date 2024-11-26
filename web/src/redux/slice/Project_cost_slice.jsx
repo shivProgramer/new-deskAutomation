@@ -6,13 +6,12 @@ import { showToast } from "../../utils/config";
 const initialState = {
   marketer: [],
   allProduct: [],
-  marketerAnalytics: [],
+  singleProduct: [],
   loading: false,
   error: null,
   access: [],
   allProjects: [],
 };
-// Fetch product data
 
 export const getAllProjects = createAsyncThunk(
   "getAllProjects",
@@ -26,27 +25,24 @@ export const getAllProjects = createAsyncThunk(
   }
 );
 
-export const updateMarketerProfilePic = createAsyncThunk(
-  "updateMarketerProfilePic",
-  async ({ marketerId, newData }, thunkAPI) => {
+export const createPorject = createAsyncThunk(
+  "createProject",
+  async (newproject, thunkAPI) => {
     try {
-      const response = await axiosInstance.post(
-        `marketers/upload/marketer-profile/${marketerId}`,
-        newData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await axiosInstance.post("projects", newproject);
 
-      if (response.data.statusCode === 1) {
-        response.data.statusCode &&
-          showToast({ msg: response.data.message }, "success");
-      } else {
-        response.data.statusCode &&
-          showToast({ msg: response.data.message }, "error");
-      }
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
+
+export const getprojectbyid = createAsyncThunk(
+  "getprojectbyid",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(`projects/getByid/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -54,43 +50,13 @@ export const updateMarketerProfilePic = createAsyncThunk(
   }
 );
 
-export const updateMarketer = createAsyncThunk(
-  "updateMarketer",
-  async ({ markterId, newData }, thunkAPI) => {
+export const updateProjects = createAsyncThunk(
+  "updateProjects",
+  async ({ id, newData }, thunkAPI) => {
     try {
-      const response = await axiosInstance.put(
-        `marketers/${markterId}`,
-        newData
-      );
-
-      if (response.data.statusCode === 1) {
-        response.data.statusCode &&
-          showToast({ msg: response.data.message }, "success");
-      } else {
-        response.data.statusCode &&
-          showToast({ msg: response.data.message }, "error");
-      }
+      const response = await axiosInstance.put(`projects/${id}`, newData);
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue({ error: error.message });
-    }
-  }
-);
-export const trackImpression = createAsyncThunk(
-  "trackImpression",
-  async ({ productId, vendorId, marketerId }, thunkAPI) => {
-    try {
-      const response = await axiosInstance.post(
-        `affiliate/track/impression?productId=${productId}&vendorId=${vendorId}&marketerId=${marketerId}`
-      );
-
-      if (response.status === 1) {
-        showToast({ msg: "Impression tracked successfully." }, "success");
-      }
-
-      return response.data;
-    } catch (error) {
-      showToast({ msg: "Failed to track impression." }, "error");
       return thunkAPI.rejectWithValue({ error: error.message });
     }
   }
@@ -133,41 +99,42 @@ const Project_cost_slice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateMarketerProfilePic.pending, (state) => {
+      .addCase(getprojectbyid.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateMarketerProfilePic.fulfilled, (state, action) => {
+      .addCase(getprojectbyid.fulfilled, (state, action) => {
         state.loading = false;
+        state.singleProduct = action.payload;
       })
-      .addCase(updateMarketerProfilePic.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(updateMarketer.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateMarketer.fulfilled, (state, action) => {
-        state.loading = false;
-      })
-      .addCase(updateMarketer.rejected, (state, action) => {
+      .addCase(getprojectbyid.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      .addCase(trackImpression.pending, (state) => {
+      .addCase(updateProjects.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(trackImpression.fulfilled, (state, action) => {
+      .addCase(updateProjects.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(trackImpression.rejected, (state, action) => {
+      .addCase(updateProjects.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
+      .addCase(createPorject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createPorject.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(createPorject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       .addCase(deleteProjects.pending, (state) => {
         state.loading = true;
         state.error = null;

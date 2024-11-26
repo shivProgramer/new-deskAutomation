@@ -1,8 +1,4 @@
-
-
-
 import React from "react";
-
 const ProjectCreateUpdateModel = ({
   isOpen,
   onClose,
@@ -12,7 +8,6 @@ const ProjectCreateUpdateModel = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -21,12 +16,16 @@ const ProjectCreateUpdateModel = ({
     }));
   };
 
+
+
+  console.log("formData ---- in model" , formData)
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-lg p-6 shadow-lg">
         {/* Modal Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">{title}</h2>
+          <h2 className="text-xl font-semibold text-green-600">{title}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 focus:outline-none"
@@ -44,11 +43,11 @@ const ProjectCreateUpdateModel = ({
         >
           {/* Fields */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Project Name</label>
+            <label className="block text-sm font-medium mb-1 ">Project Name</label>
             <input
               type="text"
               name="project_name"
-              value={formData.project_name || ""}
+              value={formData?.project_name || ""}
               onChange={handleInputChange}
               className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-3 "
               placeholder="Enter project name"
@@ -61,7 +60,7 @@ const ProjectCreateUpdateModel = ({
             <input
               type="number"
               name="budget"
-              value={formData.budget || ""}
+              value={formData?.budget || ""}
               onChange={handleInputChange}
               className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-3"
               placeholder="Enter budget"
@@ -95,7 +94,7 @@ const ProjectCreateUpdateModel = ({
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 flex justify-start items-center">
             <label className="block text-sm font-medium mb-1">Critical Project</label>
             <input
               type="checkbox"
@@ -134,7 +133,7 @@ const ProjectCreateUpdateModel = ({
               type="submit"
               className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
             >
-              Save
+                {/* {isEditMode ? "Update" : "Create"} */} Save 
             </button>
           </div>
         </form>

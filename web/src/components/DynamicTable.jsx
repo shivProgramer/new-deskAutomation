@@ -5,10 +5,10 @@
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentData = data.slice(indexOfFirstRow, indexOfLastRow);
+  const currentData = data?.slice(indexOfFirstRow, indexOfLastRow);
 
   console.log("currentData" , currentData)
-  const totalPages = Math.ceil(data.length / rowsPerPage);
+  const totalPages = Math.ceil(data?.length / rowsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -21,9 +21,6 @@
       setCurrentPage(currentPage - 1);
     }
   };
-
-
-  
 
   return (
     <div className="p-4">
@@ -44,7 +41,7 @@
           </tr>
         </thead>
         <tbody>
-          {currentData.map((row, index) => (
+          {currentData?.map((row, index) => (
             <tr
               key={index}
               className={`${
