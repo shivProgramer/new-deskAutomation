@@ -9,6 +9,7 @@ const errorMessages = require("../utils/errorMessages");
 
 
 // Registration ---------------------------------------------------------------------------------
+
 exports.registerUser = async (req, res) => {
   const { username, password, email, phone } = req.body;
   try {

@@ -44,38 +44,22 @@ export const loginApi = createAsyncThunk(
   }
 );
 
-export const MarketerLogin = createAsyncThunk(
-  "MarketerLogin",
-  async ({ newData, nevigate }, thunkAPI) => {
+
+
+export const Registerapi = createAsyncThunk(
+  "Registerapi",
+  async (newData, thunkAPI) => {
     try {
-      const response = await axios.post(`${API_URL}marketers/login`, newData);
-      if (response.data.statusCode !== 1) {
-        showToast({ msg: response.data.message }, "error");
-        return thunkAPI.rejectWithValue({
-          error: response.data.message || "An unknown error occurred",
-        });
-      } else if (response.data.statusCode === 1) {
-        if (response?.data?.data?.token) {
-          localStorage.setItem("token", response?.data?.data?.token);
-          localStorage.setItem("isLoggedIn", true);
-          localStorage.setItem(
-            "marketerData",
-            JSON.stringify(response?.data?.data?.marketer)
-          );
-          nevigate("/marketer");
-        }
-        showToast({ msg: response.data.message }, "success");
-        return response.data.data;
-      }
+      const res = await axios.post(`${API_URL}admin-users/register`, newData);
+      return res.data;
     } catch (error) {
-      showToast(
-        { msg: error.response?.data?.message || error.message },
-        "error"
-      );
       return thunkAPI.rejectWithValue({ error: error.message });
     }
   }
 );
+
+
+
 const Auth_slice = createSlice({
   name: "Auth_slice",
   initialState,
@@ -101,18 +85,17 @@ const Auth_slice = createSlice({
         state.loading = false;
         state.error = action.payload.error;
       })
-      .addCase(MarketerLogin.pending, (state) => {
+      .addCase(Registerapi.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(MarketerLogin.fulfilled, (state, action) => {
+      .addCase(Registerapi.fulfilled, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = true;
       })
-      .addCase(MarketerLogin.rejected, (state, action) => {
+      .addCase(Registerapi.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.error;
-      });
+        state.error = action.payload;
+      })
   },
 });
 

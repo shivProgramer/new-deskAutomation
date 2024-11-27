@@ -25,10 +25,9 @@ const ProtectedRoute = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!token) {
-      showToast("Token is not available. Please log in.", "error");
-    } else if (isTokenExpired(token)) {
+    if (isTokenExpired(token)) {
       localStorage.removeItem("token");
+      showToast("Token has been expired. Please log in.", "error");
     }
   }, [location.pathname]);
 
