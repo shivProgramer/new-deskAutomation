@@ -12,7 +12,7 @@ const user_data = JSON.parse(localStorage.getItem("userData"))
     setDropdownOpen((prev) => !prev);
   };
 
-  console.log("user_data ---" , user_data)
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (

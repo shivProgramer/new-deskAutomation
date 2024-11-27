@@ -138,7 +138,7 @@ const Attendance = () => {
       } catch (error) {
         showToast(error, "error");
       }
-      console.log("updating ");
+      
     } else {
       try {
         const res = await dispatch(createAttendance(attendanceData));

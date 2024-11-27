@@ -27,7 +27,6 @@ const Hourly_Rate = () => {
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
 
-  console.log("formData --", formData);
   const [isUpdate, setIsUpdate] = useState(false); // To track if it's an update or create action
   const [searchTerm, setSearchTerm] = useState();
   const [filterData, setFilterData] = useState();
@@ -45,7 +44,7 @@ const Hourly_Rate = () => {
   const singledata = useSelector((state) => state.horuly_rate?.singleHoruly);
   const loading = useSelector((state) => state.horuly_rate?.loading);
 
-  console.log("singledata --", singledata);
+
   // Handle opening the modal for creating a new hourly rate
   const handleOpen = () => {
     setFormData(initialFormData); // Reset form data

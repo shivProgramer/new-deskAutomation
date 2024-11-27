@@ -5,7 +5,7 @@ export const API_URL = "http://localhost:3333/api/";
 
 
 export const showToast = (message, type = "default") => {
-  console.log("Toast called:", message, type);
+ 
   const options = { autoClose: 5000 };
   const msg = typeof message === "object" ? message.msg : message;
 

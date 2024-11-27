@@ -34,7 +34,7 @@ const Employee = () => {
   const singleEmp = useSelector((state) => state.employee?.singleEmployee);
   const loading = useSelector((state) => state.employee?.loading);
 
-  console.log("singleEmp --", singleEmp);
+
 
   useEffect(() => {
     setEmployeeData({
@@ -175,7 +175,7 @@ const Employee = () => {
 
   const confirmDelete = async () => {
     if (rowToDelete) {
-      console.log("rowToDelete", rowToDelete);
+      
       try {
         const res = await dispatch(deleteEmployee(rowToDelete?.e_id));
 
