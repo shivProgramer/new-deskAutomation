@@ -9,7 +9,7 @@ exports.getAllEmployees = async (req, res) => {
   const { id } = req.params;
   try {
     const employees = await Employee.findAll({
-      where: { isDeleted: false, user_id: id },
+      where: { isDeleted: false },
     });
     res.status(200).json(employees);
   } catch (error) {
