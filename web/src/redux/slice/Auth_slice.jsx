@@ -6,14 +6,13 @@ const initialState = {
   token: null,
   loading: false,
   error: null,
-};  
+};
 
 export const loginApi = createAsyncThunk(
   "loginApi",
   async ({ newData, navigate }, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}admin-users/login`, newData);
-      console.log("response---", response);
 
       // Check if statusCode is not 1
       if (response.data.statusCode !== 1) {
@@ -23,25 +22,20 @@ export const loginApi = createAsyncThunk(
         });
       }
 
-      // If statusCode is 1, handle the login success
       if (response.data.statusCode === 1) {
         const { token, userData } = response.data;
 
-        // Store token and userData in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userData", JSON.stringify(userData));
 
-        // Navigate to the dashboard or home page
         navigate("/");
 
-        // Show success toast
         showToast(response.data.message, "success");
 
-        return { token, userData }; // Return the token and user data for further use
+        return { token, userData };
       }
     } catch (error) {
-      // Handle any errors during the API call
       const errorMsg =
         error.response?.data?.message || "An error occurred. Please try again.";
       showToast(errorMsg, "error");
@@ -49,9 +43,6 @@ export const loginApi = createAsyncThunk(
     }
   }
 );
-
-
-
 
 export const MarketerLogin = createAsyncThunk(
   "MarketerLogin",

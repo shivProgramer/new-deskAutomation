@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { showToast } from "../utils/config";
@@ -23,16 +22,15 @@ const isTokenExpired = (token) => {
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
-  const location = useLocation(); 
+  const location = useLocation();
 
   useEffect(() => {
     if (!token) {
       showToast("Token is not available. Please log in.", "error");
     } else if (isTokenExpired(token)) {
       localStorage.removeItem("token");
-      showToast("Token has expired. Please log in again.", "error");
     }
-  }, [location.pathname]); 
+  }, [location.pathname]);
 
   if (!token || isTokenExpired(token)) {
     return <Navigate to="/login" replace />;
@@ -42,4 +40,3 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export default ProtectedRoute;
-

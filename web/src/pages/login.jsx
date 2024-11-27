@@ -29,15 +29,10 @@ const Login = () => {
       return;
     }
   
-    // If validation passes, dispatch login action
+  
     const formVal = { email, password };
     const res = await dispatch(loginApi({ newData: formVal, navigate }));
-    // if(res?.statusCode){
-    //   showToast("Login failed. Please try again.", "error");
-    // }
-    // if (res.error) {
-    //   showToast("Login failed. Please try again.", "error");
-    // }
+    
   };
 
   return (
