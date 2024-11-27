@@ -1,18 +1,27 @@
-const EmployeeHourlyRate = require('../models/Employee_Hourly_Rate.jsx');
+const EmployeeHourlyRate = require("../models/Employee_Hourly_Rate.jsx");
 
 // Create a new Employee Hourly Rate
 const createEmployeeHourlyRate = async (req, res) => {
   try {
-    const { employee_id, employee_name, bill_rate, pay_rate } = req.body;
+    const { employee_name, bill_rate, pay_rate } = req.body;
     const newRate = await EmployeeHourlyRate.create({
-      employee_id,
       employee_name,
       bill_rate,
       pay_rate,
     });
-    res.status(201).json({ message: 'Employee hourly rate created successfully', data: newRate });
+    res
+      .status(201)
+      .json({
+        message: "Employee hourly rate created successfully",
+        data: newRate,
+      });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating employee hourly rate', error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Error creating employee hourly rate",
+        error: error.message,
+      });
   }
 };
 
@@ -22,7 +31,12 @@ const getAllEmployeeHourlyRates = async (req, res) => {
     const rates = await EmployeeHourlyRate.findAll();
     res.status(200).json(rates);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching employee hourly rates', error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Error fetching employee hourly rates",
+        error: error.message,
+      });
   }
 };
 
@@ -30,13 +44,22 @@ const getAllEmployeeHourlyRates = async (req, res) => {
 const getEmployeeHourlyRateById = async (req, res) => {
   try {
     const { id } = req.params;
-    const rate = await EmployeeHourlyRate.findOne({ where: { employee_id: id } });
+    const rate = await EmployeeHourlyRate.findOne({
+      where: { employee_id: id },
+    });
     if (!rate) {
-      return res.status(404).json({ message: 'Employee hourly rate not found' });
+      return res
+        .status(404)
+        .json({ message: "Employee hourly rate not found" });
     }
     res.status(200).json(rate);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching employee hourly rate', error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Error fetching employee hourly rate",
+        error: error.message,
+      });
   }
 };
 
@@ -50,11 +73,20 @@ const updateEmployeeHourlyRate = async (req, res) => {
       { where: { employee_id: id } }
     );
     if (updated[0] === 0) {
-      return res.status(404).json({ message: 'Employee hourly rate not found or no changes made' });
+      return res
+        .status(404)
+        .json({ message: "Employee hourly rate not found or no changes made" });
     }
-    res.status(200).json({ message: 'Employee hourly rate updated successfully' });
+    res
+      .status(200)
+      .json({ message: "Employee hourly rate updated successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating employee hourly rate', error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Error updating employee hourly rate",
+        error: error.message,
+      });
   }
 };
 
@@ -62,13 +94,24 @@ const updateEmployeeHourlyRate = async (req, res) => {
 const deleteEmployeeHourlyRate = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await EmployeeHourlyRate.destroy({ where: { employee_id: id } });
+    const deleted = await EmployeeHourlyRate.destroy({
+      where: { employee_id: id },
+    });
     if (!deleted) {
-      return res.status(404).json({ message: 'Employee hourly rate not found' });
+      return res
+        .status(404)
+        .json({ message: "Employee hourly rate not found" });
     }
-    res.status(200).json({ message: 'Employee hourly rate deleted successfully' });
+    res
+      .status(200)
+      .json({ message: "Employee hourly rate deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting employee hourly rate', error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Error deleting employee hourly rate",
+        error: error.message,
+      });
   }
 };
 

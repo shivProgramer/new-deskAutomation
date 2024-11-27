@@ -1,3 +1,5 @@
+
+
 const { DataTypes, Sequelize } = require('sequelize');
 const sequelize = require('../db');
 
@@ -5,6 +7,7 @@ const EmployeeHourlyRate = sequelize.define('EmployeeHourlyRate', {
   employee_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
     allowNull: false,
   },
   employee_name: {
@@ -13,25 +16,27 @@ const EmployeeHourlyRate = sequelize.define('EmployeeHourlyRate', {
   },
   bill_rate: {
     type: DataTypes.DECIMAL(18, 2),
-    allowNull: false, // Rate at which the employee's work is billed
+    allowNull: false, 
   },
   pay_rate: {
     type: DataTypes.DECIMAL(18, 2),
-    allowNull: false, // Rate at which the employee is paid
+    allowNull: false, 
   },
   created_at: {
     type: DataTypes.DATE,
     allowNull: false,
-    defaultValue: Sequelize.fn('GETDATE'),
+    defaultValue: Sequelize.literal('GETDATE()'),  
   },
   updated_at: {
     type: DataTypes.DATE,
     allowNull: false,
-    defaultValue: Sequelize.fn('GETDATE'),
+    defaultValue: Sequelize.literal('GETDATE()'),  
   },
 }, {
-  tableName: 'Employee_Hourly_Rate', // Match the table name in the database
-  timestamps: false, // Disable automatic timestamps
+  sequelize,
+  modelName: 'EmployeeHourlyRate',
+  tableName: 'Employee_Hourly_Rate',
+  timestamps: false,  
 });
 
 module.exports = EmployeeHourlyRate;

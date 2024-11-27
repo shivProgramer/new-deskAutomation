@@ -39,20 +39,7 @@ const HourlyRateCreateUpdateModel = ({
             handleSubmit();
           }}
         >
-          {/* Fields */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Employee ID</label>
-            <input
-              type="number"
-              name="employee_id"
-              value={formData.employee_id || ""}
-              onChange={handleInputChange}
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-3"
-              placeholder="Enter employee ID"
-              required
-            />
-          </div>
-
+    
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Employee Name</label>
             <input
