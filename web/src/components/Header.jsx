@@ -40,7 +40,7 @@ const user_data = JSON.parse(localStorage.getItem("userData"))
         ☰
       </button>
 
-      <h1 className="block md:hidden">
+      {/* <h1 className="block md:hidden">
         <span className="text-red-700 font-extrabold text-2xl font-serif">
           D
         </span>
@@ -49,7 +49,7 @@ const user_data = JSON.parse(localStorage.getItem("userData"))
           A
         </span>
         utomation{" "}
-      </h1>
+      </h1> */}
 
       {/* User Avatar and Dropdown */}
       <div className="flex items-center space-x-4 relative ml-auto">

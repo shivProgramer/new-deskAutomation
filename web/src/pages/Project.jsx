@@ -208,7 +208,7 @@ const Project = () => {
         <ProjectCreateUpdateModel
           isOpen={isModalOpen}
           onClose={toggleModal}
-          title={isEditMode ? "Edit Project" : "Create Project"}
+          title={isEditMode ? "Update Project" : "Create Project"}
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}

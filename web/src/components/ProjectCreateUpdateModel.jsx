@@ -16,9 +16,9 @@ const ProjectCreateUpdateModel = ({
     }));
   };
 
+ 
 
-
-  console.log("formData ---- in model" , formData)
+  console.log("formData ---- title" , title)
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -133,7 +133,7 @@ const ProjectCreateUpdateModel = ({
               type="submit"
               className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
             >
-                {/* {isEditMode ? "Update" : "Create"} */} Save 
+                {title === "Update Project" ? "Update" : "Create"}
             </button>
           </div>
         </form>
