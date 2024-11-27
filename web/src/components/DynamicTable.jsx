@@ -1,5 +1,5 @@
- import React, { useState } from "react";
- const DynamicTable = ({ columns, data, onEdit, onDelete }) => {
+import React, { useState } from "react";
+const DynamicTable = ({ columns, data, onEdit, onDelete }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10; // Rows per page
 
@@ -7,7 +7,7 @@
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentData = data?.slice(indexOfFirstRow, indexOfLastRow);
 
-  console.log("currentData" , currentData)
+  console.log("currentData", currentData);
   const totalPages = Math.ceil(data?.length / rowsPerPage);
 
   const handleNextPage = () => {
@@ -40,7 +40,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        {/* <tbody>
           {currentData?.map((row, index) => (
             <tr
               key={index}
@@ -74,9 +74,50 @@
               </td>
             </tr>
           ))}
+        </tbody> */}
+        <tbody>
+          {currentData?.map((row, index) => (
+            <tr
+              key={index}
+              className={`${
+                index % 2 === 0 ? "bg-white" : "bg-gray-50"
+              } hover:bg-gray-100`}
+            >
+              {columns.map((col) => (
+                <td
+                  key={col.key}
+                  className="px-4 py-2 border border-gray-200 text-sm text-gray-600"
+                >
+                  {col.key === "is_online" ? (
+                    <span
+                      className={`px-2 py-1 rounded text-sm ${row.status_color}`}
+                    >
+                      {row[col.key]}
+                    </span>
+                  ) : (
+                    row[col.key]
+                  )}
+                </td>
+              ))}
+              <td className="px-4 py-2 border border-gray-200 text-sm text-gray-600">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => onEdit(row)}
+                    className="text-blue-500 hover:underline"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => onDelete(row)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
-      
-
       </table>
 
       {/* Pagination Controls */}
