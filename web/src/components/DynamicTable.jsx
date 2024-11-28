@@ -6,7 +6,7 @@ const DynamicTable = ({ columns, data, onEdit, onDelete, type }) => {
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentData = data?.slice(indexOfFirstRow, indexOfLastRow);
-
+console.log("currentData --" , currentData)
   const totalPages = Math.ceil(data?.length / rowsPerPage);
 
   const handleNextPage = () => {
@@ -90,7 +90,7 @@ const DynamicTable = ({ columns, data, onEdit, onDelete, type }) => {
       </table>
 
       {/* Pagination Controls */}
-      {currentData && <div className="w-full">
+      {currentData?.length < 1 && <div className="w-full p-2">
         <h1> No Data is Available </h1>
       </div>}
       <div className="flex items-center justify-between mt-4 ">
