@@ -179,7 +179,7 @@ const Employee = () => {
   return (
     <>
       {loading && <Loader loading={loading} />}
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen bg-gray-50 p-0 md:p-8 ">
         <div className="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-100 rounded-md shadow-md">
           <button
             onClick={handleCreate}

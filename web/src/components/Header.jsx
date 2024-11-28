@@ -32,7 +32,7 @@ const Header = ({ toggleDrawer }) => {
   }, []);
 
   return (
-    <header className="bg-gray-800 text-white flex items-center justify-between p-3 shadow-md sticky top-0">
+    <header className="bg-gray-800 text-white flex items-center justify-between p-3 shadow-md sticky top-0  z-50">
       <button onClick={toggleDrawer} className="md:hidden text-2xl">
         ☰
       </button>

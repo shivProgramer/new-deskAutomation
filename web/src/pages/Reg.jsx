@@ -42,7 +42,7 @@ const Reg = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
+      <div className="bg-white  rounded-lg shadow-lg max-w-sm w-full p-4">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Sign Up
         </h2>
@@ -55,7 +55,7 @@ const Reg = () => {
               htmlFor="username"
               className="block text-sm font-medium text-gray-600"
             >
-              Username
+              Name
             </label>
             <input
               type="text"
