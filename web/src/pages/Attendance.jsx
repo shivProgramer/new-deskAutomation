@@ -94,7 +94,7 @@ const Attendance = () => {
 
   useEffect(() => {
     if (userData) {
-      dispatch(getAlEmployee(userData?.user_id));
+      dispatch(getAlEmployee());
     }
   }, []);
   const handleSearchInputChange = (e) => setSearchTerm(e.target.value);

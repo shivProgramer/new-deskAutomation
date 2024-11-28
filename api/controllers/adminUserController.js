@@ -3,13 +3,9 @@
 const AdminUser = require("../models/adminUser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const moment = require("moment");
+
 const errorMessages = require("../utils/errorMessages");
-
-
-
 // Registration ---------------------------------------------------------------------------------
-
 exports.registerUser = async (req, res) => {
   const { username, password, email, phone } = req.body;
   try {

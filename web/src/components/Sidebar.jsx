@@ -79,6 +79,20 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
         >
           <RiMoneyDollarCircleLine /> Hourly Rate
         </NavLink>
+
+        <NavLink
+          to="/adhoc-report"
+          className={({ isActive }) =>
+            `py-4 pl-10 cursor-pointer flex gap-4 items-center ${
+              isActive
+                ? "bg-gray-500 text-white border-l-2 border-green-500"  
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white"  
+            }`
+          }
+        >
+          <RiMoneyDollarCircleLine /> Adhoc_Report
+        </NavLink>
+        
       </ul>
       <button
         className="absolute top-4 right-4 md:hidden"

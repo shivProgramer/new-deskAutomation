@@ -1,0 +1,83 @@
+// Import necessary dependencies
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axiosInstance from "../../components/axiosInstance";
+import { showToast } from "../../utils/config";
+
+const initialState = {
+  singleProduct: [],
+  loading: false,
+  error: null,
+  access: [],
+  allAdhocReport: [],
+  Spdata: [],
+};
+
+export const getAllAdhocReport = createAsyncThunk(
+  "getAllAdhocReport",
+  async (thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(`adhoc-reports`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
+
+export const getSpData = createAsyncThunk(
+  "getSpData",
+  async (name, thunkAPI) => {
+    try {
+
+      const response = await axiosInstance.get(`/adhoc-reports/execute/${name}`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
+
+
+const Adhoc_Report_slice = createSlice({
+  name: "Project_cost_slice",
+  initialState,
+  reducers: {
+    searchClient: (state, action) => {
+      state.searchData = action.payload;
+    },
+    acessModle: (state, action) => {
+      state.access = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllAdhocReport.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllAdhocReport.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allAdhocReport = action.payload;
+      })
+      .addCase(getAllAdhocReport.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getSpData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSpData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.Spdata = action.payload;
+      })
+      .addCase(getSpData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase("reset", () => initialState);
+  },
+});
+
+export default Adhoc_Report_slice.reducer;
+export const { searchClient, acessModle } = Adhoc_Report_slice.actions;

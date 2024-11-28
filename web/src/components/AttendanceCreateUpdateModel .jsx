@@ -69,7 +69,7 @@ const AttendanceCreateUpdateModel = ({
 
   useEffect(() => {
     if (userData) {
-      dispatch(getAlEmployee(userData?.user_id));
+      dispatch(getAlEmployee());
     }
   }, []);
 
