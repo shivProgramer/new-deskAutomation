@@ -5,13 +5,12 @@ const Header = ({ toggleDrawer }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null); //
-const user_data = JSON.parse(localStorage.getItem("userData"))
+  const user_data = JSON.parse(localStorage.getItem("userData"));
 
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
   };
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -32,24 +31,11 @@ const user_data = JSON.parse(localStorage.getItem("userData"))
     };
   }, []);
 
-
-
   return (
     <header className="bg-gray-800 text-white flex items-center justify-between p-3 shadow-md sticky top-0">
       <button onClick={toggleDrawer} className="md:hidden text-2xl">
         ☰
       </button>
-
-      {/* <h1 className="block md:hidden">
-        <span className="text-red-700 font-extrabold text-2xl font-serif">
-          D
-        </span>
-        esk{" "}
-        <span className="text-green-600 font-extrabold text-2xl font-serif">
-          A
-        </span>
-        utomation{" "}
-      </h1> */}
 
       {/* User Avatar and Dropdown */}
       <div className="flex items-center space-x-4 relative ml-auto">
@@ -62,7 +48,7 @@ const user_data = JSON.parse(localStorage.getItem("userData"))
             className="relative"
           >
             <span className="uppercase w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white">
-            {user_data?.username?.charAt(0)}
+              {user_data?.username?.charAt(0)}
             </span>
           </button>
 
@@ -72,33 +58,16 @@ const user_data = JSON.parse(localStorage.getItem("userData"))
               className="absolute right-0 mt-2 bg-gray-700 text-white rounded-lg shadow-lg w-40"
             >
               <ul className="py-2">
-                {/* Login Option */}
-                {/* <li>
-                  <a
-                    href="/login"
-                    className="block px-4 py-2 text-sm hover:bg-gray-600 rounded-t-lg"
-                  >
-                    Login
-                  </a>
-                </li> */}
-                {/* Signup Option */}
-                {/* <li>
-                  <a
-                    href="/signup"
-                    className="block px-4 py-2 text-sm hover:bg-gray-600"
-                  >
-                    Signup
-                  </a>
-                </li> */}
-                {/* Checkout Option */}
-                {token && <li onClick={()=>  localStorage.clear()}>
-                  <a
-                    href="/"
-                    className="block px-4 py-2 text-sm hover:bg-gray-600 rounded-b-lg"
-                  >
-                    Logout
-                  </a>
-                </li>}
+                {token && (
+                  <li onClick={() => localStorage.clear()}>
+                    <a
+                      href="/"
+                      className="block px-4 py-2 text-sm hover:bg-gray-600 rounded-b-lg"
+                    >
+                      Logout
+                    </a>
+                  </li>
+                )}
               </ul>
             </div>
           )}

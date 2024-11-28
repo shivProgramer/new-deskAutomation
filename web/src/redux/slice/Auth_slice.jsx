@@ -44,7 +44,17 @@ export const loginApi = createAsyncThunk(
   }
 );
 
-
+// export const Registerapi = createAsyncThunk(
+//   "Registerapi",
+//   async (newData, thunkAPI) => {
+//     try {
+//       const res = await axios.post(`${API_URL}admin-users/register`, newData);
+//       return res.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue({ error: error.message });
+//     }
+//   }
+// );
 
 export const Registerapi = createAsyncThunk(
   "Registerapi",
@@ -53,12 +63,15 @@ export const Registerapi = createAsyncThunk(
       const res = await axios.post(`${API_URL}admin-users/register`, newData);
       return res.data;
     } catch (error) {
+     
+      if (error.response && error.response.data && error.response.data.error) {
+        return thunkAPI.rejectWithValue({ error: error.response.data.error });
+      }
+    
       return thunkAPI.rejectWithValue({ error: error.message });
     }
   }
 );
-
-
 
 const Auth_slice = createSlice({
   name: "Auth_slice",
@@ -95,7 +108,7 @@ const Auth_slice = createSlice({
       .addCase(Registerapi.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
+      });
   },
 });
 

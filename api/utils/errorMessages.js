@@ -5,7 +5,7 @@ module.exports = {
   handleDuplicateEmailError: () => {
     return {
       statusCode: 400,
-      message: "Email already exists. Please use a different email address.",
+      message: "Email or Name already exists. Please use a different email or name address.",
     };
   },
 

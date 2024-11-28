@@ -21,11 +21,8 @@ const Employee = () => {
     name: "",
     email: "",
     group_name: "",
-    user_id: null,
-    password: "",
   });
   const [isEditMode, setIsEditMode] = useState(false);
-
   const dispatch = useDispatch();
   const userData = JSON.parse(localStorage.getItem("userData"));
 
@@ -34,31 +31,19 @@ const Employee = () => {
   const singleEmp = useSelector((state) => state.employee?.singleEmployee);
   const loading = useSelector((state) => state.employee?.loading);
 
-
-
   useEffect(() => {
     setEmployeeData({
       name: singleEmp?.name,
       email: singleEmp?.email,
       group_name: singleEmp?.group_name,
-      user_id: singleEmp?.user_id,
-      password: "",
     });
   }, [singleEmp]);
 
   useEffect(() => {
     if (userData) {
-      dispatch(getAlEmployee(userData?.user_id));
+      dispatch(getAlEmployee());
     }
   }, []);
-
-  useEffect(() => {
-    if (userData?.user_id) {
-      setEmployeeData({
-        user_id: userData?.user_id,
-      });
-    }
-  }, [userData?.user_id]);
 
   const handleSearchInputChange = (e) => setSearchTerm(e.target.value);
 
@@ -81,9 +66,7 @@ const Employee = () => {
     setEmployeeData({
       name: "",
       email: "",
-      user_id: userData?.user_id,
       group_name: "",
-      password: "",
     });
   };
 
@@ -114,7 +97,7 @@ const Employee = () => {
           );
 
           if (res?.payload?.status === 1) {
-            await dispatch(getAlEmployee(userData?.user_id));
+            await dispatch(getAlEmployee());
             showToast(res.payload.message, "success");
             setIsModalOpen(false);
           } else if (res?.payload?.message) {
@@ -131,7 +114,7 @@ const Employee = () => {
         try {
           const res = await dispatch(createEmployee(employeeData));
           if (res?.payload?.status === 1) {
-            await dispatch(getAlEmployee(userData?.user_id));
+            await dispatch(getAlEmployee());
             showToast(res.payload.message, "success");
             setIsModalOpen(false);
           } else if (res?.payload?.message) {
@@ -175,14 +158,13 @@ const Employee = () => {
 
   const confirmDelete = async () => {
     if (rowToDelete) {
-      
       try {
         const res = await dispatch(deleteEmployee(rowToDelete?.e_id));
 
         if (res?.payload) {
           showToast(res?.payload?.message, "success");
         }
-        dispatch(getAlEmployee(userData?.user_id));
+        dispatch(getAlEmployee());
       } catch (error) {
         console.error("Error deleting row:", error);
 

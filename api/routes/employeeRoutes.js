@@ -3,7 +3,7 @@ const router = express.Router();
 const employeeController = require("../controllers/employeeController.js");
 const { verifyToken } = require("../middleware/authMiddleware");
 // Get all employees
-router.get("/:id", verifyToken, employeeController.getAllEmployees);
+router.get("/", verifyToken, employeeController.getAllEmployees);
 // Get employee by ID
 router.get("/getbyid/:id", verifyToken, employeeController.getEmployeeById);
 // Create a new employee

@@ -1,33 +1,29 @@
 const Employee = require("../models/Employee");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 const errorHandlerMiddleware = require("../middleware/errorHandlerMiddleware");
 const { createError, createSuccess } = require("../utils/errorMessages");
-// Get all employees
+
 exports.getAllEmployees = async (req, res) => {
-  const { id } = req.params;
   try {
-    const employees = await Employee.findAll({
-      where: { isDeleted: false },
-    });
+    const employees = await Employee.findAll(); // Removed isDeleted check
     res.status(200).json(employees);
   } catch (error) {
     res.status(500).json({ message: "Error retrieving employees", error });
   }
 };
 
-// Get a single employee by ID
 exports.getEmployeeById = async (req, res) => {
   const { id } = req.params;
   try {
     const employee = await Employee.findOne({
-      where: { desk_employee_id: id, isDeleted: false },
+      where: { desk_employee_id: id },
     });
     if (employee) {
       res.status(200).json(employee);
     } else {
-      res.status(404).json({ message: "Employee not found or is deleted" });
+      res.status(404).json({ message: "Employee not found" });
     }
   } catch (error) {
     res.status(500).json({ message: "Error retrieving employee", error });
@@ -37,8 +33,6 @@ exports.getEmployeeById = async (req, res) => {
 exports.createEmployee = async (req, res) => {
   try {
     const employeeData = req.body;
-
-    // Check if the required data exists
     if (!employeeData) {
       return res.json({ message: "Data is null or missing", status: 0 });
     }
@@ -47,18 +41,14 @@ exports.createEmployee = async (req, res) => {
     const existingEmployee = await Employee.findOne({
       where: { email: employeeData.email },
     });
+
     if (existingEmployee) {
-      return res.json({ message: "email is already exist", status: 0 });
+      return res.json({ message: "Email is already in use", status: 0 });
     }
-    // Hash the password
-    const passwordHash = await bcrypt.hash(employeeData.password, 10);
-    // Create a new employee
     const newEmployee = await Employee.create({
       name: employeeData.name,
       email: employeeData.email,
       group_name: employeeData.group_name,
-      user_id: employeeData.user_id,
-      password: passwordHash,
     });
 
     // Return success response
@@ -69,53 +59,41 @@ exports.createEmployee = async (req, res) => {
     });
   } catch (error) {
     console.log(`Exception: ${error.message}`);
-    return errorHandlerMiddleware(error, req, res); // Pass the error directly
+    return errorHandlerMiddleware(error, req, res);
   }
 };
 
-
 exports.updateEmployee = async (req, res) => {
   const { id } = req.params;
-  const { name, email, group_name, user_id, password } = req.body;
+  const { name, email, group_name } = req.body;
 
   try {
-    
-    if (!name || !email || !group_name || !user_id) {
+    if (!name || !email || !group_name) {
       return res.json({ message: "Required fields are missing", status: 0 });
     }
+
     const employee = await Employee.findOne({
-      where: { desk_employee_id: id, isDeleted: false },
+      where: { desk_employee_id: id },
     });
+
     if (!employee) {
-      return res.json({
-        message: "Employee not found or is deleted",
-        status: 0,
-      });
+      return res.json({ message: "Employee not found", status: 0 });
     }
+
     const existingEmployee = await Employee.findOne({
       where: { email, desk_employee_id: { [Sequelize.Op.ne]: id } },
     });
+
     if (existingEmployee) {
       return res.json({
         message: "Email is already in use by another employee",
         status: 0,
       });
     }
-
     employee.name = name || employee.name;
     employee.email = email || employee.email;
     employee.group_name = group_name || employee.group_name;
-    employee.user_id = user_id || employee.user_id;
-
-    // Update password if provided and hash it
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
-      employee.password = hashedPassword; // Save the hashed password
-    }
-
-    // Save the updated employee details to the database
     await employee.save();
-
     // Return success response
     res.json({
       message: "Employee updated successfully",
@@ -124,11 +102,10 @@ exports.updateEmployee = async (req, res) => {
     });
   } catch (error) {
     console.log(`Exception: ${error.message}`);
-    return errorHandlerMiddleware(error, req, res); 
+    return errorHandlerMiddleware(error, req, res);
   }
 };
 
-// Deactivate/Activate employee (soft delete)
 exports.toggleEmployeeStatus = async (req, res) => {
   const { id } = req.params;
   try {
@@ -139,42 +116,53 @@ exports.toggleEmployeeStatus = async (req, res) => {
       return res.status(404).json({ message: "Employee not found" });
     }
 
-    // Toggle the isDeleted status
-    employee.isDeleted = !employee.isDeleted;
+    // Toggle the status logic (no isDeleted field anymore)
+    employee.status = employee.status === "active" ? "inactive" : "active"; // Example of toggling status
     await employee.save();
 
-    const status = employee.isDeleted ? "deactivated" : "activated";
+    const status = employee.status === "inactive" ? "deactivated" : "activated";
     res.status(200).json({ message: `Employee has been ${status}` });
   } catch (error) {
     res.status(500).json({ message: "Error toggling employee status", error });
   }
 };
 
-// login api
-
-// delete api
 exports.deleteEmployee = async (req, res) => {
   const { id } = req.params; // Get employee ID from params
   try {
     // Find the employee by desk_employee_id
     const employee = await Employee.findOne({
-      where: { desk_employee_id: id, isDeleted: false },
+      where: { desk_employee_id: id },
     });
 
-    // If employee exists
     if (employee) {
-      // Update the employee to mark it as deleted (soft delete)
-      employee.isDeleted = true;
+      employee.status = "inactive";
       await employee.save();
-
       res.status(200).json({ message: "Employee deleted successfully" });
     } else {
-      res
-        .status(404)
-        .json({ message: "Employee not found or already deleted" });
+      res.status(404).json({ message: "Employee not found" });
     }
   } catch (error) {
     res.status(500).json({ message: "Error deleting employee", error });
+  }
+};
+
+exports.deleteEmployee = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const project = await Employee.findOne({
+      where: { desk_employee_id: id },
+    });
+
+    if (!project) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    await project.destroy();
+    res.status(200).json({ message: "Employee deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting Employee:", error);
+    res.status(500).json({ message: "Failed to delete Employee" });
   }
 };
 
@@ -184,12 +172,10 @@ exports.loginEmployee = async (req, res) => {
 
     // Find employee by email
     const employee = await Employee.findOne({
-      where: { email, isDeleted: false },
+      where: { email },
     });
     if (!employee) {
-      return res
-        .status(404)
-        .json({ error: "Employee not found or is deleted." });
+      return res.status(404).json({ error: "Employee not found." });
     }
 
     // Check password
