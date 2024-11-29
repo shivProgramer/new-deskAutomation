@@ -21,6 +21,7 @@ const Employee = () => {
     name: "",
     email: "",
     group_name: "",
+    desk_employee_id:0
   });
   const [isEditMode, setIsEditMode] = useState(false);
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ const Employee = () => {
       name: singleEmp?.name,
       email: singleEmp?.email,
       group_name: singleEmp?.group_name,
+      desk_employee_id:singleEmp?.desk_employee_id
     });
   }, [singleEmp]);
 
@@ -67,6 +69,7 @@ const Employee = () => {
       name: "",
       email: "",
       group_name: "",
+      desk_employee_id:0
     });
   };
 

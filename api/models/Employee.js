@@ -1,5 +1,4 @@
 
-
 const { DataTypes, Sequelize } = require("sequelize");
 const sequelize = require("../db");
 
@@ -9,14 +8,14 @@ const Employee = sequelize.define(
     desk_employee_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      allowNull: false,  // This allows manual insertion of desk_employee_id
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: true,
       unique: true,
     },
@@ -25,11 +24,11 @@ const Employee = sequelize.define(
       allowNull: true,
     },
     group_name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: true,
     },
     profile_url: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(500),
       allowNull: true,
     },
     is_online: {
@@ -102,13 +101,12 @@ const Employee = sequelize.define(
       allowNull: true,
       defaultValue: Sequelize.fn("GETDATE"),
     },
-    
   },
   {
     tableName: "Employees",
-    timestamps: false,
-  
+    timestamps: false, // Disable automatic timestamps
   }
 );
 
 module.exports = Employee;
+

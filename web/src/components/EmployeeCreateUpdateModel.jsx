@@ -19,7 +19,6 @@ const EmployeeCreateUpdateModel = ({
     }));
   };
 
-  console.log("formData 11 ----", formData);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-lg md:max-w-xl p-4 md:p-6 shadow-lg mx-4 sm:mx-6 lg:mx-0 relative">
@@ -48,6 +47,21 @@ const EmployeeCreateUpdateModel = ({
               handleSubmit();
             }}
           >
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">
+                Desk Employee ID
+              </label>
+              <input
+                type="number" 
+                name="desk_employee_id"
+                value={formData.desk_employee_id || ""}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 md:p-3"
+                placeholder="Enter employee ID"
+                required
+              />
+            </div>
+
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Name</label>
               <input

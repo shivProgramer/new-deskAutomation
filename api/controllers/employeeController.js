@@ -33,25 +33,44 @@ exports.getEmployeeById = async (req, res) => {
 exports.createEmployee = async (req, res) => {
   try {
     const employeeData = req.body;
-    if (!employeeData) {
-      return res.json({ message: "Data is null or missing", status: 0 });
+    if (!employeeData || !employeeData.desk_employee_id) {
+      return res.json({ message: "desk_employee_id is missing", status: 0 });
     }
 
-    // Check if the email already exists
+    // Check if the employee with the provided desk_employee_id already exists
     const existingEmployee = await Employee.findOne({
-      where: { email: employeeData.email },
+      where: { desk_employee_id: employeeData.desk_employee_id },
     });
 
     if (existingEmployee) {
-      return res.json({ message: "Email is already in use", status: 0 });
+      return res.json({ message: "Employee with this desk_employee_id already exists", status: 0 });
     }
+
+    // Create the new employee, using the desk_employee_id passed from the request body
     const newEmployee = await Employee.create({
+      desk_employee_id: employeeData.desk_employee_id,  // Using provided desk_employee_id
       name: employeeData.name,
       email: employeeData.email,
       group_name: employeeData.group_name,
+      profile_url: employeeData.profile_url,
+      is_online: employeeData.is_online,
+      arrived: employeeData.arrived,
+      left: employeeData.left,
+      late: employeeData.late,
+      online_time: employeeData.online_time,
+      offline_time: employeeData.offline_time,
+      desktime_time: employeeData.desktime_time,
+      at_work_time: employeeData.at_work_time,
+      after_work_time: employeeData.after_work_time,
+      before_work_time: employeeData.before_work_time,
+      productive_time: employeeData.productive_time,
+      productivity: employeeData.productivity,
+      efficiency: employeeData.efficiency,
+      work_starts: employeeData.work_starts,
+      work_ends: employeeData.work_ends,
     });
 
-    // Return success response
+    // Return the newly created employee data
     return res.json({
       message: "Employee successfully created",
       status: 1,
@@ -62,6 +81,7 @@ exports.createEmployee = async (req, res) => {
     return errorHandlerMiddleware(error, req, res);
   }
 };
+
 
 exports.updateEmployee = async (req, res) => {
   const { id } = req.params;
