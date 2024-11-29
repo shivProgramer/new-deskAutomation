@@ -37,7 +37,7 @@ const Employee = () => {
       name: singleEmp?.name,
       email: singleEmp?.email,
       group_name: singleEmp?.group_name,
-      desk_employee_id:singleEmp?.desk_employee_id
+   
     });
   }, [singleEmp]);
 

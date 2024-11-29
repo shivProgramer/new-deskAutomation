@@ -47,7 +47,7 @@ const EmployeeCreateUpdateModel = ({
               handleSubmit();
             }}
           >
-            <div className="mb-4">
+           {!isEditMode && <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
                 Desk Employee ID
               </label>
@@ -60,7 +60,7 @@ const EmployeeCreateUpdateModel = ({
                 placeholder="Enter employee ID"
                 required
               />
-            </div>
+            </div>}
 
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Name</label>

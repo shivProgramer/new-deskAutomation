@@ -1,4 +1,4 @@
-const EmployeeHourlyRate = require("../models/Employee_Hourly_Rate.jsx");
+const EmployeeHourlyRate = require("../models/Employee_Hourly_Rate.js");
 
 // Create a new Employee Hourly Rate
 const createEmployeeHourlyRate = async (req, res) => {

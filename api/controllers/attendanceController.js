@@ -1,7 +1,7 @@
 
 
 // controllers/EmployeeAttendanceController.js
-const EmployeeAttendance = require('../models/Employee_Attendance.jsx');
+const EmployeeAttendance = require('../models/Employee_Attendance.js');
 const { Op } = require('sequelize');
 const sequelize = require("../db.js");
 // Create new attendance record
@@ -105,7 +105,7 @@ const updateAttendance = async (req, res) => {
       const { id } = req.params;
       const {
         arrived,
-        left,  // Escaped reserved keyword 'left'
+        left,  
         online_time,
         offline_time,
         desktime_time,
