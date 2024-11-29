@@ -11,7 +11,7 @@ import { NavLink } from "react-router-dom";  // Import NavLink instead of Link
 const Sidebar = ({ isOpen, toggleDrawer }) => {
   return (
     <div
-      className={`fixed top-0 left-0 h-full bg-gray-800 text-white transition-transform transform ${
+      className={`fixed top-0 left-0 h-full z-50 bg-gray-800 text-white transition-transform transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } md:translate-x-0 w-64`}
     >

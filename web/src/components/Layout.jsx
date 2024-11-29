@@ -20,10 +20,12 @@ const Layout = () => {
         }`}
       >
         {/* Header */}
-        <Header toggleDrawer={toggleDrawer} />
+        <div className="w-full bg-gray-100 shadow-md">
+          <Header toggleDrawer={toggleDrawer} />
+        </div>
 
         {/* Page Content */}
-        <div className="p-4">
+        <div className="flex-grow p-4 overflow-auto">
           <Outlet />
         </div>
       </div>
@@ -32,4 +34,3 @@ const Layout = () => {
 };
 
 export default Layout;
-
