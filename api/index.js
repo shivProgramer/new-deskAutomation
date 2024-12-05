@@ -13,6 +13,7 @@ const attendanceRoutes = require("./routes/attendance.js");
 const employeeHourlyRateRoutes = require('./routes/employeeHourlyRateRoutes.js');
 const adhocReportRoutes = require("./routes/adhocReportRoutes.js");
 const dalyReportsRoutes = require("./routes/dalyReportsRoutes")
+const ecommProjectListRoutes = require("./routes/ecommProjectListRoutes");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -25,7 +26,7 @@ app.use('/api/employee-hourly-rate', employeeHourlyRateRoutes);
 
 app.use("/api/adhoc-reports", adhocReportRoutes);
 app.use('/api/daly-reports', dalyReportsRoutes);
-
+app.use("/api/ecomm-p-list", ecommProjectListRoutes); 
 // Define a simple test route
 app.get("/tester", (req, res) => {
   res.send("Hello World!");

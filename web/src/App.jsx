@@ -13,6 +13,8 @@ import Login from "./pages/login";
 import Reg from "./pages/Reg";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Adhoc_Report from "./pages/Adhoc_Report";
+import DalyReports from "./pages/DalyReports";
+import Ecomm_Projectlist from "./pages/Ecomm_Projectlist";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -43,6 +45,14 @@ function App() {
         {
           path: "/adhoc-report",
           element: <Adhoc_Report />,
+        },
+        {
+          path: "/daly_reports",
+          element: <DalyReports />,
+        },
+        {
+          path: "/project-list",
+          element: <Ecomm_Projectlist />,
         },
       ],
     },

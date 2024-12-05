@@ -24,15 +24,27 @@ const getReportById = async (req, res) => {
   }
 };
 
-// Create a new report
+
+
 const createReport = async (req, res) => {
   try {
     const newReport = await DalyReports.create(req.body);
-    res.status(201).json(newReport);
+    // Success response with status 1
+    res.status(201).json({
+      status: 1,
+      message: 'Report created successfully',
+      data: newReport,
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create the report', details: error.message });
+    // Error response with status 0 and reason for failure
+    res.status(500).json({
+      status: 0,
+      message: 'Failed to create the report',
+      errorDetails: error.message,
+    });
   }
 };
+
 
 
 
@@ -43,15 +55,31 @@ const updateReport = async (req, res) => {
     const [updated] = await DalyReports.update(req.body, {
       where: { ID: req.params.id },
     });
+
     if (!updated) {
-      return res.status(404).json({ message: 'Report not found' });
+      return res.status(404).json({
+        status: 0,
+        message: 'Report not found',
+      });
     }
+
     const updatedReport = await DalyReports.findByPk(req.params.id);
-    res.status(200).json(updatedReport);
+    // Success response with status 1
+    res.status(200).json({
+      status: 1,
+      message: 'Report updated successfully',
+      data: updatedReport,
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update the report', details: error.message });
+    // Error response with status 0 and reason for failure
+    res.status(500).json({
+      status: 0,
+      message: 'Failed to update the report',
+      errorDetails: error.message,
+    });
   }
 };
+
 
 const deleteReport = async (req, res) => {
     try {

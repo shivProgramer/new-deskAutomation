@@ -7,7 +7,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { FaHospitalUser } from "react-icons/fa6";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { NavLink } from "react-router-dom";  // Import NavLink instead of Link
-
+import { BiSolidReport } from "react-icons/bi";
+import { TbReportAnalytics } from "react-icons/tb";
 const Sidebar = ({ isOpen, toggleDrawer }) => {
   return (
     <div
@@ -90,7 +91,32 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
             }`
           }
         >
-          <RiMoneyDollarCircleLine /> Adhoc_Report
+          <TbReportAnalytics /> Adhoc_Report
+        </NavLink>
+
+        <NavLink
+          to="/daly_reports"
+          className={({ isActive }) =>
+            `py-4 pl-10 cursor-pointer flex gap-4 items-center ${
+              isActive
+                ? "bg-gray-500 text-white border-l-2 border-green-500"  
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white"  
+            }`
+          }
+        >
+          <BiSolidReport /> Daly Reports
+        </NavLink>
+        <NavLink
+          to="/project-list"
+          className={({ isActive }) =>
+            `py-4 pl-10 cursor-pointer flex gap-4 items-center ${
+              isActive
+                ? "bg-gray-500 text-white border-l-2 border-green-500"  
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white"  
+            }`
+          }
+        >
+          <BiSolidReport /> Ecomm Project List
         </NavLink>
         
       </ul>
