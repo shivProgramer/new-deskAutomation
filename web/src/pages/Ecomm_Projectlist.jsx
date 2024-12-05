@@ -19,12 +19,7 @@ const Ecomm_Projectlist = () => {
   //  const loading = useSelector((state) => state.horuly_rate?.loading);
   const dispatch = useDispatch();
   console.log("allECommProject ---", allECommProject);
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-  const handleSend = () => {
-    alert(`The checkbox is ${isChecked ? "checked" : "unchecked"}. List sent!`);
-  };
+
 
   useEffect(() => {
     dispatch(getAllEcomm_project_List());
@@ -36,6 +31,8 @@ const Ecomm_Projectlist = () => {
     { label: "Email Code", key: "email_code" },
     { label: "Is Active", key: "is_active" },
     { label: "Employee ID", key: "employee_id" },
+    { label: "Last Date Reported", key: "last_date_reported" },
+
   ];
 
   const data = allECommProject?.map((ele, index) => ({
@@ -49,7 +46,10 @@ const Ecomm_Projectlist = () => {
     report_sent_by_type: ele.report_sent_by_type,
     report_sent_by_name: ele.report_sent_by_name,
     employee_id: ele.employee_id,
+    last_date_reported: ele.last_date_reported,
   }));
+
+
 
   const handleStatusChange = async (row) => {
     let p_id = row.project_id;
