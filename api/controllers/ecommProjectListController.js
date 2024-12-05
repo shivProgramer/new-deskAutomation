@@ -68,11 +68,9 @@ const sendReport = async (req, res) => {
     const project = await Ecomm_project_list.findOne({
       where: { project_id: project_id },
     });
-
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
-
     const report = await Ecomm_project_reporting.create({
       project_id,
       last_date_reported,

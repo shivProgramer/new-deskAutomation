@@ -45,8 +45,8 @@ const Adhoc_Report_slice = createSlice({
     searchClient: (state, action) => {
       state.searchData = action.payload;
     },
-    acessModle: (state, action) => {
-      state.access = action.payload;
+    clearSpddata: (state, action) => {
+      state.Spdata =[];
     },
   },
   extraReducers: (builder) => {
@@ -80,4 +80,4 @@ const Adhoc_Report_slice = createSlice({
 });
 
 export default Adhoc_Report_slice.reducer;
-export const { searchClient, acessModle } = Adhoc_Report_slice.actions;
+export const { searchClient, clearSpddata } = Adhoc_Report_slice.actions;

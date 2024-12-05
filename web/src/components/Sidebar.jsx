@@ -6,9 +6,10 @@ import { GrProjects } from "react-icons/gr";
 import { FaUserCircle } from "react-icons/fa";
 import { FaHospitalUser } from "react-icons/fa6";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
-import { NavLink } from "react-router-dom";  // Import NavLink instead of Link
+import { NavLink } from "react-router-dom";  
 import { BiSolidReport } from "react-icons/bi";
 import { TbReportAnalytics } from "react-icons/tb";
+import { BsReverseListColumnsReverse } from "react-icons/bs";
 const Sidebar = ({ isOpen, toggleDrawer }) => {
   return (
     <div
@@ -116,7 +117,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
             }`
           }
         >
-          <BiSolidReport /> Ecomm Project List
+          <BsReverseListColumnsReverse /> Ecomm Project List
         </NavLink>
         
       </ul>
