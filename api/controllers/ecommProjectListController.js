@@ -1,73 +1,98 @@
 const Ecomm_project_list = require("../models/Ecomm_project_list");
+const Ecomm_project_reporting = require("../models/Ecomm_project_reporting");
 
-// Create a new project
-const createProject = async (req, res) => {
-  try {
-    const project = await Ecomm_project_list.create(req.body);
-    res.status(201).json({ status: 1, message: "Project created successfully", project });
-  } catch (error) {
-    res.status(500).json({ status: 0, message: "Failed to create project", error: error.message });
-  }
-};
+const sequelize = require("../db");
 
-// Get all projects
 const getAllProjects = async (req, res) => {
   try {
-    const projects = await Ecomm_project_list.findAll();
-    res.status(200).json({ status: 1, projects });
+    const projects = await sequelize.query(
+      "EXEC SP_ecomm_project_list_GetStatus",
+      {
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    res.status(200).json({
+      status: 1,
+      message: "Projects retrieved successfully",
+      data: projects,
+    });
   } catch (error) {
-    res.status(500).json({ status: 0, message: "Failed to fetch projects", error: error.message });
+    res.status(500).json({
+      status: 0,
+      message: "Failed to retrieve projects",
+      error: error.message,
+    });
   }
 };
 
-// Get a single project by ID
-const getProjectById = async (req, res) => {
+const toggleProjectStatus = async (req, res) => {
+  const { project_id } = req.params;
+
   try {
-    const project = await Ecomm_project_list.findByPk(req.params.id);
+    const project = await Ecomm_project_list.findOne({
+      where: { project_id },
+    });
+
     if (!project) {
-      return res.status(404).json({ status: 0, message: "Project not found" });
+      return res.status(404).json({ message: "Project not found" });
     }
-    res.status(200).json({ status: 1, project });
+
+    const updatedStatus = !project.is_active;
+    await project.update({ is_active: updatedStatus });
+
+    return res.status(200).json({
+      message: `Project status updated to ${
+        updatedStatus ? "Active" : "Inactive"
+      }`,
+      project: project,
+    });
   } catch (error) {
-    res.status(500).json({ status: 0, message: "Failed to fetch project", error: error.message });
+    console.error("Error updating project status:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Update a project by ID
-const updateProject = async (req, res) => {
+const sendReport = async (req, res) => {
   try {
-    const [updated] = await Ecomm_project_list.update(req.body, {
-      where: { project_id: req.params.id },
-    });
-    if (!updated) {
-      return res.status(404).json({ status: 0, message: "Project not found" });
-    }
-    const updatedProject = await Ecomm_project_list.findByPk(req.params.id);
-    res.status(200).json({ status: 1, message: "Project updated successfully", updatedProject });
-  } catch (error) {
-    res.status(500).json({ status: 0, message: "Failed to update project", error: error.message });
-  }
-};
+    const {
+      project_id,
+      last_date_reported,
+      report_sent_by_name = "admin",
+      report_sent_by_type = "email",
+      employee_id,
+    } = req.body;
 
-// Delete a project by ID
-const deleteProject = async (req, res) => {
-  try {
-    const deleted = await Ecomm_project_list.destroy({
-      where: { project_id: req.params.id },
+    const empId = employee_id || 0;
+
+    const project = await Ecomm_project_list.findOne({
+      where: { project_id: project_id },
     });
-    if (!deleted) {
-      return res.status(404).json({ status: 0, message: "Project not found" });
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
     }
-    res.status(200).json({ status: 1, message: "Project deleted successfully" });
+
+    const report = await Ecomm_project_reporting.create({
+      project_id,
+      last_date_reported,
+      report_sent_by_name,
+      report_sent_by_type,
+      employee_id: empId,
+    });
+
+    return res.status(201).json({
+      message: "Report sent successfully",
+      report,
+    });
   } catch (error) {
-    res.status(500).json({ status: 0, message: "Failed to delete project", error: error.message });
+    console.error("Error sending report:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
 module.exports = {
-  createProject,
   getAllProjects,
-  getProjectById,
-  updateProject,
-  deleteProject,
+  toggleProjectStatus,
+  sendReport,
 };

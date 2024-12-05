@@ -1,75 +1,91 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DynamicTable from "../components/DynamicTable";
+import {
+  getAllEcomm_project_List,
+  sendReportInReporting,
+  updateStatusEcomm,
+} from "../redux/slice/E_comm_p_List_slice";
+import { useDispatch, useSelector } from "react-redux";
+import { showToast } from "../utils/config";
 
 const Ecomm_Projectlist = () => {
   const [isChecked, setIsChecked] = useState(false);
-
+  // const hourlyRatedat = useSelector(
+  //   (state) => state.ecomm_p_List?.allCommPList
+  // );
+  const allECommProject = useSelector(
+    (state) => state.ecomm_p_List?.allCommPList?.data
+  );
+  //  const loading = useSelector((state) => state.horuly_rate?.loading);
+  const dispatch = useDispatch();
+  console.log("allECommProject ---", allECommProject);
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
-
   const handleSend = () => {
     alert(`The checkbox is ${isChecked ? "checked" : "unchecked"}. List sent!`);
   };
 
-// Column structure
-const columns = [
-  { label: "Project ID", key: "project_id" },
-  { label: "Name", key: "name" },
-  { label: "Email Code", key: "email_code" },
-  { label: "Is Active", key: "is_active" },
-  { label: "Account Manager Name", key: "account_manager_name" },
-  { label: "Account Manager Email", key: "account_manager_email" },
-  { label: "Employee ID", key: "employee_id" },
-];
+  useEffect(() => {
+    dispatch(getAllEcomm_project_List());
+  }, []);
 
-// Dummy data
-const filterData = [
-  {
-    project_id: 101,
-    name: "Project Alpha",
-    email_code: 12345,
-    is_active: true,
-    account_manager_name: "Alice Johnson",
-    account_manager_email: "alice.johnson@example.com",
-    employee_id: 1001,
-  },
-  {
-    project_id: 102,
-    name: "Project Beta",
-    email_code: 67890,
-    is_active: false,
-    account_manager_name: "Bob Smith",
-    account_manager_email: "bob.smith@example.com",
-    employee_id: 1002,
-  },
-  {
-    project_id: 103,
-    name: "Project Gamma",
-    email_code: 11223,
-    is_active: true,
-    account_manager_name: "Charlie Brown",
-    account_manager_email: "charlie.brown@example.com",
-    employee_id: 1003,
-  },
-];
+  const columns = [
+    { label: "ID", key: "id" },
+    { label: "Name", key: "name" },
+    { label: "Email Code", key: "email_code" },
+    { label: "Is Active", key: "is_active" },
+    { label: "Employee ID", key: "employee_id" },
+  ];
 
-const data = filterData.map((ele) => ({
-  project_id: ele.project_id,
-  name: ele.name,
-  email_code: ele.email_code,
-  is_active: ele.is_active ? "Active" : "Inactive", 
-  account_manager_name: ele.account_manager_name,
-  account_manager_email: ele.account_manager_email,
-  employee_id: ele.employee_id,
-}));
+  const data = allECommProject?.map((ele, index) => ({
+    project_id: ele.project_id,
+    id: index + 1,
+    name: ele.name,
+    email_code: ele.email_code,
+    is_active: ele.is_active ? "Active" : "Inactive",
+    employee_id: ele.employee_id,
+    last_date_reported: ele.last_date_reported,
+    report_sent_by_type: ele.report_sent_by_type,
+    report_sent_by_name: ele.report_sent_by_name,
+    employee_id: ele.employee_id,
+  }));
 
-console.log(data);
-  
+  const handleStatusChange = async (row) => {
+    let p_id = row.project_id;
+    if (p_id) {
+      await dispatch(updateStatusEcomm(p_id));
+      dispatch(getAllEcomm_project_List());
+    }
+  };
+  const onSend = async (row) => {
+    // Create the new data object
+    let newData = {
+      project_id: row.project_id,
+      last_date_reported: row.last_date_reported,
+      report_sent_by_name: row.report_sent_by_name,
+      report_sent_by_type: row.report_sent_by_type,
+      employee_id: row.employee_id,
+    };
+
+    if (newData) {
+      console.log("lkdjflsa");
+    }
+    try {
+      const res = await dispatch(sendReportInReporting(newData));
+      if (res?.payload?.message) {
+        showToast(res.payload.message, "success");
+      }
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error sending data:", error);
+    }
+  };
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md p-2 md:mx-10 md:mt-3  w-80 md:w-96">
+      {/* <div className="bg-white rounded-lg shadow-md p-2 md:mx-10 md:mt-3  w-80 md:w-96">
         <h1 className="text-lg font-semibold mb-4 text-center text-gray-700">
           E-commerce Project List
         </h1>
@@ -90,13 +106,20 @@ console.log(data);
         >
           Send List
         </button>
-      </div>
+      </div> */}
 
+      <div className=" p-2 md:p-4  ">
+        <h1 className="font-medium text-2xl text-gray-600 ">
+          {" "}
+          E-commerce Project List{" "}
+        </h1>
+      </div>
       <DynamicTable
         columns={columns}
         data={data}
-        // onEdit={handleUpdate}
-        // onDelete={handleDelete}
+        type="Ecomm_Projectlist"
+        handleStatusChange={handleStatusChange}
+        onSend={onSend}
       />
     </>
   );

@@ -6,6 +6,7 @@ import Attendance_slice from "./slice/Attendance_slice"
 import Hourly_rate_slice from "./slice/Hourly_rate_slice"
 import Adhoc_Report_slice from "./slice/Adhoc_Report_slice"
 import Daly_reports_slice from "./slice/Daly_reports_slice"
+import E_comm_p_List_slice from "./slice/E_comm_p_List_slice"
 const store = configureStore({
   reducer: {
     auth: Auth_slice,
@@ -14,7 +15,8 @@ const store = configureStore({
     attendance:Attendance_slice,
     horuly_rate : Hourly_rate_slice,
     adhoc_report : Adhoc_Report_slice, 
-    daly_report : Daly_reports_slice
+    daly_report : Daly_reports_slice,
+    ecomm_p_List : E_comm_p_List_slice
   },
 });
 
