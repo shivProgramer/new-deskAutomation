@@ -53,27 +53,29 @@ const toggleProjectStatus = async (req, res) => {
   }
 };
 
+
+
 const sendReport = async (req, res) => {
   try {
     const {
       project_id,
-      last_date_reported,
       report_sent_by_name = "admin",
       report_sent_by_type = "email",
       employee_id,
     } = req.body;
 
     const empId = employee_id || 0;
-
+    const currentDate = new Date(); 
     const project = await Ecomm_project_list.findOne({
       where: { project_id: project_id },
     });
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
+
     const report = await Ecomm_project_reporting.create({
       project_id,
-      last_date_reported,
+      last_date_reported: currentDate, 
       report_sent_by_name,
       report_sent_by_type,
       employee_id: empId,

@@ -2,19 +2,24 @@ const AdhocReport = require("../models/Adhoc_Report.js");
 const sequelize = require("../db.js");
 const { Sequelize } = require("sequelize");
 // Create a new Adhoc Report
+
 exports.createAdhocReport = async (req, res) => {
   try {
-    const { ID, Name, SP, IsActive } = req.body;
-    const newReport = await AdhocReport.create({ ID, Name, SP, IsActive });
+    const { Name, SP } = req.body;
+    const newReport = await AdhocReport.create({ Name, SP });
     res.status(201).json({ message: "Adhoc Report created successfully", data: newReport });
   } catch (error) {
     res.status(500).json({ message: "Error creating Adhoc Report", error: error.message });
   }
 };
+
+
 // Get all Adhoc Reports
 exports.getAllAdhocReports = async (req, res) => {
   try {
-    const reports = await AdhocReport.findAll();
+    const reports = await AdhocReport.findAll({
+      where: { IsActive: false },
+    });
     res.status(200).json({ message: "Adhoc Reports fetched successfully", data: reports });
   } catch (error) {
     res.status(500).json({ message: "Error fetching Adhoc Reports", error: error.message });

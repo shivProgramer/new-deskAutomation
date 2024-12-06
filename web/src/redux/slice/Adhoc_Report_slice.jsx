@@ -24,12 +24,11 @@ export const getAllAdhocReport = createAsyncThunk(
   }
 );
 
-export const getSpData = createAsyncThunk(
-  "getSpData",
-  async (name, thunkAPI) => {
+export const CreateAdhocReport = createAsyncThunk(
+  "CreateAdhocReport",
+  async (newData, thunkAPI) => {
     try {
-
-      const response = await axiosInstance.get(`/adhoc-reports/execute/${name}`);
+      const response = await axiosInstance.post("adhoc-reports",newData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -37,6 +36,19 @@ export const getSpData = createAsyncThunk(
   }
 );
 
+export const getSpData = createAsyncThunk(
+  "getSpData",
+  async (name, thunkAPI) => {
+    try {
+      const response = await axiosInstance.get(
+        `/adhoc-reports/execute/${name}`
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
 
 const Adhoc_Report_slice = createSlice({
   name: "Project_cost_slice",
@@ -46,7 +58,7 @@ const Adhoc_Report_slice = createSlice({
       state.searchData = action.payload;
     },
     clearSpddata: (state, action) => {
-      state.Spdata =[];
+      state.Spdata = [];
     },
   },
   extraReducers: (builder) => {
@@ -72,6 +84,17 @@ const Adhoc_Report_slice = createSlice({
         state.Spdata = action.payload;
       })
       .addCase(getSpData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(CreateAdhocReport.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(CreateAdhocReport.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(CreateAdhocReport.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

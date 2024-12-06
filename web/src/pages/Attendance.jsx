@@ -13,6 +13,7 @@ import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import { showToast } from "../utils/config";
 import Loader from "../components/Loader";
+import moment from "moment";
 
 const Attendance = () => {
   // for create model ---------------------
@@ -50,9 +51,10 @@ const Attendance = () => {
   const allEmployee = useSelector((state) => state.employee?.allEmployee);
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [filterData, setFilterData] = useState([]);
-
+  const [filterByDate, setFilterByDate] = useState();
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
+  console.log("filterByDate ---- ", filterByDate);
   const handleOpenModal = () => {
     setAttendanceData({
       desk_employee_id: "",
@@ -138,7 +140,6 @@ const Attendance = () => {
       } catch (error) {
         showToast(error, "error");
       }
-      
     } else {
       try {
         const res = await dispatch(createAttendance(attendanceData));
@@ -152,24 +153,36 @@ const Attendance = () => {
     }
     setIsModalOpen(false);
   };
+  const handleSearchBydate = (e) => {
+    const val = e.target.value;
+
+    setFilterByDate(val);
+  };
 
   useEffect(() => {
+    const currentDate = moment().format("YYYY-MM-DD");
+    let filteredData = [];
+
+    if (filterByDate) {
+      filteredData = allAttendance.filter(
+        (att) => moment(att.date).format("YYYY-MM-DD") === filterByDate
+      );
+    } else {
+      filteredData = allAttendance.filter((att) =>
+        moment(att.date).isSame(currentDate, "day")
+      );
+    }
     if (searchTerm) {
-      // Filter attendance data based on the employee name
-      const filtered = allAttendance.filter((att) => {
+      filteredData = filteredData.filter((att) => {
         const employee = allEmployee.find(
           (emp) => emp.desk_employee_id === att.desk_employee_id
         );
-
-        // Check if the employee's name matches the search term
         return employee?.name?.toLowerCase().includes(searchTerm.toLowerCase());
       });
-
-      setFilterData(filtered);
-    } else {
-      setFilterData(allAttendance);
     }
-  }, [allAttendance, allEmployee, searchTerm]);
+
+    setFilterData(filteredData);
+  }, [allAttendance, allEmployee, searchTerm, filterByDate]);
 
   const columns = [
     { label: "ID", key: "id" },
@@ -178,61 +191,70 @@ const Attendance = () => {
     { label: "Productive Time", key: "productive_time" },
     { label: "Work Starts", key: "work_starts" },
     { label: "Work Ends", key: "work_ends" },
+    { label: "Date", key: "date" },
     { label: "Is Online", key: "is_online" },
   ];
 
-  const data = filterData?.map((att, index) => {
-    const formatProductiveTime = (minutes) => {
-      if (!minutes) return "0 minutes";
-      const hours = Math.floor(minutes / 60);
-      const mins = minutes % 60;
-      return `${hours > 0 ? `${hours} hours` : ""} ${
-        mins > 0 ? `${mins} minutes` : ""
-      }`.trim();
-    };
+  const formatProductiveTime = (minutes) => {
+    if (!minutes) return "0 minutes";
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours > 0 ? `${hours} hours` : ""} ${
+      mins > 0 ? `${mins} minutes` : ""
+    }`.trim();
+  };
 
-    const formatDateTime = (dateTime) => {
-      if (!dateTime) return "N/A";
-      const options = {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      };
-      return new Intl.DateTimeFormat("en-US", options).format(
-        new Date(dateTime)
+  const formatDateTime = (dateTime) => {
+    if (!dateTime) return "N/A";
+    const date = new Date(dateTime);
+    if (isNaN(date)) return "Invalid Date";
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
+
+  const formatTime = (timeString) => {
+    if (!timeString) return "N/A";
+    const [hour, minute] = timeString.split(":").map(Number);
+    if (isNaN(hour) || isNaN(minute)) return "Invalid Time";
+    const isPM = hour >= 12;
+    const formattedHour = hour % 12 || 12;
+    const period = isPM ? "PM" : "AM";
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
+  };
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const data = filterData
+    ?.filter((att) => {
+      const attendanceDate = new Date(att.date).toISOString().split("T")[0];
+      return attendanceDate;
+    })
+    .map((att, index) => {
+      const employee = allEmployee?.find(
+        (emp) => emp.desk_employee_id === att.desk_employee_id
       );
-    };
-
-    const getStatus = (isOnline) => ({
-      label: isOnline ? "Online" : "Offline",
-      color: isOnline
-        ? "bg-green-200 text-green-800"
-        : "bg-red-200 text-red-800",
+      return {
+        id: att.id,
+        name: employee ? employee.name : "N/A",
+        is_online: att ? (att.is_online ? "Online" : "Offline") : "N/A",
+        desk_employee_id: att.desk_employee_id,
+        date: att.date,
+        arrived: formatDateTime(att.arrived),
+        left: formatDateTime(att.left),
+        work_starts: formatTime(att.work_starts),
+        work_ends: formatTime(att.work_ends),
+        productivity: `${att.productivity}%`,
+        efficiency: `${att.efficiency}%`,
+        productive_time: formatProductiveTime(att.productive_time),
+      };
     });
-
-    const employee = allEmployee?.find(
-      (emp) => emp.desk_employee_id === att.desk_employee_id
-    );
-
-    const status = getStatus(att?.is_online);
-
-    return {
-      id: index + 1,
-      name: employee?.name || "N/A",
-      email: employee?.email || "N/A",
-      productive_time: formatProductiveTime(att?.productive_time),
-      work_starts: formatDateTime(att?.work_starts),
-      work_ends: formatDateTime(att?.work_ends),
-      is_online: status.label,
-      status_color: status.color,
-      e_id: att?.id,
-    };
-  });
-
-
 
   const handleDelete = (row) => {
     setRowToDelete(row);
@@ -271,22 +293,36 @@ const Attendance = () => {
           >
             Create Attendance
           </button>
-
           {/* Right Side: Search Bar with Button */}
           <div className="flex items-center space-x-2 w-full md:w-auto">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchInputChange}
-              placeholder="Search employees..."
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
-            />
-            <button
-              onClick={onClear}
-              className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-md"
-            >
-              Clear
-            </button>
+            <div class="">
+              <div class="flex items-center space-x-4">
+                <label for="date" class="text-sm font-semibold text-gray-700">
+                  Select Date:
+                </label>
+                <input
+                  type="date"
+                  id="date"
+                  class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                  onChange={handleSearchBydate}
+                />
+              </div>
+            </div>
+            <div>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearchInputChange}
+                placeholder="Search employees..."
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
+              />
+              <button
+                onClick={onClear}
+                className="px-4 py-2 ml-4 bg-red-700 hover:bg-red-800 text-white rounded-md"
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
 

@@ -67,6 +67,7 @@ const Ecomm_Projectlist = () => {
       const res = await dispatch(sendReportInReporting(newData));
       if (res?.payload?.message) {
         showToast(res.payload.message, "success");
+        dispatch(getAllEcomm_project_List());
       }
       const result = await response.json();
       console.log(result);

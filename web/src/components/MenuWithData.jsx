@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
 import DynamicTable from "./DynamicTable";
 import {
+  CreateAdhocReport,
   getAllAdhocReport,
   getSpData,
 } from "../redux/slice/Adhoc_Report_slice";
 import Loader from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
+import AdhocReportCreateUpdateModal from "./AdhocReportCreateUpdateModal";
+import { showToast } from "../utils/config";
 
 const MenuWithData = () => {
   const [selectedItem, setSelectedItem] = useState("Item 1");
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ Name: "", SP: "" });
+
+  console.log(formData);
 
   // Redux selectors
   const allAdhocReport = useSelector(
@@ -51,13 +58,33 @@ const MenuWithData = () => {
     }
   }, [sp_data]);
 
+  const handleSubmit = async () => {
+    const res = await dispatch(CreateAdhocReport(formData));
+    if (res?.payload?.message) {
+      showToast(res.payload.message, "success");
+      dispatch(getAllAdhocReport());
+    }
+    setModalOpen(false);
+  };
+
   return (
     <>
       {loading && <Loader loading={loading} />}
       <div className="flex flex-col bg-gray-50 z-10">
         {/* Menu Section - Grid Layout */}
+
         <div className="bg-gray-100 text-gray-600 p-6 rounded-b-xl shadow-lg z-10  max-w-2xl md:max-w-5xl xl:max-w-[100rem]">
-          <h2 className="text-xl font-bold mb-2">Menu</h2>
+          <button
+            onClick={() => {
+              setModalOpen(true);
+              setFormData({ Name: "", SP: "" });
+            }}
+            className="px-4 py-2 bg-gray-600 text-white rounded-md mb-4 hover:bg-gray-800"
+          >
+            {" "}
+            Create New{" "}
+          </button>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {allAdhocReport?.map((item, index) => (
               <div
@@ -77,7 +104,7 @@ const MenuWithData = () => {
 
         {/* Data Display Section - Table Below Menu */}
         <div className="p-2 max-w-2xl md:max-w-5xl xl:max-w-[100rem]">
-          <h2 className="text-3xl font-bold mb-2 text-gray-800">Data</h2>
+          <h2 className="text-3xl font-bold mb-2 text-gray-800 ml-4">Data</h2>
           <div className="bg-white p-2 rounded-lg shadow-lg overflow-x-auto">
             <div className="overflow-x-auto">
               <DynamicTable
@@ -90,6 +117,15 @@ const MenuWithData = () => {
             </div>
           </div>
         </div>
+
+        <AdhocReportCreateUpdateModal
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          title="Create Adhoc Report"
+          formData={formData}
+          setFormData={setFormData}
+          handleSubmit={handleSubmit}
+        />
       </div>
     </>
   );
