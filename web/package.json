@@ -12,6 +12,8 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
     "axios": "^1.7.7",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^11.11.17",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.460.0",

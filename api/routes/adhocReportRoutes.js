@@ -20,4 +20,5 @@ router.delete("/:id",verifyToken, adhocReportController.deleteAdhocReport);
 
 router.get("/execute/:name",verifyToken, adhocReportController.executeStoredProcedure);
 
+
 module.exports = router;

@@ -195,10 +195,20 @@ const Attendance = () => {
     { label: "Is Online", key: "is_online" },
   ];
 
-  const formatProductiveTime = (minutes) => {
-    if (!minutes) return "0 minutes";
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+  // const formatProductiveTime = (minutes) => {
+  //   if (!minutes) return "0 minutes";
+  //   const hours = Math.floor(minutes / 60);
+  //   const mins = minutes % 60;
+  //   return `${hours > 0 ? `${hours} hours` : ""} ${
+  //     mins > 0 ? `${mins} minutes` : ""
+  //   }`.trim();
+  // };
+
+  const formatProductiveTime = (seconds) => {
+    if (!seconds) return "0 minutes";
+    const totalMinutes = Math.floor(seconds / 60); 
+    const hours = Math.floor(totalMinutes / 60);  
+    const mins = totalMinutes % 60;
     return `${hours > 0 ? `${hours} hours` : ""} ${
       mins > 0 ? `${mins} minutes` : ""
     }`.trim();
@@ -229,8 +239,6 @@ const Attendance = () => {
     return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
   };
 
-  const today = new Date().toISOString().split("T")[0];
-
   const data = filterData
     ?.filter((att) => {
       const attendanceDate = new Date(att.date).toISOString().split("T")[0];
@@ -241,7 +249,7 @@ const Attendance = () => {
         (emp) => emp.desk_employee_id === att.desk_employee_id
       );
       return {
-        id: att.id,
+        id: index + 1,
         name: employee ? employee.name : "N/A",
         is_online: att ? (att.is_online ? "Online" : "Offline") : "N/A",
         desk_employee_id: att.desk_employee_id,
@@ -253,8 +261,10 @@ const Attendance = () => {
         productivity: `${att.productivity}%`,
         efficiency: `${att.efficiency}%`,
         productive_time: formatProductiveTime(att.productive_time),
+        e_id:att?.id
       };
     });
+
 
   const handleDelete = (row) => {
     setRowToDelete(row);
@@ -313,7 +323,7 @@ const Attendance = () => {
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchInputChange}
-                placeholder="Search employees..."
+                placeholder="Search attendance..."
                 className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
               />
               <button

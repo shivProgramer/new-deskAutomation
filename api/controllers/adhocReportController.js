@@ -1,6 +1,8 @@
 const AdhocReport = require("../models/Adhoc_Report.js");
 const sequelize = require("../db.js");
 const { Sequelize } = require("sequelize");
+const ExcelJS = require("exceljs")
+
 // Create a new Adhoc Report
 
 exports.createAdhocReport = async (req, res) => {
@@ -25,6 +27,8 @@ exports.getAllAdhocReports = async (req, res) => {
     res.status(500).json({ message: "Error fetching Adhoc Reports", error: error.message });
   }
 };
+
+
 // Get a single Adhoc Report by ID
 exports.getAdhocReportById = async (req, res) => {
   try {
@@ -102,3 +106,65 @@ exports.executeStoredProcedure = async (req, res) => {
     res.status(500).json({ message: "Error executing stored procedure", error: error.message });
   }
 };
+
+// exports.exportToExcel = async (req, res) => {
+//   try {
+//     const { name } = req.params;
+
+//     // Fetch the record with the given name
+//     const report = await AdhocReport.findOne({ where: { Name: name } });
+
+//     if (!report) {
+//       return res.status(404).json({ message: "Adhoc Report not found" });
+//     }
+
+//     const storedProcedure = report.SP;
+
+//     if (!storedProcedure) {
+//       return res.status(400).json({ message: "No stored procedure defined for this Adhoc Report" });
+//     }
+
+//     // Execute the stored procedure
+//     const result = await sequelize.query(`EXEC ${storedProcedure}`, {
+//       type: Sequelize.QueryTypes.SELECT,
+//     });
+
+//     if (!result || result.length === 0) {
+//       return res.status(404).json({ message: "No data found to export" });
+//     }
+
+//     // Create a new Excel workbook and worksheet
+//     const workbook = new ExcelJS.Workbook();
+//     const worksheet = workbook.addWorksheet("Report Data");
+
+//     // Add column headers based on the keys in the first result object
+//     const columns = Object.keys(result[0]).map((key) => ({
+//       header: key,
+//       key: key,
+//       width: 20, // Adjust width as needed
+//     }));
+//     worksheet.columns = columns;
+
+//     // Add rows from the result data
+//     worksheet.addRows(result);
+
+//     // Set response headers for Excel file download
+//     res.setHeader(
+//       "Content-Disposition",
+//       `attachment; filename=${name}_Report.xlsx`
+//     );
+//     res.setHeader(
+//       "Content-Type",
+//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//     );
+
+//     // Write the workbook to the response stream
+//     await workbook.xlsx.write(res);
+
+//     // End the response
+//     res.end();
+//   } catch (error) {
+//     console.error("Error exporting data to Excel:", error);
+//     res.status(500).json({ message: "Error exporting data to Excel", error: error.message });
+//   }
+// };

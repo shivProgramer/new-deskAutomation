@@ -23,7 +23,7 @@ const AdhocReportCreateUpdateModal = ({
       <div className="bg-white rounded-lg w-full max-w-lg p-6 shadow-lg">
         {/* Modal Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">{title}</h2>
+          <h2 className="text-xl text-green-600 font-semibold">{title}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 focus:outline-none"

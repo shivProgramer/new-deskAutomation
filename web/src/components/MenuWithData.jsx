@@ -9,7 +9,8 @@ import Loader from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
 import AdhocReportCreateUpdateModal from "./AdhocReportCreateUpdateModal";
 import { showToast } from "../utils/config";
-
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 const MenuWithData = () => {
   const [selectedItem, setSelectedItem] = useState("Item 1");
   const [columns, setColumns] = useState([]);
@@ -67,6 +68,40 @@ const MenuWithData = () => {
     setModalOpen(false);
   };
 
+  const exportToExcel = async () => {
+    if (!sp_data || sp_data.length === 0) {
+      alert("No data available to export.");
+      return;
+    }
+
+    try {
+      // Create a new workbook and worksheet
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("SP Data");
+
+      // Define columns based on the keys of the first object in sp_data
+      const columns = Object.keys(sp_data[0]).map((key) => ({
+        header: key,
+        key: key,
+        width: 20, // Adjust column width
+      }));
+      worksheet.columns = columns;
+
+      // Add rows to the worksheet
+      worksheet.addRows(sp_data);
+
+      // Generate Excel file
+      const buffer = await workbook.xlsx.writeBuffer();
+
+      // Save the Excel file
+      const fileName = "sp_data_report.xlsx";
+      saveAs(new Blob([buffer]), fileName);
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+      alert("Error exporting to Excel.");
+    }
+  };
+
   return (
     <>
       {loading && <Loader loading={loading} />}
@@ -104,7 +139,17 @@ const MenuWithData = () => {
 
         {/* Data Display Section - Table Below Menu */}
         <div className="p-2 max-w-2xl md:max-w-5xl xl:max-w-[100rem]">
-          <h2 className="text-3xl font-bold mb-2 text-gray-800 ml-4">Data</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-3xl font-bold mb-2 text-gray-800 ml-4">Data</h2>
+            <div className="mr-4">
+              <button
+                onClick={exportToExcel}
+                className="bg-green-600 text-white px-4 py-1 mb-2 rounded"
+              >
+                Export
+              </button>
+            </div>
+          </div>
           <div className="bg-white p-2 rounded-lg shadow-lg overflow-x-auto">
             <div className="overflow-x-auto">
               <DynamicTable

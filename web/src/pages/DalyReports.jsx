@@ -194,7 +194,7 @@ const DalyReports = () => {
               type="text"
               value={searchTerm}
               onChange={handleSearchInputChange}
-              placeholder="Search employees..."
+              placeholder="Search Daly Report..."
               className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
             />
             <button
