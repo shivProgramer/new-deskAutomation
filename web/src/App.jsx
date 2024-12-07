@@ -15,6 +15,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Adhoc_Report from "./pages/Adhoc_Report";
 import DalyReports from "./pages/DalyReports";
 import Ecomm_Projectlist from "./pages/Ecomm_Projectlist";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -28,6 +29,10 @@ function App() {
       children: [
         {
           path: "/",
+          element: <Dashboard />,
+        },
+        {
+          path: "/project",
           element: <Project />,
         },
         {

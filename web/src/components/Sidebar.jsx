@@ -30,8 +30,22 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
         </h1>
       </div>
       <ul className="mt-4">
-        <NavLink
+
+      <NavLink
           to="/"
+          className={({ isActive }) =>
+            `py-4 pl-10 cursor-pointer flex gap-4 items-center ${
+              isActive
+                ? "bg-gray-500 text-white border-l-2 border-green-500"  // Active styles (blue background)
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white"  // Hover styles
+            }`
+          }
+        >
+          <GrProjects /> Dashboard
+        </NavLink>
+
+        <NavLink
+          to="/project"
           className={({ isActive }) =>
             `py-4 pl-10 cursor-pointer flex gap-4 items-center ${
               isActive

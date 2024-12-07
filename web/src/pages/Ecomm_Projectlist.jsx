@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
 import DynamicTable from "../components/DynamicTable";
 import {
+  EcommUpdateEmployee,
   getAllEcomm_project_List,
   sendReportInReporting,
   updateStatusEcomm,
 } from "../redux/slice/E_comm_p_List_slice";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "../utils/config";
+import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
+import Loader from "../components/Loader";
 
 const Ecomm_Projectlist = () => {
   const [isChecked, setIsChecked] = useState(false);
-
   const allECommProject = useSelector(
     (state) => state.ecomm_p_List?.allCommPList?.data
   );
-   const loading = useSelector((state) => state.ecomm_p_List?.loading);
+  const loading = useSelector((state) => state.ecomm_p_List?.loading);
+  const allEmployee = useSelector((state) => state.employee?.allEmployee);
   const dispatch = useDispatch();
-  console.log("allECommProject ---", allECommProject);
+  console.log("allEmployee ---", allEmployee);
 
   useEffect(() => {
     dispatch(getAllEcomm_project_List());
@@ -27,7 +30,7 @@ const Ecomm_Projectlist = () => {
     { label: "Name", key: "name" },
     { label: "Email Code", key: "email_code" },
     { label: "Is Active", key: "is_active" },
-    { label: "Employee ID", key: "employee_id" },
+    { label: "Employee ", key: "employee_id" },
     { label: "Last Date Reported", key: "last_date_reported" },
   ];
 
@@ -50,6 +53,7 @@ const Ecomm_Projectlist = () => {
       dispatch(getAllEcomm_project_List());
     }
   };
+
   const onSend = async (row) => {
     // Create the new data object
     let newData = {
@@ -76,41 +80,47 @@ const Ecomm_Projectlist = () => {
     }
   };
 
+  const handleEmployeeChange = async (row, newEmployeeId) => {
+    console.log("row ", row);
+    let newData = {
+      employee_id: newEmployeeId || 0,
+    };
+    let project_id = row.project_id;
+    if (newData && project_id) {
+      const res = await dispatch(
+        EcommUpdateEmployee({ project_id: project_id, newData: newData })
+      );
+      dispatch(getAllEcomm_project_List());
+      if (res?.payload?.message) {
+        showToast(res?.payload?.message, "success");
+      }
+    }
+    const selectedEmployee = allEmployee.find(
+      (emp) => emp.desk_employee_id === parseInt(newEmployeeId, 10)
+    );
+    console.log("Selected Employee:", selectedEmployee);
+  };
+
+  useEffect(() => {
+    dispatch(getAlEmployee());
+  }, []);
+
   return (
     <>
-      {/* <div className="bg-white rounded-lg shadow-md p-2 md:mx-10 md:mt-3  w-80 md:w-96">
-        <h1 className="text-lg font-semibold mb-4 text-center text-gray-700">
-          E-commerce Project List
-        </h1>
-        <div className="flex items-center justify-between mb-4">
-          <label className="flex items-center text-gray-600">
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-              className="mr-2 w-5 h-5 text-[#1F2937] bg-[#1F2937] border-gray-300 rounded focus:ring-[#171f2b]"
-            />
-            Select Item
-          </label>
-        </div>
-        <button
-          onClick={handleSend}
-          className="w-full bg-[#1F2937] hover:bg-[#1F2937] text-white py-2 px-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 transition-all"
-        >
-          Send List
-        </button>
-      </div> */}
-
+      {loading && <Loader loading={loading} />}
       <div className=" p-2 md:p-4  ">
         <h1 className="font-medium text-2xl text-gray-600 ">
           {" "}
           E-commerce Project List{" "}
         </h1>
       </div>
+      
       <DynamicTable
         columns={columns}
         data={data}
         type="Ecomm_Projectlist"
+        employees={allEmployee}
+        handleEmployeeChange={handleEmployeeChange}
         handleStatusChange={handleStatusChange}
         onSend={onSend}
       />

@@ -33,6 +33,19 @@ export const updateStatusEcomm = createAsyncThunk(
   }
 );
 
+export const EcommUpdateEmployee = createAsyncThunk(
+  "EcommUpdateEmployee",
+  async ({project_id , newData}, thunkAPI) => {
+    try {
+      const response = await axiosInstance.put(`ecomm-p-list/${project_id}/employee`,newData);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
+
+
 export const sendReportInReporting= createAsyncThunk(
   "sendReportInReporting",
    async (newdata, thunkAPI) => {
@@ -82,6 +95,18 @@ const E_comm_p_List_slice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(EcommUpdateEmployee.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(EcommUpdateEmployee.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(EcommUpdateEmployee.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
       .addCase(sendReportInReporting.pending, (state) => {
         state.loading = true;
         state.error = null;

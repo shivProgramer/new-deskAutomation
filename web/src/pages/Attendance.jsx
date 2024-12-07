@@ -54,7 +54,7 @@ const Attendance = () => {
   const [filterByDate, setFilterByDate] = useState();
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
-  console.log("filterByDate ---- ", filterByDate);
+
   const handleOpenModal = () => {
     setAttendanceData({
       desk_employee_id: "",
@@ -206,8 +206,8 @@ const Attendance = () => {
 
   const formatProductiveTime = (seconds) => {
     if (!seconds) return "0 minutes";
-    const totalMinutes = Math.floor(seconds / 60); 
-    const hours = Math.floor(totalMinutes / 60);  
+    const totalMinutes = Math.floor(seconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
     const mins = totalMinutes % 60;
     return `${hours > 0 ? `${hours} hours` : ""} ${
       mins > 0 ? `${mins} minutes` : ""
@@ -261,10 +261,9 @@ const Attendance = () => {
         productivity: `${att.productivity}%`,
         efficiency: `${att.efficiency}%`,
         productive_time: formatProductiveTime(att.productive_time),
-        e_id:att?.id
+        e_id: att?.id,
       };
     });
-
 
   const handleDelete = (row) => {
     setRowToDelete(row);
@@ -291,18 +290,21 @@ const Attendance = () => {
     }
   };
 
+
+
   return (
     <>
       {loading && <Loader loading={loading} />}
       <div className="min-h-screen bg-gray-50 p-0 md:p-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-100 rounded-md shadow-md">
           {/* Left Side: Create Project Button */}
-          <button
+          {/* <button
             onClick={handleOpenModal}
             className="px-4 py-2 bg-[#1F2937] hover:bg-[#151c27] text-white rounded-md mb-4 md:mb-0"
           >
             Create Attendance
-          </button>
+          </button> */}
+          <h1 className="text-lg font-bold text-gray-600"> Attendance List</h1>
           {/* Right Side: Search Bar with Button */}
           <div className="flex items-center space-x-2 w-full md:w-auto">
             <div class="">

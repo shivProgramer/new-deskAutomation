@@ -8,7 +8,10 @@ const DynamicTable = ({
   type,
   handleStatusChange,
   onSend,
+  employees,
+  handleEmployeeChange,
 }) => {
+  console.log("employees --", employees);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 20;
 
@@ -59,12 +62,53 @@ const DynamicTable = ({
                 index % 2 === 0 ? "bg-white" : "bg-gray-50"
               } hover:bg-gray-100`}
             >
-              {columns.map((col) => (
+              {/* {columns.map((col) => (
                 <td
                   key={col.key}
                   className="px-4 py-2 border border-gray-200 text-sm text-gray-600"
                 >
                   {col.key === "is_active" ? (
+                    <button
+                      onClick={() => handleStatusChange(row)}
+                      className={`${
+                        row.is_active === "Active"
+                          ? "bg-green-500 hover:bg-green-600"
+                          : "bg-gray-500 hover:bg-gray-600"
+                      } text-white px-4 py-1 rounded-md transition-all duration-200 ease-in-out`}
+                    >
+                      {row.is_active === "Active" ? "Active" : "Inactive"}
+                    </button>
+                  ) : (
+                    row[col.key]
+                  )}
+                </td>
+              ))} */}
+
+              {columns.map((col) => (
+                <td
+                  key={col.key}
+                  className="px-4 py-2 border border-gray-200 text-sm text-gray-600"
+                >
+                  {type === "Ecomm_Projectlist" && col.key === "employee_id" ? (
+                    <div className="flex items-center">
+                      <select
+                        value={row[col.key]}
+                        onChange={(e) =>
+                          handleEmployeeChange(row, e.target.value)
+                        }
+                        className="px-2 py-1 border rounded-md text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        {!employees.find((emp) => emp.desk_employee_id === row[col.key]) && (
+                          <option value="">{`---no---`}</option>
+                        )}
+                        {employees.map((employee) => (
+                          <option key={employee.desk_employee_id} value={employee.desk_employee_id}>
+                            {employee.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : col.key === "is_active" ? (
                     <button
                       onClick={() => handleStatusChange(row)}
                       className={`${

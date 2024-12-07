@@ -21,7 +21,7 @@ const Employee = () => {
     name: "",
     email: "",
     group_name: "",
-    desk_employee_id:0
+    desk_employee_id: 0,
   });
   const [isEditMode, setIsEditMode] = useState(false);
   const dispatch = useDispatch();
@@ -37,14 +37,11 @@ const Employee = () => {
       name: singleEmp?.name,
       email: singleEmp?.email,
       group_name: singleEmp?.group_name,
-   
     });
   }, [singleEmp]);
 
   useEffect(() => {
-    if (userData) {
-      dispatch(getAlEmployee());
-    }
+    dispatch(getAlEmployee());
   }, []);
 
   const handleSearchInputChange = (e) => setSearchTerm(e.target.value);
@@ -69,7 +66,7 @@ const Employee = () => {
       name: "",
       email: "",
       group_name: "",
-      desk_employee_id:0
+      desk_employee_id: 0,
     });
   };
 

@@ -86,3 +86,5 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ error: "An error occurred while fetching users." });
   }
 };
+
+

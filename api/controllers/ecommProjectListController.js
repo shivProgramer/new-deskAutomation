@@ -53,8 +53,6 @@ const toggleProjectStatus = async (req, res) => {
   }
 };
 
-
-
 const sendReport = async (req, res) => {
   try {
     const {
@@ -91,8 +89,49 @@ const sendReport = async (req, res) => {
   }
 };
 
+const updateEmployee = async (req, res) => {
+  const { project_id } = req.params;
+  const { employee_id } = req.body; 
+
+  try {
+    // Find the project by ID
+    const project = await Ecomm_project_list.findOne({
+      where: { project_id },
+    });
+
+    // Check if the project exists
+    if (!project) {
+      return res.status(404).json({
+        status: 0,
+        message: "Project not found",
+      });
+    }
+
+    // Update the employee_id
+    await project.update({ employee_id });
+
+    // Return success response
+    return res.status(200).json({
+      status: 1,
+      message: "Employee  updated successfully",
+      data: project,
+    });
+  } catch (error) {
+    console.error("Error updating employee_id:", error);
+    // Handle errors
+    return res.status(500).json({
+      status: 0,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   getAllProjects,
   toggleProjectStatus,
   sendReport,
+  updateEmployee
 };
