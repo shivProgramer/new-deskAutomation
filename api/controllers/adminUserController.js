@@ -1,7 +1,8 @@
 // controllers/adminUserController.js
 
 const AdminUser = require("../models/adminUser");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
 const errorMessages = require("../utils/errorMessages");

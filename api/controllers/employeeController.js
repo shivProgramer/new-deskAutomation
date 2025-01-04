@@ -1,7 +1,8 @@
 
 
 const Employee = require("../models/Employee");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { Sequelize } = require("sequelize");
 const errorHandlerMiddleware = require("../middleware/errorHandlerMiddleware");

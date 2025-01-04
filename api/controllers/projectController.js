@@ -1,7 +1,3 @@
-
-
-
-
 const ProjectCostDetail = require("../models/Project_Cost_Details.js");
 
 const { Op, fn, col, where, literal, Sequelize } = require("sequelize");
@@ -17,7 +13,11 @@ const getProjects = async (req, res) => {
         "budget",
         "current_cost",
         "is_critical",
+        "IsMonthly",
         "actual_cost",
+        "start_date",
+        "end_date",
+        "Paid_amount",
       ],
     });
     res.status(200).json(projects);
@@ -77,6 +77,45 @@ async function createProject(req, res) {
 }
 
 // Update a project by ID
+// const updateProject = async (req, res) => {
+//   const { id } = req.params;
+//   const {
+//     project_name,
+//     budget,
+//     current_cost,
+//     actual_cost,
+//     is_critical,
+//     IsMonthly,
+//     project_manager_emails,
+//   } = req.body;
+
+//   try {
+//     const project = await ProjectCostDetail.findOne({
+//       where: { project_id: id },
+//     });
+
+//     if (!project) {
+//       return res.status(404).json({ message: "Project not found" });
+//     }
+
+//     // Update only provided fields
+//     if (project_name !== undefined) project.project_name = project_name;
+//     if (budget !== undefined) project.budget = budget;
+//     if (current_cost !== undefined) project.current_cost = current_cost;
+//     if (actual_cost !== undefined) project.actual_cost = actual_cost;
+//     if (is_critical !== undefined) project.is_critical = is_critical;
+//     if (IsMonthly !== undefined) project.IsMonthly = IsMonthly;
+//     if (project_manager_emails !== undefined)
+//       project.project_manager_emails = project_manager_emails;
+
+//     await project.save();
+//     res.status(200).json({ message: "Project updated successfully", project });
+//   } catch (error) {
+//     console.error("Error updating project:", error);
+//     res.status(500).json({ message: "Failed to update project" });
+//   }
+// };
+
 const updateProject = async (req, res) => {
   const { id } = req.params;
   const {
@@ -85,7 +124,11 @@ const updateProject = async (req, res) => {
     current_cost,
     actual_cost,
     is_critical,
+    IsMonthly,
     project_manager_emails,
+    start_date,
+    end_date,
+    Paid_amount,
   } = req.body;
 
   try {
@@ -103,8 +146,19 @@ const updateProject = async (req, res) => {
     if (current_cost !== undefined) project.current_cost = current_cost;
     if (actual_cost !== undefined) project.actual_cost = actual_cost;
     if (is_critical !== undefined) project.is_critical = is_critical;
+    if (IsMonthly !== undefined) project.IsMonthly = IsMonthly;
     if (project_manager_emails !== undefined)
       project.project_manager_emails = project_manager_emails;
+
+    if (start_date === null) project.start_date = null;
+    else if (start_date !== undefined)
+      project.start_date = new Date(start_date);
+
+    if (end_date === null) project.end_date = null;
+    else if (end_date !== undefined) project.end_date = new Date(end_date);
+
+    if (Paid_amount !== undefined)
+      project.Paid_amount = parseFloat(Paid_amount);
 
     await project.save();
     res.status(200).json({ message: "Project updated successfully", project });
@@ -167,7 +221,10 @@ const searchProjects = async (req, res) => {
         filters[Op.and] = filters[Op.and] || [];
         filters[Op.and].push(
           Sequelize.where(
-            Sequelize.cast(Sequelize.col("projectCostDetail.updated_at"), "DATE"),
+            Sequelize.cast(
+              Sequelize.col("projectCostDetail.updated_at"),
+              "DATE"
+            ),
             {
               [Op.gte]: start_date,
             }
@@ -184,7 +241,10 @@ const searchProjects = async (req, res) => {
         filters[Op.and] = filters[Op.and] || [];
         filters[Op.and].push(
           Sequelize.where(
-            Sequelize.cast(Sequelize.col("projectCostDetail.updated_at"), "DATE"),
+            Sequelize.cast(
+              Sequelize.col("projectCostDetail.updated_at"),
+              "DATE"
+            ),
             {
               [Op.lte]: end_date,
             }

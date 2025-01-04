@@ -7,7 +7,7 @@ ProjectCostDetail.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      allowNull: false,
+      allowNull: false, 
     },
     project_name: {
       type: DataTypes.STRING(255),
@@ -29,10 +29,27 @@ ProjectCostDetail.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    IsMonthly: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     project_manager_emails: {
       type: DataTypes.STRING(500),
       allowNull: true,
     },
+    start_date: {
+      type: DataTypes.DATE,
+      allowNull: true, 
+    },
+    end_date: {
+      type: DataTypes.DATE,
+      allowNull: true, 
+    },
+    Paid_amount: {
+      type: DataTypes.DECIMAL(18, 2),
+      allowNull: true, 
+    },
+
     created_at: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.fn('GETDATE'),

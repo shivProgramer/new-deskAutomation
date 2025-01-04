@@ -22,12 +22,13 @@ const Project = () => {
   const [searchTerm, setSearchTerm] = useState();
   const [filterData, setFilterData] = useState();
 
+  console.log("formData --", formData);
   // use selector -----------
- 
+
   const projects = useSelector((state) => state.projects?.allProjects);
   const singledata = useSelector((state) => state.projects?.singleProduct);
   const loading = useSelector((state) => state.projects?.loading);
-  
+
   useEffect(() => {
     setFormData({
       project_name: singledata?.project_name,
@@ -35,7 +36,12 @@ const Project = () => {
       current_cost: singledata?.current_cost,
       actual_cost: singledata?.actual_cost,
       is_critical: singledata?.is_critical,
+      IsMonthly: singledata?.IsMonthly,
       project_manager_emails: singledata?.project_manager_emails,
+      start_date: singledata?.start_date,
+      end_date: singledata?.end_date,
+      Paid_amount : singledata?.Paid_amount,
+      duration: singledata?.IsMonthly === true ? "monthly" : "one time",
     });
   }, [singledata]);
 
@@ -77,16 +83,6 @@ const Project = () => {
       } catch (error) {
         showToast(error, "error");
       }
-    } else {
-      try {
-        const res = await dispatch(createPorject(formData));
-        if (res?.payload) {
-          await dispatch(getAllProjects());
-          showToast(res?.payload?.message, "success");
-        }
-      } catch (error) {
-        showToast(error, "error");
-      }
     }
     toggleModal();
   };
@@ -111,29 +107,37 @@ const Project = () => {
     }
   }, [projects, searchTerm]);
 
-  const onClear = () =>{
-    setSearchTerm('')
-  }
+  const onClear = () => {
+    setSearchTerm("");
+  };
+
   const columns = [
     { label: "ID", key: "id" },
     { label: "Name", key: "name" },
     { label: "Current Cost", key: "current_cost" },
     { label: "Budget", key: "budget" },
     { label: "Actual Cost", key: "actual_cost" },
+    { label: "Paid Amount", key: "paid_amount" },
+    { label: "Start Date", key: "start_date" },
+    { label: "End Date", key: "end_date" },
+    { label: "Duration", key: "duration" },
     { label: "Role", key: "role" },
   ];
 
   const data = filterData?.map((project, index) => ({
     id: index + 1,
     name: project?.project_name,
-    current_cost: "₹ " + project?.current_cost,
-    budget: "₹ " + project?.budget,
-    actual_cost: "₹ " + project?.actual_cost,
-    role: project.is_critical ? "Critical" : "Non-Critical",
+    current_cost: "₹ " + (project?.current_cost || 0),
+    budget: "₹ " + (project?.budget || 0),
+    actual_cost: "₹ " + (project?.actual_cost || 0),
+    paid_amount: "₹ " + (project?.Paid_amount || 0),
+    start_date: project?.start_date || "No Date",
+    end_date: project?.end_date || "No Date",
+    role: project?.is_critical ? "Critical" : "Non-Critical",
+    duration: project?.IsMonthly === true ? "monthly" : "one time",
     p_id: project?.project_id,
   }));
 
-  // for delete
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
 
@@ -168,12 +172,13 @@ const Project = () => {
       <div className="min-h-screen bg-gray-50 p-0 md:p-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-100 rounded-md shadow-md">
           {/* Left Side: Create Project Button */}
-          <button
+          {/* <button
             onClick={handleCreate}
             className="px-4 py-2 bg-[#1F2937] hover:bg-[#151c27] text-white rounded-md mb-4 md:mb-0"
           >
             Create Project
-          </button>
+          </button> */}
+          <button></button>
 
           {/* Right Side: Search Bar with Button */}
           <div className="flex items-center space-x-2 w-full md:w-auto">
@@ -185,7 +190,7 @@ const Project = () => {
               className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
             />
             <button
-                onClick={onClear}
+              onClick={onClear}
               className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-md"
             >
               Clear
