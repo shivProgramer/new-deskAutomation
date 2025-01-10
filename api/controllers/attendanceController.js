@@ -175,22 +175,7 @@ const updateAttendance = async (req, res) => {
   }
 };
 
-// Get attendance by employee and date
-// const getAttendance = async (req, res) => {
-//   try {
-//     // Fetch all attendance records
-//     const attendance = await EmployeeAttendance.findAll();
 
-//     if (attendance.length === 0) {
-//       return res.status(404).json({ message: "No attendance records found" });
-//     }
-
-//     res.json(attendance);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error fetching attendance records" });
-//   }
-// };
 
 const getAttendance = async (req, res) => {
   try {

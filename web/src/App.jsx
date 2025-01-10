@@ -16,6 +16,9 @@ import Adhoc_Report from "./pages/Adhoc_Report";
 import DalyReports from "./pages/DalyReports";
 import Ecomm_Projectlist from "./pages/Ecomm_Projectlist";
 import Dashboard from "./pages/Dashboard";
+import SalesReward from "./pages/SalesReward";
+import SalesTransaction from "./pages/SalesTransaction";
+import SalestTeamsTarget from "./pages/SalestTeamsTarget";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -58,6 +61,18 @@ function App() {
         {
           path: "/project-list",
           element: <Ecomm_Projectlist />,
+        },
+        {
+          path: "/sales/reward",
+          element: <SalesReward />,
+        },
+        {
+          path: "/sales/transaction",
+          element: <SalesTransaction />,
+        },
+        {
+          path: "/sales/teams-target",
+          element: <SalestTeamsTarget />,
         },
       ],
     },

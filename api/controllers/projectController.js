@@ -76,45 +76,7 @@ async function createProject(req, res) {
   }
 }
 
-// Update a project by ID
-// const updateProject = async (req, res) => {
-//   const { id } = req.params;
-//   const {
-//     project_name,
-//     budget,
-//     current_cost,
-//     actual_cost,
-//     is_critical,
-//     IsMonthly,
-//     project_manager_emails,
-//   } = req.body;
 
-//   try {
-//     const project = await ProjectCostDetail.findOne({
-//       where: { project_id: id },
-//     });
-
-//     if (!project) {
-//       return res.status(404).json({ message: "Project not found" });
-//     }
-
-//     // Update only provided fields
-//     if (project_name !== undefined) project.project_name = project_name;
-//     if (budget !== undefined) project.budget = budget;
-//     if (current_cost !== undefined) project.current_cost = current_cost;
-//     if (actual_cost !== undefined) project.actual_cost = actual_cost;
-//     if (is_critical !== undefined) project.is_critical = is_critical;
-//     if (IsMonthly !== undefined) project.IsMonthly = IsMonthly;
-//     if (project_manager_emails !== undefined)
-//       project.project_manager_emails = project_manager_emails;
-
-//     await project.save();
-//     res.status(200).json({ message: "Project updated successfully", project });
-//   } catch (error) {
-//     console.error("Error updating project:", error);
-//     res.status(500).json({ message: "Failed to update project" });
-//   }
-// };
 
 const updateProject = async (req, res) => {
   const { id } = req.params;
