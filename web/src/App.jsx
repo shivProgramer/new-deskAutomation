@@ -19,6 +19,7 @@ import Dashboard from "./pages/Dashboard";
 import SalesReward from "./pages/SalesReward";
 import SalesTransaction from "./pages/SalesTransaction";
 import SalestTeamsTarget from "./pages/SalestTeamsTarget";
+import DME from "./pages/DME";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -73,6 +74,10 @@ function App() {
         {
           path: "/sales/teams-target",
           element: <SalestTeamsTarget />,
+        },
+        {
+          path: "/dme",
+          element: <DME />,
         },
       ],
     },

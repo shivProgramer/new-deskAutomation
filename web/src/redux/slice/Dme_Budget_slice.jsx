@@ -3,18 +3,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../components/axiosInstance";
 
 const initialState = {
-  singleSalesTransaction: [],
+  allDmeBudgetData: [],
   loading: false,
   error: null,
   access: [],
-  allSalesTransationData: [],
+  singleDmeBudget: [],
 };
 
-export const getAllSalesTransaction = createAsyncThunk(
-  "getAllSalesTransaction",
+export const getAllDmeBudget = createAsyncThunk(
+  "getAllDmeBudget",
   async (thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`sales/transaction`);
+      const response = await axiosInstance.get(`dme/budgets`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -22,11 +22,11 @@ export const getAllSalesTransaction = createAsyncThunk(
   }
 );
 
-export const createSalesTransaction = createAsyncThunk(
-  "createSalesTransaction",
+export const createDmeBudget = createAsyncThunk(
+  "createDmeBudget",
   async (newData, thunkAPI) => {
     try {
-      const res = await axiosInstance.post("sales/transaction", newData);
+      const res = await axiosInstance.post("dme/budgets", newData);
 
       return res.data;
     } catch (error) {
@@ -35,11 +35,11 @@ export const createSalesTransaction = createAsyncThunk(
   }
 );
 
-export const getSalesTransactionbyid = createAsyncThunk(
-  "getSalesTransactionbyid",
+export const getDmeBudgetbyid = createAsyncThunk(
+  "getDmeBudgetbyid",
   async (id, thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`sales/transaction/${id}`);
+      const response = await axiosInstance.get(`dme/budgets/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -47,11 +47,11 @@ export const getSalesTransactionbyid = createAsyncThunk(
   }
 );
 
-export const updateSalesTransaction = createAsyncThunk(
-  "updateSalesTransaction",
+export const updateDmeBudget = createAsyncThunk(
+  "updateDmeBudget",
   async ({ id, newData }, thunkAPI) => {
     try {
-      const response = await axiosInstance.put(`sales/transaction/${id}`, newData);
+      const response = await axiosInstance.put(`dme/budgets/${id}`, newData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -59,11 +59,11 @@ export const updateSalesTransaction = createAsyncThunk(
   }
 );
 
-export const deleteSalesTransaction = createAsyncThunk(
-  "deleteSalesTransaction",
+export const deleteDmeBudget = createAsyncThunk(
+  "deleteDmeBudget",
   async (id, thunkAPI) => {
     try {
-      const response = await axiosInstance.delete(`sales/transaction/${id}`);
+      const response = await axiosInstance.delete(`dme/budgets/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -71,8 +71,8 @@ export const deleteSalesTransaction = createAsyncThunk(
   }
 );
 
-const SalesTransaction_slice = createSlice({
-  name: "SalesTransaction_slice",
+const Dme_Budget_slice = createSlice({
+  name: "Dme_Budget_slice",
   initialState,
   reducers: {
     searchClient: (state, action) => {
@@ -84,62 +84,62 @@ const SalesTransaction_slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllSalesTransaction.pending, (state) => {
+      .addCase(getAllDmeBudget.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllSalesTransaction.fulfilled, (state, action) => {
+      .addCase(getAllDmeBudget.fulfilled, (state, action) => {
         state.loading = false;
-        state.allSalesTransationData = action.payload;
+        state.allDmeBudgetData = action.payload;
       })
-      .addCase(getAllSalesTransaction.rejected, (state, action) => {
+      .addCase(getAllDmeBudget.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getSalesTransactionbyid.pending, (state) => {
+      .addCase(getDmeBudgetbyid.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getSalesTransactionbyid.fulfilled, (state, action) => {
+      .addCase(getDmeBudgetbyid.fulfilled, (state, action) => {
         state.loading = false;
-        state.singleSalesTransaction = action.payload;
+        state.singleDmeBudget = action.payload;
       })
-      .addCase(getSalesTransactionbyid.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      .addCase(updateSalesTransaction.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateSalesTransaction.fulfilled, (state, action) => {
-        state.loading = false;
-      })
-      .addCase(updateSalesTransaction.rejected, (state, action) => {
+      .addCase(getDmeBudgetbyid.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      .addCase(createSalesTransaction.pending, (state) => {
+      .addCase(updateDmeBudget.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createSalesTransaction.fulfilled, (state, action) => {
+      .addCase(updateDmeBudget.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(createSalesTransaction.rejected, (state, action) => {
+      .addCase(updateDmeBudget.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteSalesTransaction.pending, (state) => {
+
+      .addCase(createDmeBudget.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteSalesTransaction.fulfilled, (state, action) => {
+      .addCase(createDmeBudget.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(deleteSalesTransaction.rejected, (state, action) => {
+      .addCase(createDmeBudget.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteDmeBudget.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteDmeBudget.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(deleteDmeBudget.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -148,5 +148,5 @@ const SalesTransaction_slice = createSlice({
   },
 });
 
-export default SalesTransaction_slice.reducer;
-export const { searchClient, acessModle } = SalesTransaction_slice.actions;
+export default Dme_Budget_slice.reducer;
+export const { searchClient, acessModle } = Dme_Budget_slice.actions;

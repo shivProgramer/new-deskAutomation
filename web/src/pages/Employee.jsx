@@ -26,7 +26,6 @@ const Employee = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const dispatch = useDispatch();
   const userData = JSON.parse(localStorage.getItem("userData"));
-
   //  use slectror
   const allEmployee = useSelector((state) => state.employee?.allEmployee);
   const singleEmp = useSelector((state) => state.employee?.singleEmployee);

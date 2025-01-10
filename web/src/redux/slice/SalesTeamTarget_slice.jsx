@@ -3,18 +3,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../components/axiosInstance";
 
 const initialState = {
-  singleSalesTransaction: [],
+  allSalesTeamTargetVal: [],
   loading: false,
   error: null,
   access: [],
-  allSalesTransationData: [],
+  singleSalesTeamsTarget: [],
 };
 
-export const getAllSalesTransaction = createAsyncThunk(
-  "getAllSalesTransaction",
+export const getAllSalesTeamTarget = createAsyncThunk(
+  "getAllSalesTeamTarget",
   async (thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`sales/transaction`);
+      const response = await axiosInstance.get(`sales-targets`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -22,11 +22,11 @@ export const getAllSalesTransaction = createAsyncThunk(
   }
 );
 
-export const createSalesTransaction = createAsyncThunk(
-  "createSalesTransaction",
+export const createSalesTeamsTargetVal = createAsyncThunk(
+  "createSalesTeamsTargetVal",
   async (newData, thunkAPI) => {
     try {
-      const res = await axiosInstance.post("sales/transaction", newData);
+      const res = await axiosInstance.post("sales-targets", newData);
 
       return res.data;
     } catch (error) {
@@ -35,11 +35,11 @@ export const createSalesTransaction = createAsyncThunk(
   }
 );
 
-export const getSalesTransactionbyid = createAsyncThunk(
-  "getSalesTransactionbyid",
+export const getSalesTeamsTargetByid = createAsyncThunk(
+  "getSalesTeamsTargetByid",
   async (id, thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`sales/transaction/${id}`);
+      const response = await axiosInstance.get(`sales-targets/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -47,11 +47,11 @@ export const getSalesTransactionbyid = createAsyncThunk(
   }
 );
 
-export const updateSalesTransaction = createAsyncThunk(
-  "updateSalesTransaction",
+export const updateSalesTeamsTarget = createAsyncThunk(
+  "updateSalesTeamsTarget",
   async ({ id, newData }, thunkAPI) => {
     try {
-      const response = await axiosInstance.put(`sales/transaction/${id}`, newData);
+      const response = await axiosInstance.put(`sales-targets/${id}`, newData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -59,11 +59,11 @@ export const updateSalesTransaction = createAsyncThunk(
   }
 );
 
-export const deleteSalesTransaction = createAsyncThunk(
-  "deleteSalesTransaction",
+export const deleteSalesTeamsTarget = createAsyncThunk(
+  "deleteSalesTeamsTarget",
   async (id, thunkAPI) => {
     try {
-      const response = await axiosInstance.delete(`sales/transaction/${id}`);
+      const response = await axiosInstance.delete(`sales-targets/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -71,8 +71,8 @@ export const deleteSalesTransaction = createAsyncThunk(
   }
 );
 
-const SalesTransaction_slice = createSlice({
-  name: "SalesTransaction_slice",
+const SalesTeamTarget_slice = createSlice({
+  name: "SalesTeamTarget_slice",
   initialState,
   reducers: {
     searchClient: (state, action) => {
@@ -84,62 +84,62 @@ const SalesTransaction_slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllSalesTransaction.pending, (state) => {
+      .addCase(getAllSalesTeamTarget.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllSalesTransaction.fulfilled, (state, action) => {
+      .addCase(getAllSalesTeamTarget.fulfilled, (state, action) => {
         state.loading = false;
-        state.allSalesTransationData = action.payload;
+        state.allSalesTeamTargetVal= action.payload;
       })
-      .addCase(getAllSalesTransaction.rejected, (state, action) => {
+      .addCase(getAllSalesTeamTarget.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getSalesTransactionbyid.pending, (state) => {
+      .addCase(getSalesTeamsTargetByid.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getSalesTransactionbyid.fulfilled, (state, action) => {
+      .addCase(getSalesTeamsTargetByid.fulfilled, (state, action) => {
         state.loading = false;
-        state.singleSalesTransaction = action.payload;
+        state.singleSalesTeamsTarget = action.payload;
       })
-      .addCase(getSalesTransactionbyid.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      .addCase(updateSalesTransaction.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateSalesTransaction.fulfilled, (state, action) => {
-        state.loading = false;
-      })
-      .addCase(updateSalesTransaction.rejected, (state, action) => {
+      .addCase(getSalesTeamsTargetByid.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      .addCase(createSalesTransaction.pending, (state) => {
+      .addCase(updateSalesTeamsTarget.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createSalesTransaction.fulfilled, (state, action) => {
+      .addCase(updateSalesTeamsTarget.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(createSalesTransaction.rejected, (state, action) => {
+      .addCase(updateSalesTeamsTarget.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteSalesTransaction.pending, (state) => {
+
+      .addCase(createSalesTeamsTargetVal.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteSalesTransaction.fulfilled, (state, action) => {
+      .addCase(createSalesTeamsTargetVal.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(deleteSalesTransaction.rejected, (state, action) => {
+      .addCase(createSalesTeamsTargetVal.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteSalesTeamsTarget.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteSalesTeamsTarget.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(deleteSalesTeamsTarget.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -148,5 +148,5 @@ const SalesTransaction_slice = createSlice({
   },
 });
 
-export default SalesTransaction_slice.reducer;
-export const { searchClient, acessModle } = SalesTransaction_slice.actions;
+export default SalesTeamTarget_slice.reducer;
+export const { searchClient, acessModle } = SalesTeamTarget_slice.actions;

@@ -48,8 +48,12 @@ const SalesReward = () => {
     setCurrentDateTime(getCurrentDateTime());
   }, []);
 
-  const user_id = JSON.parse(localStorage.getItem("user_id"));
-
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  let user_id;
+  if (userData) {
+    user_id = userData?.user_id;
+  }
+  
   // get data from redux to here -----------------
   const salesRewardAllData = useSelector(
     (state) => state?.sales_reward?.allSalesRewardData
@@ -93,15 +97,15 @@ const SalesReward = () => {
           ${ele?.ValidFrom || ""}
           ${ele?.ValidTo || ""}
         `.toLowerCase();
-  
+
         return combinedFields.includes(searchTerm.toLowerCase());
       });
-  
+
       setFilterData(filtered);
     } else {
       setFilterData(salesRewardAllData);
     }
-  }, [searchTerm, salesRewardAllData])
+  }, [searchTerm, salesRewardAllData]);
 
   useEffect(() => {
     setFormData({

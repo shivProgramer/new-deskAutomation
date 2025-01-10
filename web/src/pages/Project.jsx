@@ -40,7 +40,7 @@ const Project = () => {
       project_manager_emails: singledata?.project_manager_emails,
       start_date: singledata?.start_date,
       end_date: singledata?.end_date,
-      Paid_amount : singledata?.Paid_amount,
+      Paid_amount: singledata?.Paid_amount,
       duration: singledata?.IsMonthly === true ? "monthly" : "one time",
     });
   }, [singledata]);
@@ -112,7 +112,8 @@ const Project = () => {
   };
 
   const columns = [
-    { label: "ID", key: "id" },
+    { label: "Project Id", key: "project_id" },
+
     { label: "Name", key: "name" },
     { label: "Current Cost", key: "current_cost" },
     { label: "Budget", key: "budget" },
@@ -125,7 +126,7 @@ const Project = () => {
   ];
 
   const data = filterData?.map((project, index) => ({
-    id: index + 1,
+    project_id: project?.project_id,
     name: project?.project_name,
     current_cost: "₹ " + (project?.current_cost || 0),
     budget: "₹ " + (project?.budget || 0),

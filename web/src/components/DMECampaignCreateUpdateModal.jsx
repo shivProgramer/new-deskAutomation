@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
+import React from "react";
 
-const SalesTeamsTargetCreateUpdateModal = ({
+const DMECampaignCreateUpdateModal = ({
   isOpen,
   onClose,
   title,
@@ -11,28 +9,13 @@ const SalesTeamsTargetCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
-  const dispatch = useDispatch();
-  const allEmployee = useSelector((state) => state.employee?.allEmployee);
-
-  useEffect(() => {
-    dispatch(getAlEmployee());
-  }, [dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-
-    if (name === "StartDate" && !formData.EndDate) {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-        EndDate: value,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   return (
@@ -58,62 +41,56 @@ const SalesTeamsTargetCreateUpdateModal = ({
         >
           {/* Form Inputs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Employee ID */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Employee  <span className="text-red-600"> * </span></label>
-              <select
-                name="employee_id"
-                value={formData.employee_id || ""}
-                onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                required
-              >
-                <option value="">Select</option>
-                {allEmployee.map((employee) => (
-                  <option
-                    key={employee.desk_employee_id}
-                    value={employee.desk_employee_id}
-                  >
-                    {employee.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Target Value */}
+            {/* Campaign Name */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Target Value  <span className="text-red-600"> * </span>
+                Campaign Name <span className="text-red-600"> * </span>
               </label>
               <input
-                type="number"
-                name="TargetValue"
-                value={formData.TargetValue || ""}
+                type="text"
+                name="CampaignName"
+                value={formData.CampaignName || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter target value"
+                placeholder="Enter campaign name"
                 required
               />
             </div>
 
-            {/* Target Type */}
+            {/* Platform */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Target Type  <span className="text-red-600"> * </span>
+                Platform <span className="text-red-600"> * </span>
               </label>
               <select
-                name="TargetType"
-                value={formData.TargetType || ""}
+                name="Platform"
+                value={formData.Platform || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 required
               >
                 <option value="">Select</option>
-                <option value="Monthly">Monthly</option>
-                <option value="Quarterly">Quarterly</option>
-                <option value="Half-Yearly">Half-Yearly</option>
-                <option value="Yearly">Yearly</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Google Ads">Google Ads</option>
+                <option value="LinkedIn">LinkedIn</option>
               </select>
+            </div>
+
+            {/* Objective */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">
+                Objective <span className="text-red-600"> * </span>
+              </label>
+              <input
+                type="text"
+                name="Objective"
+                value={formData.Objective || ""}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                placeholder="Enter objective"
+                required
+              />
             </div>
 
             {/* Start Date */}
@@ -145,22 +122,18 @@ const SalesTeamsTargetCreateUpdateModal = ({
                 required
               />
             </div>
-          </div>
 
-          {/* Target Description */}
-          <div className="mb-4 col-span-2">
-            <label className="block text-sm font-medium mb-1">
-              Target Description
-            </label>
-            <textarea
-              type="text"
-              name="TargetDescription"
-              value={formData.TargetDescription || ""}
-              onChange={handleInputChange}
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-              placeholder="Enter target description"
-             
-            />
+            {/* Is Active */}
+            <div className="mb-4 flex items-center">
+              <input
+                type="checkbox"
+                name="IsActive"
+                checked={formData.IsActive || false}
+                onChange={handleInputChange}
+                className="mr-2"
+              />
+              <label className="text-sm font-medium">Is Active</label>
+            </div>
           </div>
 
           {/* Modal Actions */}
@@ -185,4 +158,4 @@ const SalesTeamsTargetCreateUpdateModal = ({
   );
 };
 
-export default SalesTeamsTargetCreateUpdateModal;
+export default DMECampaignCreateUpdateModal;

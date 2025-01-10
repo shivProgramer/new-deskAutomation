@@ -50,7 +50,7 @@ const createSalesTarget = async (req, res) => {
       type: sequelize.QueryTypes.INSERT,
     });
 
-    res.status(201).json({ message: "Sales target created successfully" });
+    res.status(201).json({ message: "Sales target created successfully" , status: 1,});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error creating sales target" });
@@ -129,7 +129,7 @@ const updateSalesTarget = async (req, res) => {
         type: sequelize.QueryTypes.UPDATE,
       });
   
-      res.status(200).json({ message: "Sales target updated successfully" });
+      res.status(200).json({ message: "Sales target updated successfully" , status: 1, });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error updating sales target" });
@@ -150,7 +150,7 @@ const deleteSalesTarget = async (req, res) => {
     }
 
     await target.destroy();
-    res.json({ message: "Sales target deleted successfully" });
+    res.json({ message: "Sales target deleted successfully" , status: 1, });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error deleting sales target" });

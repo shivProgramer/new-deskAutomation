@@ -3,18 +3,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../components/axiosInstance";
 
 const initialState = {
-  singleSalesTransaction: [],
+  allDmeAnalysisData: [],
   loading: false,
   error: null,
   access: [],
-  allSalesTransationData: [],
+  singleDmeAnalysis: [],
 };
 
-export const getAllSalesTransaction = createAsyncThunk(
-  "getAllSalesTransaction",
+export const getAllDmeAnalysis = createAsyncThunk(
+  "getAllDmeAnalysis",
   async (thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`sales/transaction`);
+      const response = await axiosInstance.get(`dme/analysis`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -22,11 +22,11 @@ export const getAllSalesTransaction = createAsyncThunk(
   }
 );
 
-export const createSalesTransaction = createAsyncThunk(
-  "createSalesTransaction",
+export const createDmeAnalysis = createAsyncThunk(
+  "createDmeAnalysis",
   async (newData, thunkAPI) => {
     try {
-      const res = await axiosInstance.post("sales/transaction", newData);
+      const res = await axiosInstance.post("dme/analysis", newData);
 
       return res.data;
     } catch (error) {
@@ -35,11 +35,11 @@ export const createSalesTransaction = createAsyncThunk(
   }
 );
 
-export const getSalesTransactionbyid = createAsyncThunk(
-  "getSalesTransactionbyid",
+export const getDmeAnalysisbyid = createAsyncThunk(
+  "getDmeAnalysisbyid",
   async (id, thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`sales/transaction/${id}`);
+      const response = await axiosInstance.get(`dme/analysis/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -47,11 +47,11 @@ export const getSalesTransactionbyid = createAsyncThunk(
   }
 );
 
-export const updateSalesTransaction = createAsyncThunk(
-  "updateSalesTransaction",
+export const updateDmeAnalysis = createAsyncThunk(
+  "updateDmeAnalysis",
   async ({ id, newData }, thunkAPI) => {
     try {
-      const response = await axiosInstance.put(`sales/transaction/${id}`, newData);
+      const response = await axiosInstance.put(`dme/analysis/${id}`, newData);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -59,11 +59,11 @@ export const updateSalesTransaction = createAsyncThunk(
   }
 );
 
-export const deleteSalesTransaction = createAsyncThunk(
-  "deleteSalesTransaction",
+export const deleteDmeAnalysis = createAsyncThunk(
+  "deleteDmeAnalysis",
   async (id, thunkAPI) => {
     try {
-      const response = await axiosInstance.delete(`sales/transaction/${id}`);
+      const response = await axiosInstance.delete(`dme/analysis/${id}`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
@@ -71,8 +71,8 @@ export const deleteSalesTransaction = createAsyncThunk(
   }
 );
 
-const SalesTransaction_slice = createSlice({
-  name: "SalesTransaction_slice",
+const DmeAnalysis_slice = createSlice({
+  name: "DmeAnalysis_slice",
   initialState,
   reducers: {
     searchClient: (state, action) => {
@@ -84,62 +84,62 @@ const SalesTransaction_slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllSalesTransaction.pending, (state) => {
+      .addCase(getAllDmeAnalysis.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllSalesTransaction.fulfilled, (state, action) => {
+      .addCase(getAllDmeAnalysis.fulfilled, (state, action) => {
         state.loading = false;
-        state.allSalesTransationData = action.payload;
+        state.allDmeAnalysisData = action.payload;
       })
-      .addCase(getAllSalesTransaction.rejected, (state, action) => {
+      .addCase(getAllDmeAnalysis.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getSalesTransactionbyid.pending, (state) => {
+      .addCase(getDmeAnalysisbyid.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getSalesTransactionbyid.fulfilled, (state, action) => {
+      .addCase(getDmeAnalysisbyid.fulfilled, (state, action) => {
         state.loading = false;
-        state.singleSalesTransaction = action.payload;
+        state.singleDmeAnalysis = action.payload;
       })
-      .addCase(getSalesTransactionbyid.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      .addCase(updateSalesTransaction.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateSalesTransaction.fulfilled, (state, action) => {
-        state.loading = false;
-      })
-      .addCase(updateSalesTransaction.rejected, (state, action) => {
+      .addCase(getDmeAnalysisbyid.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      .addCase(createSalesTransaction.pending, (state) => {
+      .addCase(updateDmeAnalysis.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createSalesTransaction.fulfilled, (state, action) => {
+      .addCase(updateDmeAnalysis.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(createSalesTransaction.rejected, (state, action) => {
+      .addCase(updateDmeAnalysis.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(deleteSalesTransaction.pending, (state) => {
+
+      .addCase(createDmeAnalysis.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteSalesTransaction.fulfilled, (state, action) => {
+      .addCase(createDmeAnalysis.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(deleteSalesTransaction.rejected, (state, action) => {
+      .addCase(createDmeAnalysis.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteDmeAnalysis.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteDmeAnalysis.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(deleteDmeAnalysis.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -148,5 +148,5 @@ const SalesTransaction_slice = createSlice({
   },
 });
 
-export default SalesTransaction_slice.reducer;
-export const { searchClient, acessModle } = SalesTransaction_slice.actions;
+export default DmeAnalysis_slice.reducer;
+export const { searchClient, acessModle } = DmeAnalysis_slice.actions;

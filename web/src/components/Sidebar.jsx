@@ -10,6 +10,8 @@ import { BsReverseListColumnsReverse } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { IoMdArrowDropup } from "react-icons/io";
 import { FcSalesPerformance } from "react-icons/fc";
+import { SiGooglemarketingplatform } from "react-icons/si";
+import { GoProjectSymlink } from "react-icons/go";
 const Sidebar = ({ isOpen, toggleDrawer }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
@@ -23,7 +25,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full z-50 bg-gray-800 text-white transition-transform transform ${
+      className={`fixed top-0 left-0 h-full z-50 bg-gradient-to-r from-[#1F2937] via-[#2e343b] to-[#2a323d] text-white transition-transform transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } md:translate-x-0 w-64`}
     >
@@ -51,7 +53,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           }
           onClick={handleDropdown}
         >
-          <GrProjects /> Dashboard
+          <GrProjects className="text-green-500" /> Dashboard
         </NavLink>
 
         <NavLink
@@ -65,7 +67,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           }
           onClick={handleDropdown}
         >
-          <GrProjects /> Project
+          <GoProjectSymlink className="text-green-500" /> Project
         </NavLink>
 
         <NavLink
@@ -79,7 +81,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           }
           onClick={handleDropdown}
         >
-          <FaUserCircle /> Employee
+          <FaUserCircle className="text-green-500"/> Employee
         </NavLink>
 
         <NavLink
@@ -93,7 +95,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           }
           onClick={handleDropdown}
         >
-          <FaHospitalUser /> Attendance
+          <FaHospitalUser className="text-green-500" /> Attendance
         </NavLink>
 
         <NavLink
@@ -107,7 +109,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           }
           onClick={handleDropdown}
         >
-          <RiMoneyDollarCircleLine /> Hourly Rate
+          <RiMoneyDollarCircleLine  className="text-green-500"/> Hourly Rate
         </NavLink>
 
         <NavLink
@@ -121,7 +123,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           }
           onClick={handleDropdown}
         >
-          <TbReportAnalytics /> Adhoc_Report
+          <TbReportAnalytics className="text-green-500" /> Adhoc_Report
         </NavLink>
 
         <NavLink
@@ -135,7 +137,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           }
           onClick={handleDropdown}
         >
-          <BiSolidReport /> Daly Reports
+          <BiSolidReport className="text-green-500" /> Daly Reports
         </NavLink>
         <NavLink
           to="/project-list"
@@ -148,7 +150,21 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           }
           onClick={handleDropdown}
         >
-          <BsReverseListColumnsReverse /> Ecomm Project List
+          <BsReverseListColumnsReverse className="text-green-500" /> Ecomm Project List
+        </NavLink>
+ 
+        <NavLink
+          to="/dme"
+          className={({ isActive }) =>
+            `py-2.5 my-1 pl-10 cursor-pointer flex gap-4 items-center ${
+              isActive
+                ? "bg-gray-500 text-white border-l-2 border-green-500"
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white"
+            }`
+          }
+          onClick={handleDropdown}
+        >
+          <SiGooglemarketingplatform className="text-green-500" /> DME
         </NavLink>
 
         <div>
@@ -225,6 +241,10 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
             </div>
           </div>
         </div>
+
+        
+
+
       </ul>
       <button
         className="absolute top-4 right-4 md:hidden"

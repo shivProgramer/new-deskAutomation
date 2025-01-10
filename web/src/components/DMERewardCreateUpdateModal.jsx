@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
+import React from "react";
 
-const SalesTeamsTargetCreateUpdateModal = ({
+const DMERewardCreateUpdateModal = ({
   isOpen,
   onClose,
   title,
@@ -11,28 +9,13 @@ const SalesTeamsTargetCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
-  const dispatch = useDispatch();
-  const allEmployee = useSelector((state) => state.employee?.allEmployee);
-
-  useEffect(() => {
-    dispatch(getAlEmployee());
-  }, [dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-
-    if (name === "StartDate" && !formData.EndDate) {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-        EndDate: value,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   return (
@@ -58,109 +41,103 @@ const SalesTeamsTargetCreateUpdateModal = ({
         >
           {/* Form Inputs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Employee ID */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Employee  <span className="text-red-600"> * </span></label>
-              <select
-                name="employee_id"
-                value={formData.employee_id || ""}
-                onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                required
-              >
-                <option value="">Select</option>
-                {allEmployee.map((employee) => (
-                  <option
-                    key={employee.desk_employee_id}
-                    value={employee.desk_employee_id}
-                  >
-                    {employee.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Target Value */}
+            {/* Rule Name */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Target Value  <span className="text-red-600"> * </span>
+                Rule Name <span className="text-red-600"> * </span>
+              </label>
+              <input
+                type="text"
+                name="RuleName"
+                value={formData.RuleName || ""}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                placeholder="Enter rule name"
+                required
+              />
+            </div>
+
+            {/* Minimum ROAS */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">
+                Minimum ROAS <span className="text-red-600"> * </span>
               </label>
               <input
                 type="number"
-                name="TargetValue"
-                value={formData.TargetValue || ""}
+                name="MinROAS"
+                value={formData.MinROAS || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter target value"
+                placeholder="Enter minimum ROAS"
+                step="0.01"
                 required
               />
             </div>
 
-            {/* Target Type */}
+            {/* Minimum Revenue */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Target Type  <span className="text-red-600"> * </span>
+                Minimum Revenue <span className="text-red-600"> * </span>
+              </label>
+              <input
+                type="number"
+                name="MinRevenue"
+                value={formData.MinRevenue || ""}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                placeholder="Enter minimum revenue"
+                step="0.01"
+                required
+              />
+            </div>
+
+            {/* Reward Type */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">
+                Reward Type <span className="text-red-600"> * </span>
               </label>
               <select
-                name="TargetType"
-                value={formData.TargetType || ""}
+                name="RewardType"
+                value={formData.RewardType || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 required
               >
                 <option value="">Select</option>
-                <option value="Monthly">Monthly</option>
-                <option value="Quarterly">Quarterly</option>
-                <option value="Half-Yearly">Half-Yearly</option>
-                <option value="Yearly">Yearly</option>
+                <option value="Discount">Discount</option>
+                <option value="Cashback">Cashback</option>
+                <option value="Gift">Gift</option>
               </select>
             </div>
 
-            {/* Start Date */}
+            {/* Reward Value */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Start Date <span className="text-red-600"> * </span>
+                Reward Value <span className="text-red-600"> * </span>
               </label>
               <input
-                type="date"
-                name="StartDate"
-                value={formData.StartDate || ""}
+                type="number"
+                name="RewardValue"
+                value={formData.RewardValue || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                placeholder="Enter reward value"
+                step="0.01"
                 required
               />
             </div>
 
-            {/* End Date */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                End Date <span className="text-red-600"> * </span>
-              </label>
+            {/* Is Active */}
+            <div className="mb-4 flex items-center">
               <input
-                type="date"
-                name="EndDate"
-                value={formData.EndDate || ""}
+                type="checkbox"
+                name="IsActive"
+                checked={formData.IsActive || false}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                required
+                className="mr-2"
               />
+              <label className="text-sm font-medium">Is Active</label>
             </div>
-          </div>
-
-          {/* Target Description */}
-          <div className="mb-4 col-span-2">
-            <label className="block text-sm font-medium mb-1">
-              Target Description
-            </label>
-            <textarea
-              type="text"
-              name="TargetDescription"
-              value={formData.TargetDescription || ""}
-              onChange={handleInputChange}
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-              placeholder="Enter target description"
-             
-            />
           </div>
 
           {/* Modal Actions */}
@@ -185,4 +162,4 @@ const SalesTeamsTargetCreateUpdateModal = ({
   );
 };
 
-export default SalesTeamsTargetCreateUpdateModal;
+export default DMERewardCreateUpdateModal;

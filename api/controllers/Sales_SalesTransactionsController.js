@@ -60,7 +60,7 @@ const createSalesTransaction = async (req, res) => {
         DivisionName,
         CreatedAt,
       },
-      type: sequelize.QueryTypes.SELECT, // Use SELECT type to get results
+      type: sequelize.QueryTypes.SELECT,
     });
 
     console.log("Inserted Row Data: ", result);
@@ -68,7 +68,8 @@ const createSalesTransaction = async (req, res) => {
     // Return the inserted row data
     res.status(201).json({
       message: "Sales transaction created successfully",
-      result: result[0], // Since result is an array, we return the first item
+      result: result[0],
+      status: 1,
     });
   } catch (error) {
     console.error("Error creating sales transaction: ", error);
@@ -178,7 +179,8 @@ const updateSalesTransaction = async (req, res) => {
     // Return the updated row data
     res.status(200).json({
       message: "Sales transaction updated successfully",
-      result: result[0], // Return the updated row data
+      result: result[0],
+      status: 1,
     });
   } catch (error) {
     console.error("Error updating sales transaction: ", error);
@@ -198,7 +200,7 @@ const deleteSalesTransaction = async (req, res) => {
     }
 
     await transaction.destroy();
-    res.json({ message: "Sales transaction deleted successfully" });
+    res.json({ message: "Sales transaction deleted successfully", status: 1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error deleting sales transaction" });

@@ -1,67 +1,80 @@
-
-
-
 import React, { useEffect, useState } from "react";
 import DynamicTable from "../components/DynamicTable";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 import SalesTeamsTargetCreateUpdateModal from "../components/SalesTeamsTargetCreateUpdateModal";
-
+import {
+  createSalesTeamsTargetVal,
+  deleteSalesTeamsTarget,
+  getAllSalesTeamTarget,
+  getSalesTeamsTargetByid,
+  updateSalesTeamsTarget,
+} from "../redux/slice/SalesTeamTarget_slice";
+import { useDispatch, useSelector } from "react-redux";
+import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
+import { showToast } from "../utils/config";
+import Loader from "../components/Loader";
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const date = now.toISOString().split("T")[0];
+  const time = now.toTimeString().split(" ")[0];
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+  return `${date} ${time}.${milliseconds}`;
+};
 const SalesTeamTarget = () => {
+  const dispatch = useDispatch();
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterData, setFilterData] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState("");
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  let user_id;
+  if (userData) {
+    user_id = userData?.user_id;
+  }
+
   const [formData, setFormData] = useState({
-    TargetDescription: "Achieve 20% increase in sales",
-    TargetValue: 100000.00,
-    TargetType: "Sales",
-    StartDate: "2025-01-01T00:00:00Z",
-    EndDate: "2025-12-31T23:59:59Z",
-    CreatedBy: 1,
-    CreatedAt: "2025-01-05 03:02:34.140",
-    employee_id: 1
+    TargetDescription: "",
+    TargetValue: 0,
+    TargetType: "",
+    StartDate: "",
+    EndDate: "",
+    CreatedBy: user_id,
+    CreatedAt: currentDateTime,
+    employee_id: 0,
   });
 
   const initialFormData = {
-    TargetDescription: "Achieve 20% increase in sales",
-    TargetValue: 100000.00,
+    TargetDescription: "",
+    TargetValue: 0,
     TargetType: "Sales",
-    StartDate: "2025-01-01T00:00:00Z",
-    EndDate: "2025-12-31T23:59:59Z",
-    CreatedBy: 1,
-    CreatedAt: "2025-01-05 03:02:34.140",
-    employee_id: 1
+    StartDate: "",
+    EndDate: "",
+    CreatedBy: user_id,
+    CreatedAt: currentDateTime,
+    employee_id: 0,
   };
 
-  // Static Data for SalesTeamTarget
-  const all_targets = [
-    {
-      id: 1,
-      TargetDescription: "Achieve 20% increase in sales",
-      TargetValue: 100000.00,
-      TargetType: "Sales",
-      StartDate: "2025-01-01T00:00:00Z",
-      EndDate: "2025-12-31T23:59:59Z",
-      CreatedBy: 1,
-      CreatedAt: "2025-01-05 03:02:34.140",
-      employee_id: 1
-    },
-    {
-      id: 2,
-      TargetDescription: "Increase customer satisfaction by 15%",
-      TargetValue: 120000.00,
-      TargetType: "Customer Satisfaction",
-      StartDate: "2025-01-01T00:00:00Z",
-      EndDate: "2025-12-31T23:59:59Z",
-      CreatedBy: 2,
-      CreatedAt: "2025-02-15 11:15:10.360",
-      employee_id: 2
-    }
-    // Add more static data as needed
-  ];
+  console.log("formData ---", formData);
+  useEffect(() => {
+    setCurrentDateTime(getCurrentDateTime());
+  }, []);
+
+  const allEmployee = useSelector((state) => state.employee?.allEmployee);
+  console.log("allEmployee ---", allEmployee);
+  // get data from redux
+  const salesTeamsTargetAllData = useSelector(
+    (state) => state?.sales_team_target?.allSalesTeamTargetVal
+  );
+
+  const singledata = useSelector(
+    (state) => state.sales_team_target?.singleSalesTeamsTarget
+  );
+  console.log("singledata ---", singledata);
+  const loading = useSelector((state) => state?.sales_team_target?.loading);
 
   // Filtering the data based on search term
   const handleSearchInputChange = (e) => {
@@ -74,53 +87,109 @@ const SalesTeamTarget = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = all_targets.filter((ele) => {
-        const TargetDescription = ele?.TargetDescription?.toLowerCase() || "";
-        return TargetDescription.includes(searchTerm.toLowerCase());
+      const filtered = salesTeamsTargetAllData.filter((ele) => {
+        const matchingEmployee = allEmployee.find(
+          (emp) => emp?.desk_employee_id === ele.employee_id
+        );
+        const allFields = `
+          ${ele?.TargetValue || ""}
+          ${ele?.TargetType || ""}
+          ${ele?.StartDate || ""}
+          ${ele?.EndDate || ""}
+          ${ele?.CreatedBy || ""}
+          ${ele?.CreatedAt || ""}
+          ${matchingEmployee?.name || ""}
+        `.toLowerCase();
+
+        return allFields.includes(searchTerm.toLowerCase());
       });
+
       setFilterData(filtered);
     } else {
-      setFilterData(all_targets);
+      setFilterData(salesTeamsTargetAllData);
     }
-  }, [searchTerm]);
+  }, [searchTerm, salesTeamsTargetAllData, allEmployee]);
+
+  useEffect(() => {
+    setFormData({
+      TargetDescription: singledata?.TargetDescription,
+      TargetValue: singledata?.TargetValue,
+      TargetType: singledata?.TargetType,
+      StartDate: singledata?.StartDate,
+      EndDate: singledata?.EndDate,
+      CreatedBy: singledata?.CreatedBy,
+      CreatedAt: singledata?.CreatedAt,
+      employee_id: singledata?.employee_id,
+    });
+  }, [singledata]);
+
+  // api calling to here ------------------------------
+
+  useEffect(() => {
+    dispatch(getAlEmployee());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getAllSalesTeamTarget());
+  }, []);
 
   const columns = [
     { label: "ID", key: "id" },
-    { label: "Target Description", key: "TargetDescription" },
-    { label: "Target Value", key: "TargetValue" },
+    { label: "Employee Name", key: "employee_name" },
     { label: "Target Type", key: "TargetType" },
+    { label: "Target Value", key: "TargetValue" },
+
     { label: "Start Date", key: "StartDate" },
     { label: "End Date", key: "EndDate" },
-    { label: "Created By", key: "CreatedBy" },
-    { label: "Created At", key: "CreatedAt" },
-    { label: "Employee ID", key: "employee_id" }
+    // { label: "Created By", key: "CreatedBy" },
+    // { label: "Created At", key: "CreatedAt" },
+    { label: "Target Description", key: "TargetDescription" },
   ];
 
-  const data = filterData?.map((ele, index) => ({
-    id: index + 1,
-    TargetDescription: ele?.TargetDescription,
-    TargetValue: ele?.TargetValue,
-    TargetType: ele?.TargetType,
-    StartDate: ele?.StartDate,
-    EndDate: ele?.EndDate,
-    CreatedBy: ele?.CreatedBy,
-    CreatedAt: ele?.CreatedAt,
-    employee_id: ele?.employee_id,
-    d_id: ele?.id
-  }));
+  const data = filterData?.map((ele, index) => {
+    const matchingEmployee = allEmployee.find(
+      (emp) => emp?.desk_employee_id === ele.employee_id
+    );
+
+    return {
+      id: index + 1,
+      TargetDescription: ele?.TargetDescription || "N/A",
+      TargetValue: ele?.TargetValue || "N/A",
+      TargetType: ele?.TargetType || "N/A",
+      StartDate: ele?.StartDate || "N/A",
+      EndDate: ele?.EndDate || "N/A",
+      CreatedBy: ele?.CreatedBy || "N/A",
+      CreatedAt: ele?.CreatedAt || "N/A",
+      employee_name: matchingEmployee?.name || "N/A",
+      target_id: ele?.TargetID,
+    };
+  });
 
   const handleDelete = (row) => {
     setRowToDelete(row);
     setIsModalOpendelete(true);
   };
 
-  const confirmDelete = () => {
+ 
+
+  const confirmDelete = async () => {
+    console.log("rowToDelete --------- ", rowToDelete);
     if (rowToDelete) {
-      // In a real case, delete logic here
-      setIsModalOpendelete(false);
-      setRowToDelete(null);
+      try {
+        const res = await dispatch(deleteSalesTeamsTarget(rowToDelete?.target_id));
+        if (res?.payload) {
+          showToast(res?.payload?.message, "success");
+        }
+        dispatch(getAllSalesTeamTarget());
+      } catch (error) {
+        showToast(error, "error");
+      } finally {
+        setIsModalOpendelete(false);
+        setRowToDelete(null);
+      }
     }
   };
+
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -132,29 +201,62 @@ const SalesTeamTarget = () => {
     setIsModalOpen(false);
   };
 
-  const handleUpdate = (ele) => {
-    setFormData({
-      TargetDescription: ele?.TargetDescription,
-      TargetValue: ele?.TargetValue,
-      TargetType: ele?.TargetType,
-      StartDate: ele?.StartDate,
-      EndDate: ele?.EndDate,
-      CreatedBy: ele?.CreatedBy,
-      CreatedAt: ele?.CreatedAt,
-      employee_id: ele?.employee_id
-    });
+  const handleUpdate = async (ele) => {
+    let id = ele?.target_id;
+    try {
+      await dispatch(getSalesTeamsTargetByid(id));
+    } catch (error) {
+      showToast(error, "error");
+    }
     setIsUpdate(true);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = () => {
-    // Logic for creating/updating SalesTeamTarget
-    console.log(isUpdate ? "Updating target" : "Creating target", formData);
+  // const handleSubmit = () => {
+
+  //   console.log(isUpdate ? "Updating target" : "Creating target", formData);
+  //   closeModal();
+  // };
+
+  const handleSubmit = async () => {
+    if (isUpdate) {
+      try {
+        const res = await dispatch(
+          updateSalesTeamsTarget({
+            id: singledata?.TargetID,
+            newData: formData,
+          })
+        );
+
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllSalesTeamTarget());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
+    } else {
+      try {
+        const res = await dispatch(createSalesTeamsTargetVal(formData));
+
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllSalesTeamTarget());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
+    }
     closeModal();
   };
 
   return (
     <>
+      {loading && <Loader loading={loading} />}
       <div className="min-h-screen bg-gray-50 p-0 md:p-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-100 rounded-md shadow-md">
           <button

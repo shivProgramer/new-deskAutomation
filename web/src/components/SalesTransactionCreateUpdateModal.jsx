@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
+import { useDispatch, useSelector } from "react-redux";
 
 const SalesTransactionCreateUpdateModal = ({
   isOpen,
@@ -9,11 +11,11 @@ const SalesTransactionCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
-  const employees = [
-    { EmployeeID: 1, EmployeeName: "John Doe" },
-    { EmployeeID: 2, EmployeeName: "Jane Smith" },
-    // Add more employees as needed
-  ];
+  const dispatch = useDispatch();
+  const allEmployee = useSelector((state) => state.employee?.allEmployee);
+  useEffect(() => {
+    dispatch(getAlEmployee());
+  }, []);
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -47,7 +49,9 @@ const SalesTransactionCreateUpdateModal = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Employee ID */}
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Employee</label>
+              <label className="block text-sm font-medium mb-1">
+                Employee <span className="text-red-600"> * </span>
+              </label>
               <select
                 name="EmployeeID"
                 value={formData.EmployeeID || ""}
@@ -55,10 +59,15 @@ const SalesTransactionCreateUpdateModal = ({
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 required
               >
-                <option value="" className="">Select an employee</option>
-                {employees.map((employee) => (
-                  <option key={employee.EmployeeID} value={employee.EmployeeID}>
-                    {employee.EmployeeName}
+                <option value="" className="">
+                  Select an employee
+                </option>
+                {allEmployee.map((employee) => (
+                  <option
+                    key={employee?.desk_employee_id}
+                    value={employee?.desk_employee_id}
+                  >
+                    {employee.name}
                   </option>
                 ))}
               </select>
@@ -67,7 +76,7 @@ const SalesTransactionCreateUpdateModal = ({
             {/* Sale Date */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Sale Date
+                Sale Date <span className="text-red-600"> * </span>
               </label>
               <input
                 type="date"
@@ -82,7 +91,7 @@ const SalesTransactionCreateUpdateModal = ({
             {/* Sale Value */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Sale Value
+                Sale Value <span className="text-red-600"> * </span>
               </label>
               <input
                 type="number"
@@ -107,7 +116,6 @@ const SalesTransactionCreateUpdateModal = ({
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 placeholder="Enter reward value"
-                required
               />
             </div>
 
@@ -116,32 +124,45 @@ const SalesTransactionCreateUpdateModal = ({
               <label className="block text-sm font-medium mb-1">
                 Sales Source
               </label>
-              <input
-                type="text"
+              <select
                 name="SalesSource"
                 value={formData.SalesSource || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter sales source"
-                required
-              />
+              >
+                <option value="" disabled>
+                  Select sales source
+                </option>
+                <option value="Meta Ads">Meta Ads</option>
+                <option value="India Mart Export">India Mart Export</option>
+                <option value="Website">Website</option>
+                <option value="India Mart">India Mart</option>
+                <option value="Reference">Reference</option>
+                <option value="Google Ads">Google Ads</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
-              {/* Division Name */}
+
+            {/* Division Name */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
                 Division Name
               </label>
-              <input
-                type="text"
+              <select
                 name="DivisionName"
                 value={formData.DivisionName || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter division name"
-                required
-              />
+              >
+                <option value="" disabled>
+                  Select division name
+                </option>
+                <option value="NOWGRAY">NOWGRAY</option>
+                <option value="CA OMS">CA OMS</option>
+                <option value="Brand Graphics">Brand Graphics</option>
+                <option value="ECOMM11">ECOMM11</option>
+              </select>
             </div>
-
 
             {/* Project Name */}
             <div className="mb-4 col-span-2">
@@ -155,7 +176,6 @@ const SalesTransactionCreateUpdateModal = ({
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 placeholder="Enter project name"
-                required
               />
             </div>
 
@@ -171,25 +191,8 @@ const SalesTransactionCreateUpdateModal = ({
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 placeholder="Enter ad campaign name"
-                required
               />
             </div>
-
-          
-            
-
-            {/* Created At */}
-            {/* <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Created At</label>
-              <input
-                type="datetime-local"
-                name="CreatedAt"
-                value={formData.CreatedAt || ""}
-                onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                required
-              />
-            </div> */}
           </div>
 
           {/* Modal Actions */}
