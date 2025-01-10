@@ -50,7 +50,7 @@ const createCampaign = async (req, res) => {
       type: sequelize.QueryTypes.INSERT,
     });
 
-    res.status(201).json({ message: 'Campaign created successfully' });
+    res.status(201).json({ message: 'Campaign created successfully',status : 1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error creating campaign' });
@@ -134,7 +134,7 @@ const updateCampaign = async (req, res) => {
       return res.status(404).json({ message: 'Campaign not found' });
     }
 
-    res.status(200).json({ message: 'Campaign updated successfully' });
+    res.status(200).json({ message: 'Campaign updated successfully' , status : 1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error updating campaign' });

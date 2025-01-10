@@ -159,7 +159,7 @@ const SalesTeamsTargetCreateUpdateModal = ({
               onChange={handleInputChange}
               className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
               placeholder="Enter target description"
-             
+              required
             />
           </div>
 

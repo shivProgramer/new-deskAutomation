@@ -1,5 +1,6 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
 const DMECampaignCreateUpdateModal = ({
   isOpen,
   onClose,
@@ -9,6 +10,12 @@ const DMECampaignCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
+  const dispatch = useDispatch();
+
+  const allEmployee = useSelector((state) => state.employee?.allEmployee);
+  useEffect(() => {
+    dispatch(getAlEmployee());
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -29,7 +36,7 @@ const DMECampaignCreateUpdateModal = ({
             className="text-gray-400 hover:text-gray-600 focus:outline-none"
           >
             ✕
-          </button>
+          </button> 
         </div>
 
         {/* Modal Form */}
@@ -41,6 +48,28 @@ const DMECampaignCreateUpdateModal = ({
         >
           {/* Form Inputs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">Employee  <span className="text-red-600"> * </span></label>
+              <select
+                name="employee_id"
+                value={formData.employee_id || ""}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                required
+              >
+                <option value="">Select</option>
+                {allEmployee.map((employee) => (
+                  <option
+                    key={employee.desk_employee_id}
+                    value={employee.desk_employee_id}
+                  >
+                    {employee.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Campaign Name */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
@@ -80,7 +109,7 @@ const DMECampaignCreateUpdateModal = ({
             {/* Objective */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Objective <span className="text-red-600"> * </span>
+                Objective
               </label>
               <input
                 type="text"
@@ -89,7 +118,6 @@ const DMECampaignCreateUpdateModal = ({
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 placeholder="Enter objective"
-                required
               />
             </div>
 

@@ -4,27 +4,56 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 import { showToast } from "../utils/config";
 import DMEAnalysisCreateUpdateModal from "../components/DMEAnalysisCreateUpdateModal";
+import { getAllDmeAnalysis } from "../redux/slice/DmeAnalysis_slice";
+import { useDispatch, useSelector } from "react-redux";
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const date = now.toISOString().split("T")[0];
+  const time = now.toTimeString().split(" ")[0];
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+  return `${date} ${time}.${milliseconds}`;
+};
 
 const DMEAnalysis = () => {
+  const dispatch = useDispatch();
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterData, setFilterData] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState("");
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  let user_id;
+  if (userData) {
+    user_id = userData?.user_id;
+  }
   const [formData, setFormData] = useState({
     CampaignID: "",
     Note: "",
     AddedBy: 1,
-    AddedOn: new Date().toISOString().split("T")[0],
+    AddedOn: currentDateTime,
   });
 
   const initialFormData = {
     CampaignID: "",
     Note: "",
     AddedBy: 1,
-    AddedOn: new Date().toISOString().split("T")[0],
+    AddedOn: currentDateTime,
   };
+
+  // get data from redux to here -----------------
+  const salesCompaginAllData = useSelector(
+    (state) => state?.Dme_analysis_stroe?.allDmeAnalysisData
+  );
+  const singledata = useSelector(
+    (state) => state.Dme_analysis_stroe?.singleDmeAnalysis
+  );
+  const loading = useSelector((state) => state?.Dme_analysis_stroe?.loading);
+
+  useEffect(() => {
+    setCurrentDateTime(getCurrentDateTime());
+  }, []);
 
   const staticData = [
     {
@@ -33,11 +62,17 @@ const DMEAnalysis = () => {
       AddedBy: 12,
       AddedOn: "2025-01-06T10:00:00",
     },
-    
   ];
 
   const [analysisData, setAnalysisData] = useState(staticData);
 
+
+   // api calling to here ------------------------------
+    useEffect(() => {
+      dispatch(getAllDmeAnalysis());
+    }, []);
+  
+    
   useEffect(() => {
     setFilterData(analysisData);
   }, [analysisData]);
