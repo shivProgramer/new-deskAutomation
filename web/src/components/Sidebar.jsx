@@ -12,6 +12,7 @@ import { IoMdArrowDropup } from "react-icons/io";
 import { FcSalesPerformance } from "react-icons/fc";
 import { SiGooglemarketingplatform } from "react-icons/si";
 import { GoProjectSymlink } from "react-icons/go";
+import { FaCalendarDay } from "react-icons/fa";
 const Sidebar = ({ isOpen, toggleDrawer }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
@@ -242,8 +243,22 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           </div>
         </div>
 
-        
+        <NavLink
+          to="/employee_offdays"
+          className={({ isActive }) =>
+            `py-2.5 my-1 pl-10 cursor-pointer flex gap-4 items-center ${
+              isActive
+                ? "bg-gray-500 text-white border-l-2 border-green-500"
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white"
+            }`
+          }
+          onClick={handleDropdown}
+        >
+          <FaCalendarDay className="text-green-500" /> Employee Offdays
+        </NavLink>
 
+        
+        
 
       </ul>
       <button

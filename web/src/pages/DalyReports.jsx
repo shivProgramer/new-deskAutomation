@@ -63,7 +63,7 @@ const DalyReports = () => {
     } else {
       try {
         const res = await dispatch(createDalyReports(formData));
-        console.log("res --", res);
+        
         if (res?.payload?.status === 1) {
           await dispatch(getAllDalyReports());
           showToast(res?.payload?.message, "success");

@@ -58,13 +58,13 @@ const SalesTeamTarget = () => {
     employee_id: 0,
   };
 
-  console.log("formData ---", formData);
+
   useEffect(() => {
     setCurrentDateTime(getCurrentDateTime());
   }, []);
 
   const allEmployee = useSelector((state) => state.employee?.allEmployee);
-  console.log("allEmployee ---", allEmployee);
+
   // get data from redux
   const salesTeamsTargetAllData = useSelector(
     (state) => state?.sales_team_target?.allSalesTeamTargetVal
@@ -73,7 +73,7 @@ const SalesTeamTarget = () => {
   const singledata = useSelector(
     (state) => state.sales_team_target?.singleSalesTeamsTarget
   );
-  console.log("singledata ---", singledata);
+
   const loading = useSelector((state) => state?.sales_team_target?.loading);
 
   // Filtering the data based on search term
@@ -173,7 +173,7 @@ const SalesTeamTarget = () => {
  
 
   const confirmDelete = async () => {
-    console.log("rowToDelete --------- ", rowToDelete);
+ 
     if (rowToDelete) {
       try {
         const res = await dispatch(deleteSalesTeamsTarget(rowToDelete?.target_id));
@@ -212,11 +212,6 @@ const SalesTeamTarget = () => {
     setIsModalOpen(true);
   };
 
-  // const handleSubmit = () => {
-
-  //   console.log(isUpdate ? "Updating target" : "Creating target", formData);
-  //   closeModal();
-  // };
 
   const handleSubmit = async () => {
     if (isUpdate) {

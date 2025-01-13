@@ -128,7 +128,7 @@ const Employee = () => {
         }
       }
     } catch (error) {
-      console.log("Error during employee submission:", error);
+      
       showToast("Something went wrong. Please try again later.", "error");
     }
   };

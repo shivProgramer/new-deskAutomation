@@ -19,7 +19,7 @@ const Ecomm_Projectlist = () => {
   const loading = useSelector((state) => state.ecomm_p_List?.loading);
   const allEmployee = useSelector((state) => state.employee?.allEmployee);
   const dispatch = useDispatch();
-  console.log("allEmployee ---", allEmployee);
+
 
   useEffect(() => {
     dispatch(getAllEcomm_project_List());
@@ -64,9 +64,7 @@ const Ecomm_Projectlist = () => {
       employee_id: row.employee_id,
     };
 
-    if (newData) {
-      console.log("lkdjflsa");
-    }
+    
     try {
       const res = await dispatch(sendReportInReporting(newData));
       if (res?.payload?.message) {
@@ -74,14 +72,14 @@ const Ecomm_Projectlist = () => {
         dispatch(getAllEcomm_project_List());
       }
       const result = await response.json();
-      console.log(result);
+    
     } catch (error) {
       console.error("Error sending data:", error);
     }
   };
 
   const handleEmployeeChange = async (row, newEmployeeId) => {
-    console.log("row ", row);
+
     let newData = {
       employee_id: newEmployeeId || 0,
     };
@@ -98,7 +96,7 @@ const Ecomm_Projectlist = () => {
     const selectedEmployee = allEmployee.find(
       (emp) => emp.desk_employee_id === parseInt(newEmployeeId, 10)
     );
-    console.log("Selected Employee:", selectedEmployee);
+   
   };
 
   useEffect(() => {

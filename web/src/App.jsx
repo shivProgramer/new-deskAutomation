@@ -1,7 +1,3 @@
-
-
-
-
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./components/Layout";
@@ -20,6 +16,7 @@ import SalesReward from "./pages/SalesReward";
 import SalesTransaction from "./pages/SalesTransaction";
 import SalestTeamsTarget from "./pages/SalestTeamsTarget";
 import DME from "./pages/DME";
+import Employee_Offdays from "./pages/Employee_Offdays";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -78,6 +75,10 @@ function App() {
         {
           path: "/dme",
           element: <DME />,
+        },
+        {
+          path: "/employee_offdays",
+          element: <Employee_Offdays />,
         },
       ],
     },

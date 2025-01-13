@@ -22,7 +22,7 @@ const Project = () => {
   const [searchTerm, setSearchTerm] = useState();
   const [filterData, setFilterData] = useState();
 
-  console.log("formData --", formData);
+
   // use selector -----------
 
   const projects = useSelector((state) => state.projects?.allProjects);

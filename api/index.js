@@ -23,6 +23,7 @@ const DME_RewardRulesRouter = require("./routes/DME_RewardRulesRouter.js");
 const DME_ROASRoutes = require("./routes/DME_ROASRoutes.js");
 const DME_TeamRoutes = require("./routes/DME_TeamRoutes.js");
 const DME_BudgetRoutes = require("./routes/DME_BudgetRoutes.js");
+const employeeOffdayRoutes = require("./routes/EmployeeOffdayRoutes.js");
 
 const dashboardRoutes = require("./routes/dashboardRoutes.js");
 app.use(bodyParser.json());
@@ -48,7 +49,7 @@ app.use('/api/dme/reward-rules', DME_RewardRulesRouter);
 app.use('/api/dme/roas', DME_ROASRoutes);
 app.use('/api/dme/teams', DME_TeamRoutes);
 app.use('/api/dme/budgets', DME_BudgetRoutes);
-
+app.use("/api/employee-offdays", employeeOffdayRoutes);
 // Define a simple test route
 app.get("/tester", (req, res) => {
   res.send("Hello World!");

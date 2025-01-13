@@ -18,7 +18,7 @@ const MenuWithData = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({ Name: "", SP: "" });
 
-  console.log(formData);
+
 
   // Redux selectors
   const allAdhocReport = useSelector(

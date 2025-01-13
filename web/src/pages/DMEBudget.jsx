@@ -65,7 +65,6 @@ const DMEBudget = () => {
     (state) => state?.Dme_budget_stroe?.allDmeBudgetData
   );
 
-  console.log("DmeBudgetAllData --", DmeBudgetAllData);
   const singledata = useSelector(
     (state) => state.Dme_budget_stroe?.singleDmeBudget
   );

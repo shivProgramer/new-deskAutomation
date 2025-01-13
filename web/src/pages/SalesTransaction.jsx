@@ -149,13 +149,13 @@ const SalesTransaction = () => {
   }));
 
   const handleDelete = (row) => {
-    console.log("row ----", row);
+  
     setRowToDelete(row);
     setIsModalOpendelete(true);
   };
 
   const confirmDelete = async () => {
-    console.log("rowToDelete --------- ", rowToDelete);
+    
     if (rowToDelete) {
       try {
         const res = await dispatch(deleteSalesTransaction(rowToDelete?.t_id));

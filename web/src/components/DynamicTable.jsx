@@ -11,7 +11,7 @@ const DynamicTable = ({
   employees,
   handleEmployeeChange,
 }) => {
-  console.log("employees --", employees);
+
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 20;
 
