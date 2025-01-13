@@ -3,14 +3,40 @@ import DynamicTable from "../components/DynamicTable";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import DMERewardCreateUpdateModal from "../components/DMERewardCreateUpdateModal";
 import { showToast } from "../utils/config";
-
+import {
+  createDmeReward,
+  deleteDmeReward,
+  getAllDmeReward,
+  getDmeRewardbyid,
+  updateDmeReward,
+} from "../redux/slice/Dme_Reward_slice";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../components/Loader";
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const date = now.toISOString().split("T")[0];
+  const time = now.toTimeString().split(" ")[0];
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+  return `${date} ${time}.${milliseconds}`;
+};
 const DMEReward = () => {
+  const dispatch = useDispatch();
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterData, setFilterData] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState("");
+  const [formData, setFormData] = useState({
+    RuleName: "",
+    MinROAS: 0,
+    MinRevenue: 0,
+    RewardType: "",
+    RewardValue: 0,
+    IsActive: false,
+    CreatedOn: currentDateTime,
+  });
 
   const initialFormData = {
     RuleName: "",
@@ -19,11 +45,8 @@ const DMEReward = () => {
     RewardType: "",
     RewardValue: 0,
     IsActive: true,
-    CreatedOn: new Date().toISOString(),
+    CreatedOn: currentDateTime,
   };
-
-  const [formData, setFormData] = useState(initialFormData);
-
   const staticData = [
     {
       RuleName: "Sample Reward Rule",
@@ -35,6 +58,38 @@ const DMEReward = () => {
       CreatedOn: "2025-01-07T00:00:00Z",
     },
   ];
+
+  // get data from redux to here -----------------
+  const DmeRewardAllData = useSelector(
+    (state) => state?.Dme_reward_stroe?.allDmeRewardData
+  );
+
+  const singledata = useSelector(
+    (state) => state.Dme_reward_stroe?.singleDmeReward
+  );
+  const loading = useSelector((state) => state?.Dme_reward_stroe?.loading);
+
+  useEffect(() => {
+    setCurrentDateTime(getCurrentDateTime());
+  }, []);
+
+  useEffect(() => {
+    setFormData({
+      RuleName: singledata?.RuleName,
+      MinROAS: singledata?.MinROAS,
+      MinRevenue: singledata?.MinRevenue,
+      RewardType: singledata?.RewardType,
+      RewardValue: singledata?.RewardValue,
+      IsActive: singledata?.IsActive,
+      CreatedOn: singledata?.CreatedOn,
+    });
+  }, [singledata]);
+
+  // here is calling api
+
+  useEffect(() => {
+    dispatch(getAllDmeReward());
+  }, []);
 
   const [rewardData, setRewardData] = useState(staticData);
 
@@ -52,7 +107,7 @@ const DMEReward = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = rewardData.filter((reward) => {
+      const filtered = DmeRewardAllData.filter((reward) => {
         const allFields = `
           ${reward?.RuleName || ""}
           ${reward?.MinROAS || ""}
@@ -67,24 +122,29 @@ const DMEReward = () => {
 
       setFilterData(filtered);
     } else {
-      setFilterData(rewardData);
+      setFilterData(DmeRewardAllData);
     }
-  }, [searchTerm, rewardData]);
+  }, [searchTerm, DmeRewardAllData]);
 
   const handleDelete = (row) => {
     setRowToDelete(row);
     setIsModalOpendelete(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (rowToDelete) {
-      const updatedData = rewardData.filter(
-        (reward) => reward.RuleName !== rowToDelete.RuleName
-      );
-      setRewardData(updatedData);
-      showToast("Reward rule deleted successfully", "success");
-      setIsModalOpendelete(false);
-      setRowToDelete(null);
+      try {
+        const res = await dispatch(deleteDmeReward(rowToDelete?.r_id));
+        if (res?.payload) {
+          showToast(res?.payload?.message, "success");
+        }
+        await dispatch(getAllDmeReward());
+      } catch (error) {
+        showToast(error, "error");
+      } finally {
+        setIsModalOpendelete(false);
+        setRowToDelete(null);
+      }
     }
   };
 
@@ -98,27 +158,50 @@ const DMEReward = () => {
     setIsModalOpen(false);
   };
 
-  const handleUpdate = (reward) => {
-    setFormData(reward);
+  const handleUpdate = async (ele) => {
+    let id = ele?.r_id;
+    try {
+      await dispatch(getDmeRewardbyid(id));
+    } catch (error) {
+      showToast(error, "error");
+    }
     setIsUpdate(true);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isUpdate) {
-      const updatedData = rewardData.map((reward) =>
-        reward.RuleName === formData.RuleName ? formData : reward
-      );
-      setRewardData(updatedData);
-      showToast("Reward rule updated successfully", "success");
+      try {
+        const res = await dispatch(
+          updateDmeReward({ id: singledata?.RuleID, newData: formData })
+        );
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeReward());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     } else {
-      setRewardData([...rewardData, formData]);
-      showToast("Reward rule created successfully", "success");
+      try {
+        const res = await dispatch(createDmeReward(formData));
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeReward());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     }
     closeModal();
   };
 
   const columns = [
+    { label: "Id", key: "id" },
     { label: "Rule Name", key: "RuleName" },
     { label: "Min ROAS", key: "MinROAS" },
     { label: "Min Revenue", key: "MinRevenue" },
@@ -127,12 +210,29 @@ const DMEReward = () => {
     { label: "Is Active", key: "IsActive" },
   ];
 
-  const data = filterData.map((reward, index) => ({
+  const data = filterData?.map((ele, index) => ({
     id: index + 1,
-    ...reward,
+    RuleName: ele?.RuleName,
+    MinROAS: ele?.MinROAS,
+    MinRevenue: ele?.MinRevenue,
+    RewardType: ele?.RewardType,
+    RewardValue: ele?.RewardValue,
+    IsActive: (
+      <span
+        className={`px-2 rounded-full ${
+          ele?.IsActive ? " text-green-500" : " text-red-500"
+        }`}
+      >
+        {ele?.IsActive ? "Active" : "Inactive"}
+      </span>
+    ),
+    CreatedOn: ele?.CreatedOn,
+    r_id: ele?.RuleID,
   }));
 
   return (
+    <>
+    {loading && <Loader loading={loading} />}
     <div className="bg-gray-50 p-0 md:p-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 bg-gray-100 rounded-md shadow-md">
         <button
@@ -171,7 +271,7 @@ const DMEReward = () => {
         onConfirm={confirmDelete}
       />
 
-      <DMERewardCreateUpdateModal
+      <DMERewardCreateUpdateModal 
         isOpen={isModalOpen}
         onClose={closeModal}
         title={isUpdate ? "Update Reward Rule" : "Create Reward Rule"}
@@ -180,6 +280,7 @@ const DMEReward = () => {
         handleSubmit={handleSubmit}
       />
     </div>
+    </>
   );
 };
 

@@ -17,6 +17,7 @@ import DmePerformance_slice from "./slice/DmePerformance_slice"
 import Dme_Reward_slice from "./slice/Dme_Reward_slice"
 import Dme_Roas_slice from "./slice/Dme_Roas_slice"
 import Dme_Team_slice from "./slice/Dme_Team_slice"
+import Dme_Budget_slice from "./slice/Dme_Budget_slice"
 const store = configureStore({
   reducer: {
     auth: Auth_slice,
@@ -37,6 +38,7 @@ const store = configureStore({
     Dme_reward_stroe : Dme_Reward_slice,
     Dme_rose_stroe : Dme_Roas_slice,
     Dme_team_stroe : Dme_Team_slice,
+    Dme_budget_stroe : Dme_Budget_slice,
   },
 });
 

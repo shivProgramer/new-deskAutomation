@@ -46,7 +46,7 @@ const createRewardRule = async (req, res) => {
       type: sequelize.QueryTypes.INSERT,
     });
 
-    res.status(201).json({ message: "Reward rule created successfully" });
+    res.status(201).json({ message: "Reward rule created successfully" , status:1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error creating reward rule" });
@@ -127,7 +127,7 @@ const updateRewardRule = async (req, res) => {
       return res.status(404).json({ message: "Reward rule not found" });
     }
 
-    res.status(200).json({ message: "Reward rule updated successfully" });
+    res.status(200).json({ message: "Reward rule updated successfully" , status:1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error updating reward rule" });

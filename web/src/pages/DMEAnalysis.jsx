@@ -4,8 +4,15 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 import { showToast } from "../utils/config";
 import DMEAnalysisCreateUpdateModal from "../components/DMEAnalysisCreateUpdateModal";
-import { getAllDmeAnalysis } from "../redux/slice/DmeAnalysis_slice";
+import {
+  createDmeAnalysis,
+  deleteDmeAnalysis,
+  getAllDmeAnalysis,
+  getDmeAnalysisbyid,
+  updateDmeAnalysis,
+} from "../redux/slice/DmeAnalysis_slice";
 import { useDispatch, useSelector } from "react-redux";
+import Loader from "../components/Loader";
 const getCurrentDateTime = () => {
   const now = new Date();
   const date = now.toISOString().split("T")[0];
@@ -31,19 +38,19 @@ const DMEAnalysis = () => {
   const [formData, setFormData] = useState({
     CampaignID: "",
     Note: "",
-    AddedBy: 1,
+    AddedBy: 0,
     AddedOn: currentDateTime,
   });
 
   const initialFormData = {
     CampaignID: "",
     Note: "",
-    AddedBy: 1,
+    AddedBy: 0,
     AddedOn: currentDateTime,
   };
 
   // get data from redux to here -----------------
-  const salesCompaginAllData = useSelector(
+  const salesAnalysisAllData = useSelector(
     (state) => state?.Dme_analysis_stroe?.allDmeAnalysisData
   );
   const singledata = useSelector(
@@ -55,27 +62,19 @@ const DMEAnalysis = () => {
     setCurrentDateTime(getCurrentDateTime());
   }, []);
 
-  const staticData = [
-    {
-      CampaignID: 2,
-      Note: "This is a test note for analysis.",
-      AddedBy: 12,
-      AddedOn: "2025-01-06T10:00:00",
-    },
-  ];
-
-  const [analysisData, setAnalysisData] = useState(staticData);
-
-
-   // api calling to here ------------------------------
-    useEffect(() => {
-      dispatch(getAllDmeAnalysis());
-    }, []);
-  
-    
+  // api calling to here ------------------------------
   useEffect(() => {
-    setFilterData(analysisData);
-  }, [analysisData]);
+    dispatch(getAllDmeAnalysis());
+  }, []);
+
+  useEffect(() => {
+    setFormData({
+      CampaignID: singledata?.CampaignID,
+      Note: singledata?.Note,
+      AddedBy: singledata?.AddedBy,
+      AddedOn: singledata?.AddedOn,
+    });
+  }, [singledata]);
 
   const handleSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -86,38 +85,52 @@ const DMEAnalysis = () => {
   };
 
   useEffect(() => {
+    const formatData = (data) =>
+      data.map((ele, index) => ({
+        id: index + 1,
+        campaignName: ele?.Campaign?.Name || "N/A",
+        Note: ele?.Note || "N/A",
+        AddedBy: ele?.Employee?.Name || "N/A",
+        AddedOn: ele?.AddedOn || "N/A",
+        ana_id: ele?.AnalysisID,
+      }));
     if (searchTerm) {
-      const filtered = analysisData.filter((analysis) => {
+      const filtered = salesAnalysisAllData.filter((analysis) => {
         const allFields = `
-          ${analysis?.CampaignID || ""}
+          ${analysis?.Campaign?.Name || ""}
           ${analysis?.Note || ""}
-          ${analysis?.AddedBy || ""}
+          ${analysis?.Employee?.Name || ""}
           ${analysis?.AddedOn || ""}
         `.toLowerCase();
 
         return allFields.includes(searchTerm.toLowerCase());
       });
 
-      setFilterData(filtered);
+      setFilterData(formatData(filtered));
     } else {
-      setFilterData(analysisData);
+      setFilterData(formatData(salesAnalysisAllData));
     }
-  }, [searchTerm, analysisData]);
+  }, [searchTerm, salesAnalysisAllData]);
 
   const handleDelete = (row) => {
     setRowToDelete(row);
     setIsModalOpendelete(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (rowToDelete) {
-      const updatedData = analysisData.filter(
-        (analysis) => analysis.CampaignID !== rowToDelete.CampaignID
-      );
-      setAnalysisData(updatedData);
-      showToast("Analysis entry deleted successfully", "success");
-      setIsModalOpendelete(false);
-      setRowToDelete(null);
+      try {
+        const res = await dispatch(deleteDmeAnalysis(rowToDelete?.ana_id));
+        if (res?.payload) {
+          showToast(res?.payload?.message, "success");
+        }
+        await dispatch(getAllDmeAnalysis());
+      } catch (error) {
+        showToast(error, "error");
+      } finally {
+        setIsModalOpendelete(false);
+        setRowToDelete(null);
+      }
     }
   };
 
@@ -131,40 +144,68 @@ const DMEAnalysis = () => {
     setIsModalOpen(false);
   };
 
-  const handleUpdate = (analysis) => {
-    setFormData(analysis);
+  const handleUpdate = async (ele) => {
+    let id = ele?.ana_id;
+    try {
+      await dispatch(getDmeAnalysisbyid(id));
+    } catch (error) {
+      showToast(error, "error");
+    }
     setIsUpdate(true);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isUpdate) {
-      const updatedData = analysisData.map((analysis) =>
-        analysis.CampaignID === formData.CampaignID ? formData : analysis
-      );
-      setAnalysisData(updatedData);
-      showToast("Analysis entry updated successfully", "success");
+      try {
+        const res = await dispatch(
+          updateDmeAnalysis({ id: singledata?.AnalysisID, newData: formData })
+        );
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeAnalysis());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     } else {
-      setAnalysisData([...analysisData, formData]);
-      showToast("Analysis entry created successfully", "success");
+      try {
+        const res = await dispatch(createDmeAnalysis(formData));
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeAnalysis());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     }
     closeModal();
   };
 
   const columns = [
-    { label: "Campaign ID", key: "CampaignID" },
+    { label: "ID", key: "id" },
+    { label: "Campaign Name", key: "campaignName" },
     { label: "Note", key: "Note" },
     { label: "Added By", key: "AddedBy" },
     { label: "Added On", key: "AddedOn" },
   ];
 
-  const data = filterData.map((analysis, index) => ({
+  const data = filterData?.map((ele, index) => ({
     id: index + 1,
-    ...analysis,
+    campaignName: ele.campaignName || "N/A",
+    Note: ele?.Note || "N/A",
+    AddedBy: ele?.AddedBy || "N/A",
+    AddedOn: ele?.AddedOn || "N/A",
+    ana_id: ele?.ana_id,
   }));
 
   return (
     <>
+      {loading && <Loader loading={loading} />}
       <div className=" bg-gray-50 p-0 md:p-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 bg-gray-100 rounded-md shadow-md">
           <button

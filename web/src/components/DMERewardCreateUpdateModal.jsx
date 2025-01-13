@@ -7,7 +7,7 @@ const DMERewardCreateUpdateModal = ({
   formData,
   setFormData,
   handleSubmit,
-}) => {
+}) => { 
   if (!isOpen) return null;
 
   const handleInputChange = (e) => {
@@ -60,7 +60,7 @@ const DMERewardCreateUpdateModal = ({
             {/* Minimum ROAS */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Minimum ROAS <span className="text-red-600"> * </span>
+                Minimum ROAS
               </label>
               <input
                 type="number"
@@ -70,14 +70,14 @@ const DMERewardCreateUpdateModal = ({
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 placeholder="Enter minimum ROAS"
                 step="0.01"
-                required
+               
               />
             </div>
 
             {/* Minimum Revenue */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Minimum Revenue <span className="text-red-600"> * </span>
+                Minimum Revenue
               </label>
               <input
                 type="number"
@@ -87,7 +87,7 @@ const DMERewardCreateUpdateModal = ({
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 placeholder="Enter minimum revenue"
                 step="0.01"
-                required
+                
               />
             </div>
 

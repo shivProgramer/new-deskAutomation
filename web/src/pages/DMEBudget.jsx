@@ -4,30 +4,49 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import DMEBudgetCreateUpdateModal from "../components/DMEBudgetCreateUpdateModal";
 import { showToast } from "../utils/config";
 import Loader from "../components/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createDmeBudget,
+  deleteDmeBudget,
+  getAllDmeBudget,
+  getDmeBudgetbyid,
+  updateDmeBudget,
+} from "../redux/slice/Dme_Budget_slice";
+
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const date = now.toISOString().split("T")[0];
+  const time = now.toTimeString().split(" ")[0];
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+  return `${date} ${time}.${milliseconds}`;
+};
 
 const DMEBudget = () => {
+  const dispatch = useDispatch();
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterData, setFilterData] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState("");
+
   const [formData, setFormData] = useState({
-    CampaignID: 1,
-    TotalBudget: 60000,
-    DailyBudget: 1200,
-    CurrentSpend: 30000,
-    Currency: "USD",
-    UpdatedOn: "2025-01-07 12:00:00.000",
+    CampaignID: 0,
+    TotalBudget: 0,
+    DailyBudget: 0,
+    CurrentSpend: 0,
+    Currency: "",
+    UpdatedOn: currentDateTime,
   });
 
   const initialFormData = {
-    CampaignID: 1,
-    TotalBudget: 60000,
-    DailyBudget: 1200,
-    CurrentSpend: 30000,
-    Currency: "USD",
-    UpdatedOn: "2025-01-07 12:00:00.000",
+    CampaignID: 0,
+    TotalBudget: 0,
+    DailyBudget: 0,
+    CurrentSpend: 0,
+    Currency: "",
+    UpdatedOn: currentDateTime,
   };
 
   const staticData = [
@@ -41,11 +60,43 @@ const DMEBudget = () => {
     },
   ];
 
+  // get data from redux to here -----------------
+  const DmeBudgetAllData = useSelector(
+    (state) => state?.Dme_budget_stroe?.allDmeBudgetData
+  );
+
+  console.log("DmeBudgetAllData --", DmeBudgetAllData);
+  const singledata = useSelector(
+    (state) => state.Dme_budget_stroe?.singleDmeBudget
+  );
+  const loading = useSelector((state) => state?.Dme_budget_stroe?.loading);
+
+  useEffect(() => {
+    setCurrentDateTime(getCurrentDateTime());
+  }, []);
+
+  useEffect(() => {
+    setFormData({
+      CampaignID: singledata?.CampaignID,
+      TotalBudget: singledata?.TotalBudget,
+      DailyBudget: singledata?.DailyBudget,
+      CurrentSpend: singledata?.CurrentSpend,
+      Currency: singledata?.Currency,
+      UpdatedOn: currentDateTime,
+    });
+  }, [singledata]);
+
   const [budgetData, setBudgetData] = useState(staticData);
 
   useEffect(() => {
     setFilterData(budgetData);
   }, [budgetData]);
+
+  // here is calling api
+
+  useEffect(() => {
+    dispatch(getAllDmeBudget());
+  }, []);
 
   const handleSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -57,8 +108,9 @@ const DMEBudget = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = budgetData.filter((budget) => {
+      const filtered = DmeBudgetAllData.filter((budget) => {
         const allFields = `
+          ${budget?.DME_Campaign?.CampaignName || ""}
           ${budget?.TotalBudget || ""}
           ${budget?.DailyBudget || ""}
           ${budget?.CurrentSpend || ""}
@@ -71,24 +123,29 @@ const DMEBudget = () => {
 
       setFilterData(filtered);
     } else {
-      setFilterData(budgetData);
+      setFilterData(DmeBudgetAllData);
     }
-  }, [searchTerm, budgetData]);
+  }, [searchTerm, DmeBudgetAllData]);
 
   const handleDelete = (row) => {
     setRowToDelete(row);
     setIsModalOpendelete(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (rowToDelete) {
-      const updatedData = budgetData.filter(
-        (budget) => budget.CampaignID !== rowToDelete.CampaignID
-      );
-      setBudgetData(updatedData);
-      showToast("Budget deleted successfully", "success");
-      setIsModalOpendelete(false);
-      setRowToDelete(null);
+      try {
+        const res = await dispatch(deleteDmeBudget(rowToDelete?.b_id));
+        if (res?.payload) {
+          showToast(res?.payload?.message, "success");
+        }
+        await dispatch(getAllDmeBudget());
+      } catch (error) {
+        showToast(error, "error");
+      } finally {
+        setIsModalOpendelete(false);
+        setRowToDelete(null);
+      }
     }
   };
 
@@ -102,38 +159,65 @@ const DMEBudget = () => {
     setIsModalOpen(false);
   };
 
-  const handleUpdate = (budget) => {
-    setFormData(budget);
+  const handleUpdate = async (ele) => {
+    let id = ele?.b_id;
+    try {
+      await dispatch(getDmeBudgetbyid(id));
+    } catch (error) {
+      showToast(error, "error");
+    }
     setIsUpdate(true);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isUpdate) {
-      const updatedData = budgetData.map((budget) =>
-        budget.CampaignID === formData.CampaignID ? formData : budget
-      );
-      setBudgetData(updatedData);
-      showToast("Budget updated successfully", "success");
+      try {
+        const res = await dispatch(
+          updateDmeBudget({ id: singledata?.BudgetID, newData: formData })
+        );
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeBudget());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     } else {
-      setBudgetData([...budgetData, formData]);
-      showToast("Budget created successfully", "success");
+      try {
+        const res = await dispatch(createDmeBudget(formData));
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeBudget());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     }
     closeModal();
   };
 
   const columns = [
+    { label: "ID", key: "id" },
     { label: "Campaign ID", key: "CampaignID" },
     { label: "Total Budget", key: "TotalBudget" },
     { label: "Daily Budget", key: "DailyBudget" },
     { label: "Current Spend", key: "CurrentSpend" },
     { label: "Currency", key: "Currency" },
-    { label: "Updated On", key: "UpdatedOn" },
   ];
 
-  const data = filterData.map((budget, index) => ({
+  const data = filterData?.map((ele, index) => ({
     id: index + 1,
-    ...budget,
+    CampaignID: ele?.DME_Campaign?.CampaignName,
+    TotalBudget: ele?.TotalBudget,
+    DailyBudget: ele?.DailyBudget,
+    CurrentSpend: ele?.CurrentSpend,
+    Currency: ele?.Currency,
+    b_id: ele?.BudgetID,
   }));
 
   return (

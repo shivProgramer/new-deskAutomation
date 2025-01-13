@@ -21,7 +21,7 @@ export const getAllDmeCompaign = createAsyncThunk(
     }
   }
 );
- 
+
 export const createDmeCompaign = createAsyncThunk(
   "createDmeCompaign",
   async (newData, thunkAPI) => {
@@ -64,9 +64,29 @@ export const deleteDmeCompaign = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axiosInstance.delete(`dme/compaign/${id}`);
+      if (response.data.status === 0) {
+        return thunkAPI.rejectWithValue({
+          status: response.data.status,
+          error: response.data.error,
+          message: response.data.message,
+        });
+      }
+
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue({ error: error.message });
+      if (error.response) {
+        return thunkAPI.rejectWithValue({
+          status: error.response.status,
+          error: error.response.data.error || "Request failed",
+          message: error.response.data.message || "An error occurred",
+        });
+      } else {
+        return thunkAPI.rejectWithValue({
+          status: 500,
+          error: error.message,
+          message: "An unexpected error occurred",
+        });
+      }
     }
   }
 );

@@ -1,5 +1,8 @@
 const DME_Team = require('../models/DME_Team');
+const Employees = require('../models/Employee');
+const DME_Campaign = require('../models/DME_Campaign');
 const sequelize = require('../db');
+const { allDMETeamDetails } = require('../utils/query');
 
 // Create a new team
 const createTeam = async (req, res) => {
@@ -24,23 +27,76 @@ const createTeam = async (req, res) => {
       type: sequelize.QueryTypes.INSERT,
     });
 
-    res.status(201).json({ message: 'Team created successfully' });
+    res.status(201).json({ message: 'Team created successfully',status:1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error creating team' });
   }
 };
 
-// Get all teams
+
 const getAllTeams = async (req, res) => {
   try {
-    const teams = await DME_Team.findAll();
+    // Using Sequelize's raw query method
+    const teams = await sequelize.query(allDMETeamDetails, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    // Send the result as the response
     res.json(teams);
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching teams:', error);
     res.status(500).json({ error: 'Error fetching teams' });
   }
 };
+
+// const getAllTeams = async (req, res) => {
+//   try {
+//     // Query using Sequelize's include
+//     const campaignsWithEmployeesAndTeams = await DME_Campaign.findAll({
+//       attributes: ['CampaignID', 'CampaignName', 'StartDate'],
+//       include: [
+//         {
+//           model: DME_Team,
+//           attributes: ['TeamID', 'AssignedOn'],
+//           include: [
+//             {
+//               model: Employees,
+//               attributes: ['EmployeeID', 'EmployeeName'],
+//             },
+//           ],
+//         },
+//       ],
+//     });
+
+//     // Format the result as per your required structure
+//     const result = campaignsWithEmployeesAndTeams.map(campaign => {
+//       return {
+//         CampaignID: campaign.CampaignID,
+//         CampaignName: campaign.CampaignName,
+//         StartDate: campaign.StartDate,
+//         Employees: campaign.DME_Teams.map(team => {
+//           return team.Employees.map(employee => ({
+//             EmployeeID: employee.EmployeeID,
+//             EmployeeName: employee.EmployeeName,
+//             TeamID: team.TeamID,
+//             AssignedOn: team.AssignedOn
+//           }));
+//         }).flat(),
+//       };
+//     });
+
+//     // Send the formatted data as the response
+//     res.json(result);
+//   } catch (error) {
+//     console.error('Error fetching campaigns with employees and teams:', error);
+//     res.status(500).json({
+//       error: 'Error fetching campaigns with employees and teams',
+//       details: error.message
+//     });
+//   }
+// };
+
 
 // Get a team by ID
 const getTeamById = async (req, res) => {
@@ -83,7 +139,7 @@ const updateTeam = async (req, res) => {
       return res.status(404).json({ message: 'Team not found' });
     }
 
-    res.status(200).json({ message: 'Team updated successfully' });
+    res.status(200).json({ message: 'Team updated successfully', status:1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error updating team' });

@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDmeCompaign } from "../redux/slice/Dme_Compaign_slice";
+import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
 
 const DMETeamCreateUpdateModal = ({
   isOpen,
@@ -9,6 +12,19 @@ const DMETeamCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
+  const dispatch = useDispatch();
+  const DmeCompaginAllData = useSelector(
+    (state) => state?.Dme_compaign_store?.allDmeCompaignData
+  );
+
+  const allEmployee = useSelector((state) => state.employee?.allEmployee);
+  useEffect(() => {
+    dispatch(getAlEmployee());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getAllDmeCompaign());
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -44,33 +60,47 @@ const DMETeamCreateUpdateModal = ({
             {/* Campaign ID */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Campaign ID <span className="text-red-600"> * </span>
+                Campaign Name <span className="text-red-600"> * </span>
               </label>
-              <input
-                type="text"
+              <select
                 name="CampaignID"
-                value={formData.CampaignID || ""}
+                value={parseInt(formData.CampaignID)}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter campaign ID"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
                 required
-              />
+              >
+                <option value="">Select</option>
+                {DmeCompaginAllData.map((dme) => (
+                  <option key={dme.CampaignID} value={dme.CampaignID}>
+                    {dme.CampaignName}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Employee ID */}
+
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Employee ID <span className="text-red-600"> * </span>
+                Employee <span className="text-red-600"> * </span>
               </label>
-              <input
-                type="text"
+              <select
                 name="EmployeeID"
                 value={formData.EmployeeID || ""}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter employee ID"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
                 required
-              />
+              >
+                <option value="">Select</option>
+                {allEmployee.map((employee) => (
+                  <option
+                    key={employee.desk_employee_id}
+                    value={employee.desk_employee_id}
+                  >
+                    {employee.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Role */}
@@ -78,34 +108,19 @@ const DMETeamCreateUpdateModal = ({
               <label className="block text-sm font-medium mb-1">
                 Role <span className="text-red-600"> * </span>
               </label>
-              <select
+              <input
+                type="text"
                 name="Role"
                 value={formData.Role || ""}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                required
-              >
-                <option value="">Select Role</option>
-                <option value="Manager">Manager</option>
-                <option value="Executive">Executive</option>
-                <option value="Assistant">Assistant</option>
-              </select>
-            </div>
-
-            {/* Assigned Date */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Assigned Date <span className="text-red-600"> * </span>
-              </label>
-              <input
-                type="date"
-                name="AssignedOn"
-                value={formData.AssignedOn || ""}
-                onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
+                placeholder="Enter Role"
                 required
               />
             </div>
+
+            {/* Assigned Date */}
+            
           </div>
 
           {/* Modal Actions */}

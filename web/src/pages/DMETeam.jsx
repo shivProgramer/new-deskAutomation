@@ -4,43 +4,80 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 import { showToast } from "../utils/config";
 import DMETeamCreateUpdateModal from "../components/DMETeamCreateUpdateModal";
+import Loader from "../components/Loader";
+import {
+  createDmeTeam,
+  deleteDmeTeam,
+  getAllDmeTeam,
+  getDmeTeambyid,
+  updateDmeTeam,
+} from "../redux/slice/Dme_Team_slice";
+import { useDispatch, useSelector } from "react-redux";
+
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const date = now.toISOString().split("T")[0];
+  const time = now.toTimeString().split(" ")[0];
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+  return `${date} ${time}.${milliseconds}`;
+};
 
 const DMETeam = () => {
+  const dispatch = useDispatch();
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterData, setFilterData] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState("");
   const [formData, setFormData] = useState({
-    CampaignID: 1,
+    CampaignID: 0,
     EmployeeID: "",
     Role: "",
-    AssignedOn: new Date().toISOString().split("T")[0], // Default to current date
+    AssignedOn: currentDateTime,
   });
 
   const initialFormData = {
-    CampaignID: 1,
-    EmployeeID: "",
-    Role: "",
-    AssignedOn: new Date().toISOString().split("T")[0],
+    CampaignID: 0,
+    EmployeeID: 0,
+    Role: 0,
+    AssignedOn: currentDateTime,
   };
 
-  const staticData = [
-    {
-      CampaignID: 1,
-      EmployeeID: 101,
-      Role: "Manager",
-      AssignedOn: "2025-01-05",
-    },
-    // Add more static data as needed
-  ];
 
-  const [teamData, setTeamData] = useState(staticData);
+  // get data from redux to here -----------------
+  const DmeTeamAllData = useSelector(
+    (state) => state?.Dme_team_stroe?.allDmeTeamData
+  );
+
+  const singledata = useSelector(
+    (state) => state.Dme_team_stroe?.singleDmeTeam
+  );
+
+  const loading = useSelector((state) => state?.Dme_team_stroe?.loading);
+
+
 
   useEffect(() => {
-    setFilterData(teamData);
-  }, [teamData]);
+    setCurrentDateTime(getCurrentDateTime());
+  }, []);
+
+
+  useEffect(() => {
+    setFormData({
+      CampaignID: singledata?.CampaignID,
+      EmployeeID: singledata?.EmployeeID,
+      Role: singledata?.Role,
+      AssignedOn: singledata?.AssignedOn,
+    });
+  }, [singledata]);
+
+  // here is calling api
+
+  useEffect(() => {
+    dispatch(getAllDmeTeam());
+  }, []);
 
   const handleSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -52,36 +89,39 @@ const DMETeam = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = teamData.filter((team) => {
+      const filtered = DmeTeamAllData.filter((team) => {
         const allFields = `
-          ${team?.EmployeeID || ""}
+          ${team?.EmployeeName || ""}
           ${team?.Role || ""}
-          ${team?.AssignedOn || ""}
+          ${team?.CampaignName || ""}
         `.toLowerCase();
-
         return allFields.includes(searchTerm.toLowerCase());
       });
 
       setFilterData(filtered);
     } else {
-      setFilterData(teamData);
+      setFilterData(DmeTeamAllData);
     }
-  }, [searchTerm, teamData]);
-
+  }, [searchTerm, DmeTeamAllData]);
   const handleDelete = (row) => {
     setRowToDelete(row);
     setIsModalOpendelete(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (rowToDelete) {
-      const updatedData = teamData.filter(
-        (team) => team.EmployeeID !== rowToDelete.EmployeeID
-      );
-      setTeamData(updatedData);
-      showToast("Team member deleted successfully", "success");
-      setIsModalOpendelete(false);
-      setRowToDelete(null);
+      try {
+        const res = await dispatch(deleteDmeTeam(rowToDelete?.team_id));
+        if (res?.payload) {
+          showToast(res?.payload?.message, "success");
+        }
+        await dispatch(getAllDmeTeam());
+      } catch (error) {
+        showToast(error, "error");
+      } finally {
+        setIsModalOpendelete(false);
+        setRowToDelete(null);
+      }
     }
   };
 
@@ -95,39 +135,66 @@ const DMETeam = () => {
     setIsModalOpen(false);
   };
 
-  const handleUpdate = (team) => {
-    setFormData(team);
+  const handleUpdate = async (ele) => {
+    let id = ele?.team_id;
+    try {
+      await dispatch(getDmeTeambyid(id));
+    } catch (error) {
+      showToast(error, "error");
+    }
     setIsUpdate(true);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isUpdate) {
-      const updatedData = teamData.map((team) =>
-        team.EmployeeID === formData.EmployeeID ? formData : team
-      );
-      setTeamData(updatedData);
-      showToast("Team member updated successfully", "success");
+      try {
+        const res = await dispatch(
+          updateDmeTeam({ id: singledata?.TeamID, newData: formData })
+        );
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeTeam());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     } else {
-      setTeamData([...teamData, formData]);
-      showToast("Team member added successfully", "success");
+      try {
+        const res = await dispatch(createDmeTeam(formData));
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeTeam());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     }
     closeModal();
   };
 
   const columns = [
-    { label: "Employee ID", key: "EmployeeID" },
+    { label: "Id", key: "id" },
+    { label: "Employee Name", key: "EmployeeID" },
     { label: "Role", key: "Role" },
-    { label: "Assigned On", key: "AssignedOn" },
+    { label: "Compaign Name", key: "CampaignID" },
+    // { label: "Assigned On", key: "AssignedOn" },
   ];
 
-  const data = filterData.map((team, index) => ({
+  const data = filterData?.map((ele, index) => ({
     id: index + 1,
-    ...team,
+    CampaignID: ele?.CampaignName || "N/A",
+    EmployeeID: ele?.EmployeeName || "N/A",
+    Role: ele?.Role || "N/A",
+    team_id: ele?.TeamID,
   }));
-
   return (
     <>
+      {loading && <Loader loading={loading} />}
       <div className=" bg-gray-50 p-0 md:p-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 bg-gray-100 rounded-md shadow-md">
           <button

@@ -5,42 +5,74 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import { showToast } from "../utils/config";
 import Loader from "../components/Loader";
 import DMERoasCreateUpdateModal from "../components/DMERoasCreateUpdateModal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createDmeRoas,
+  deleteDmeRoas,
+  getAllDmeRoas,
+  getDmeRoasbyid,
+  updateDmeRoas,
+} from "../redux/slice/Dme_Roas_slice";
+
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const date = now.toISOString().split("T")[0];
+  const time = now.toTimeString().split(" ")[0];
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+  return `${date} ${time}.${milliseconds}`;
+};
 
 const DMEROAS = () => {
+  const dispatch = useDispatch();
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterData, setFilterData] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState("");
   const [formData, setFormData] = useState({
-    CampaignID: "",
-    RevenueGenerated: "",
-    Spend: "",
-    UpdatedOn: new Date().toISOString().split("T")[0],
+    CampaignID: 0,
+    RevenueGenerated: 0,
+    Spend: 0,
+    UpdatedOn: currentDateTime,
   });
 
   const initialFormData = {
-    CampaignID: "",
-    RevenueGenerated: "",
-    Spend: "",
-    UpdatedOn: new Date().toISOString().split("T")[0],
+    CampaignID: 0,
+    RevenueGenerated: 0,
+    Spend: 0,
+    UpdatedOn: currentDateTime,
   };
 
-  const staticData = [
-    {
-      CampaignID: 1,
-      RevenueGenerated: 10000.00,
-      Spend: 5000.00,
-      UpdatedOn: "2025-01-07 10:00:00.000",
-    },
-  ];
+  // get data from redux to here -----------------
+  const DmeRoasAllData = useSelector(
+    (state) => state?.Dme_rose_stroe?.allDmeRoasData
+  );
 
-  const [roasData, setRoasData] = useState(staticData);
+  const singledata = useSelector(
+    (state) => state.Dme_rose_stroe?.singleDmeRoas
+  );
+  const loading = useSelector((state) => state?.Dme_rose_stroe?.loading);
 
   useEffect(() => {
-    setFilterData(roasData);
-  }, [roasData]);
+    setCurrentDateTime(getCurrentDateTime());
+  }, []);
+
+  useEffect(() => {
+    setFormData({
+      CampaignID: singledata?.CampaignID,
+      RevenueGenerated: singledata?.RevenueGenerated,
+      Spend: singledata?.Spend,
+      UpdatedOn: currentDateTime,
+    });
+  }, [singledata]);
+
+  // here is calling api
+
+  useEffect(() => {
+    dispatch(getAllDmeRoas());
+  }, []);
 
   const handleSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -52,12 +84,13 @@ const DMEROAS = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = roasData.filter((roas) => {
+      const filtered = DmeRoasAllData.filter((roas) => {
         const allFields = `
-          ${roas?.CampaignID || ""}
-          ${roas?.RevenueGenerated || ""}
-          ${roas?.Spend || ""}
+          ${roas?.Campaign?.Name || ""} 
+          ${roas?.RevenueGenerated || ""} 
+          ${roas?.Spend || ""} 
           ${roas?.UpdatedOn || ""}
+          ${roas?.ROAS || ""}
         `.toLowerCase();
 
         return allFields.includes(searchTerm.toLowerCase());
@@ -65,22 +98,29 @@ const DMEROAS = () => {
 
       setFilterData(filtered);
     } else {
-      setFilterData(roasData);
+      setFilterData(DmeRoasAllData);
     }
-  }, [searchTerm, roasData]);
+  }, [searchTerm, DmeRoasAllData]);
 
   const handleDelete = (row) => {
     setRowToDelete(row);
     setIsModalOpendelete(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (rowToDelete) {
-      const updatedData = roasData.filter((roas) => roas.CampaignID !== rowToDelete.CampaignID);
-      setRoasData(updatedData);
-      showToast("ROAS data deleted successfully", "success");
-      setIsModalOpendelete(false);
-      setRowToDelete(null);
+      try {
+        const res = await dispatch(deleteDmeRoas(rowToDelete?.rs_id));
+        if (res?.payload) {
+          showToast(res?.payload?.message, "success");
+        }
+        await dispatch(getAllDmeRoas());
+      } catch (error) {
+        showToast(error, "error");
+      } finally {
+        setIsModalOpendelete(false);
+        setRowToDelete(null);
+      }
     }
   };
 
@@ -94,40 +134,69 @@ const DMEROAS = () => {
     setIsModalOpen(false);
   };
 
-  const handleUpdate = (roas) => {
-    setFormData(roas);
+  const handleUpdate = async (ele) => {
+    let id = ele?.rs_id;
+    try {
+      await dispatch(getDmeRoasbyid(id));
+    } catch (error) {
+      showToast(error, "error");
+    }
     setIsUpdate(true);
     setIsModalOpen(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isUpdate) {
-      const updatedData = roasData.map((roas) =>
-        roas.CampaignID === formData.CampaignID ? formData : roas
-      );
-      setRoasData(updatedData);
-      showToast("ROAS data updated successfully", "success");
+      try {
+        const res = await dispatch(
+          updateDmeRoas({ id: singledata?.ROASID, newData: formData })
+        );
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeRoas());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     } else {
-      setRoasData([...roasData, formData]);
-      showToast("ROAS data created successfully", "success");
+      try {
+        const res = await dispatch(createDmeRoas(formData));
+        if (res?.payload?.status === 1) {
+          await dispatch(getAllDmeRoas());
+          showToast(res?.payload?.message, "success");
+        } else {
+          showToast(res?.payload?.error, "error");
+        }
+      } catch (error) {
+        showToast(error, "error");
+      }
     }
     closeModal();
   };
 
   const columns = [
-    { label: "Campaign ID", key: "CampaignID" },
+    { label: "Id", key: "id" },
+    { label: "Campaign Name", key: "CampaignID" },
     { label: "Revenue Generated", key: "RevenueGenerated" },
     { label: "Spend", key: "Spend" },
-    { label: "Updated On", key: "UpdatedOn" },
+    { label: "ROAS", key: "roas" },
   ];
 
-  const data = filterData.map((roas, index) => ({
+  const data = filterData?.map((ele, index) => ({
     id: index + 1,
-    ...roas,
+    CampaignID: ele?.Campaign?.Name || "N/A",
+    RevenueGenerated: ele?.RevenueGenerated || "N/A",
+    Spend: ele?.Spend || "N/A",
+    roas: ele?.ROAS || "N/A",
+
+    rs_id: ele?.ROASID,
   }));
 
   return (
     <>
+      {loading && <Loader loading={loading} />}
       <div className=" bg-gray-50 p-0 md:p-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 bg-gray-100 rounded-md shadow-md">
           <button

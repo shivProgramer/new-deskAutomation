@@ -45,7 +45,7 @@ const createBudget = async (req, res) => {
       type: sequelize.QueryTypes.INSERT,
     });
 
-    res.status(201).json({ message: 'Budget created successfully' });
+    res.status(201).json({ message: 'Budget created successfully',status:1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error creating budget' });
@@ -133,7 +133,7 @@ const updateBudget = async (req, res) => {
       return res.status(404).json({ message: 'Budget not found' });
     }
 
-    res.status(200).json({ message: 'Budget updated successfully' });
+    res.status(200).json({ message: 'Budget updated successfully',status:1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error updating budget' });

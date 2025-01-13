@@ -29,7 +29,6 @@ const DMECampaign = () => {
   const [filterData, setFilterData] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
   const [currentDateTime, setCurrentDateTime] = useState("");
   const userData = JSON.parse(localStorage.getItem("userData"));
   let user_id;
@@ -63,7 +62,7 @@ const DMECampaign = () => {
   };
 
   // get data from redux to here -----------------
-  const salesCompaginAllData = useSelector(
+  const DmeCompaginAllData = useSelector(
     (state) => state?.Dme_compaign_store?.allDmeCompaignData
   );
   const singledata = useSelector(
@@ -98,7 +97,7 @@ const DMECampaign = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = salesCompaginAllData.filter((campaign) => {
+      const filtered = DmeCompaginAllData.filter((campaign) => {
         const allFields = `
           ${campaign?.CampaignName || ""}
           ${campaign?.Platform || ""}
@@ -114,9 +113,9 @@ const DMECampaign = () => {
 
       setFilterData(filtered);
     } else {
-      setFilterData(salesCompaginAllData);
+      setFilterData(DmeCompaginAllData);
     }
-  }, [searchTerm, salesCompaginAllData]);
+  }, [searchTerm, DmeCompaginAllData]);
 
   const handleDelete = (row) => {
     setRowToDelete(row);
@@ -127,12 +126,19 @@ const DMECampaign = () => {
     if (rowToDelete) {
       try {
         const res = await dispatch(deleteDmeCompaign(rowToDelete?.cmp_id));
-        if (res?.payload) {
+
+        if (res.payload.status === 400) {
+          showToast(res?.payload?.message, "error");
+        } else if (res?.payload !== 400) {
           showToast(res?.payload?.message, "success");
         }
         await dispatch(getAllDmeCompaign());
       } catch (error) {
-        showToast(error, "error");
+        if (error?.payload?.message) {
+          showToast(error?.payload?.message, "error");
+        } else {
+          showToast(error.message, "error");
+        }
       } finally {
         setIsModalOpendelete(false);
         setRowToDelete(null);

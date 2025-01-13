@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDmeCompaign } from "../redux/slice/Dme_Compaign_slice";
+import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
 
 const DMEAnalysisCreateUpdateModal = ({
   isOpen,
@@ -9,6 +12,19 @@ const DMEAnalysisCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
+  const dispatch = useDispatch();
+  const DmeCompaginAllData = useSelector(
+    (state) => state?.Dme_compaign_store?.allDmeCompaignData
+  );
+  const allEmployee = useSelector((state) => state.employee?.allEmployee);
+
+  useEffect(() => {
+    dispatch(getAlEmployee());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllDmeCompaign());
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +39,7 @@ const DMEAnalysisCreateUpdateModal = ({
       <div className="bg-white rounded-lg w-full max-w-lg p-6 shadow-lg">
         {/* Modal Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-blue-600">{title}</h2>
+          <h2 className="text-xl font-semibold text-green-600">{title}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 focus:outline-none"
@@ -41,20 +57,24 @@ const DMEAnalysisCreateUpdateModal = ({
         >
           {/* Form Inputs Grid */}
           <div className="grid grid-cols-1 gap-4">
-            {/* Campaign ID */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Campaign ID <span className="text-red-600"> * </span>
+                Campaign Name <span className="text-red-600"> * </span>
               </label>
-              <input
-                type="number"
+              <select
                 name="CampaignID"
-                value={formData.CampaignID || ""}
+                value={parseInt(formData.CampaignID)}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter campaign ID"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
                 required
-              />
+              >
+                <option value="">Select</option>
+                {DmeCompaginAllData.map((dme) => (
+                  <option key={dme.CampaignID} value={dme.CampaignID}>
+                    {dme.CampaignName}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Note */}
@@ -66,42 +86,34 @@ const DMEAnalysisCreateUpdateModal = ({
                 name="Note"
                 value={formData.Note || ""}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
                 placeholder="Enter note for analysis"
                 rows="4"
                 required
               />
             </div>
 
-            {/* Added By */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
                 Added By <span className="text-red-600"> * </span>
               </label>
-              <input
-                type="number"
+              <select
                 name="AddedBy"
                 value={formData.AddedBy || ""}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter the user ID who added this"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
                 required
-              />
-            </div>
-
-            {/* Added On */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Added On <span className="text-red-600"> * </span>
-              </label>
-              <input
-                type="datetime-local"
-                name="AddedOn"
-                value={formData.AddedOn || ""}
-                onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                required
-              />
+              >
+                <option value="">Select</option>
+                {allEmployee.map((employee) => (
+                  <option
+                    key={employee.desk_employee_id}
+                    value={employee.desk_employee_id}
+                  >
+                    {employee.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -116,7 +128,7 @@ const DMEAnalysisCreateUpdateModal = ({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
             >
               {title}
             </button>

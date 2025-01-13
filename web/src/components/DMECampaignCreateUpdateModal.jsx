@@ -23,7 +23,7 @@ const DMECampaignCreateUpdateModal = ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-  };
+  };   
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -52,8 +52,8 @@ const DMECampaignCreateUpdateModal = ({
           <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Employee  <span className="text-red-600"> * </span></label>
               <select
-                name="employee_id"
-                value={formData.employee_id || ""}
+                name="CreatedBy"
+                value={formData.CreatedBy || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 required

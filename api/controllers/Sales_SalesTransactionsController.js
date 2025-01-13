@@ -81,7 +81,7 @@ const createSalesTransaction = async (req, res) => {
 const getAllSalesTransactions = async (req, res) => {
   try {
     const transactions = await Sales_SalesTransactions.findAll({
-      include: ["Employee"], // Include associated Employee data
+      include: ["Employee"], 
     });
 
     res.json(transactions);

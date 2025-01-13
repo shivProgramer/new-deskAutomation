@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDmeCompaign } from "../redux/slice/Dme_Compaign_slice";
 
 const DMEBudgetCreateUpdateModal = ({
   isOpen,
@@ -9,6 +11,14 @@ const DMEBudgetCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
+  const dispatch = useDispatch();
+  const DmeCompaginAllData = useSelector(
+    (state) => state?.Dme_compaign_store?.allDmeCompaignData
+  );
+
+  useEffect(() => {
+    dispatch(getAllDmeCompaign());
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +51,27 @@ const DMEBudgetCreateUpdateModal = ({
         >
           {/* Form Inputs Grid */}
           <div className="grid grid-cols-1 gap-4">
+          <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">
+                Campaign Name <span className="text-red-600"> * </span>
+              </label>
+              <select
+                name="CampaignID"
+                value={parseInt(formData.CampaignID)}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
+                required
+              >
+                <option value="">Select</option>
+                {DmeCompaginAllData.map((dme) => (
+                  <option key={dme.CampaignID} value={dme.CampaignID}>
+                    {dme.CampaignName}
+                  </option>
+                ))}
+                
+              </select>
+            </div>
+
             {/* Total Budget */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
@@ -51,7 +82,7 @@ const DMEBudgetCreateUpdateModal = ({
                 name="TotalBudget"
                 value={formData.TotalBudget || ""}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
                 placeholder="Enter total budget"
                 required
               />
@@ -60,46 +91,46 @@ const DMEBudgetCreateUpdateModal = ({
             {/* Daily Budget */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Daily Budget <span className="text-red-600"> * </span>
+                Daily Budget 
               </label>
               <input
                 type="number"
                 name="DailyBudget"
                 value={formData.DailyBudget || ""}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
                 placeholder="Enter daily budget"
-                required
+              
               />
             </div>
 
             {/* Current Spend */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Current Spend <span className="text-red-600"> * </span>
+                Current Spend 
               </label>
               <input
                 type="number"
                 name="CurrentSpend"
                 value={formData.CurrentSpend || ""}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
                 placeholder="Enter current spend"
-                required
+                
               />
             </div>
 
             {/* Currency */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Currency <span className="text-red-600"> * </span>
+                Currency 
               </label>
               <select
                 name="Currency"
                 value={formData.Currency || ""}
                 onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                required
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
+               
               >
                 <option value="">Select Currency</option>
                 <option value="USD">USD</option>
@@ -109,20 +140,7 @@ const DMEBudgetCreateUpdateModal = ({
               </select>
             </div>
 
-            {/* Updated On */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Updated On <span className="text-red-600"> * </span>
-              </label>
-              <input
-                type="datetime-local"
-                name="UpdatedOn"
-                value={formData.UpdatedOn || ""}
-                onChange={handleInputChange}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                required
-              />
-            </div>
+           
           </div>
 
           {/* Modal Actions */}

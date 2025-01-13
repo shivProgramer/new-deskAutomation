@@ -1,5 +1,6 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDmeCompaign } from "../redux/slice/Dme_Compaign_slice";
 const DMERoasCreateUpdateModal = ({
   isOpen,
   onClose,
@@ -9,7 +10,14 @@ const DMERoasCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
+  const dispatch = useDispatch();
+  const DmeCompaginAllData = useSelector(
+    (state) => state?.Dme_compaign_store?.allDmeCompaignData
+  );
 
+  useEffect(() => {
+    dispatch(getAllDmeCompaign());
+  }, []);
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -42,7 +50,7 @@ const DMERoasCreateUpdateModal = ({
           {/* Form Inputs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Campaign ID */}
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
                 Campaign ID <span className="text-red-600"> * </span>
               </label>
@@ -55,6 +63,26 @@ const DMERoasCreateUpdateModal = ({
                 placeholder="Enter campaign ID"
                 required
               />
+            </div> */}
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">
+                Campaign Name <span className="text-red-600"> * </span>
+              </label>
+              <select
+                name="CampaignID"
+                value={parseInt(formData.CampaignID)}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200 p-2 border"
+                required
+              >
+                <option value="">Select</option>
+                {DmeCompaginAllData.map((dme) => (
+                  <option key={dme.CampaignID} value={dme.CampaignID}>
+                    {dme.CampaignName}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Revenue Generated */}
@@ -89,7 +117,7 @@ const DMERoasCreateUpdateModal = ({
               />
             </div>
 
-            {/* Updated On */}
+            {/* Updated On
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
                 Updated On <span className="text-red-600"> * </span>
@@ -102,7 +130,7 @@ const DMERoasCreateUpdateModal = ({
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
                 required
               />
-            </div>
+            </div> */}
           </div>
 
           {/* Modal Actions */}

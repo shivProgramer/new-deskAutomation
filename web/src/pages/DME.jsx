@@ -58,7 +58,7 @@ const DME = () => {
           className={cardStyles("RewardRules")}
           onClick={() => handleCardClick("RewardRules")}
         >
-          <span className="text-md font-semibold">RewardRules</span>
+          <span className="text-md font-semibold">Reward Rules</span>
           <FaEye className="text-green-300 cursor-pointer" />
         </div>
 

@@ -7,10 +7,10 @@ const initialState = {
   loading: false,
   error: null,
   access: [],
-  singleDmeReward: [],
+  singleDmeReward: [],  
 };
 
-export const getAllDmeReward = createAsyncThunk(
+export const getAllDmeReward = createAsyncThunk( 
   "getAllDmeReward",
   async (thunkAPI) => {
     try {

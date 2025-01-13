@@ -1,5 +1,5 @@
-const DME_Campaign = require('../models/DME_Campaign');
-const sequelize = require('../db');
+const DME_Campaign = require("../models/DME_Campaign");
+const sequelize = require("../db");
 
 // Create a new campaign
 const createCampaign = async (req, res) => {
@@ -50,10 +50,12 @@ const createCampaign = async (req, res) => {
       type: sequelize.QueryTypes.INSERT,
     });
 
-    res.status(201).json({ message: 'Campaign created successfully',status : 1 });
+    res
+      .status(201)
+      .json({ message: "Campaign created successfully", status: 1 });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error creating campaign' });
+    res.status(500).json({ error: "Error creating campaign" });
   }
 };
 
@@ -64,7 +66,7 @@ const getAllCampaigns = async (req, res) => {
     res.json(campaigns);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching campaigns' });
+    res.status(500).json({ error: "Error fetching campaigns" });
   }
 };
 
@@ -76,13 +78,13 @@ const getCampaignById = async (req, res) => {
     const campaign = await DME_Campaign.findByPk(id);
 
     if (!campaign) {
-      return res.status(404).json({ message: 'Campaign not found' });
+      return res.status(404).json({ message: "Campaign not found" });
     }
 
     res.json(campaign);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching campaign' });
+    res.status(500).json({ error: "Error fetching campaign" });
   }
 };
 
@@ -131,32 +133,76 @@ const updateCampaign = async (req, res) => {
     });
 
     if (affectedRows === 0) {
-      return res.status(404).json({ message: 'Campaign not found' });
+      return res.status(404).json({ message: "Campaign not found" });
     }
 
-    res.status(200).json({ message: 'Campaign updated successfully' , status : 1 });
+    res
+      .status(200)
+      .json({ message: "Campaign updated successfully", status: 1 });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error updating campaign' });
+    res.status(500).json({ error: "Error updating campaign" });
   }
 };
 
 // Delete a campaign
+// const deleteCampaign = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     const campaign = await DME_Campaign.findByPk(id);
+
+//     if (!campaign) {
+//       return res.status(404).json({ message: 'Campaign not found' });
+//     }
+
+//     await campaign.destroy();
+//     res.json({ message: 'Campaign deleted successfully' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Error deleting campaign' });
+//   }
+// };
+
 const deleteCampaign = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Find the campaign by its ID
     const campaign = await DME_Campaign.findByPk(id);
 
+    // Check if the campaign exists
     if (!campaign) {
-      return res.status(404).json({ message: 'Campaign not found' });
+      return res.status(404).json({
+        status: 0,
+        message: "Campaign not found",
+      });
     }
 
+    // Attempt to delete the campaign
     await campaign.destroy();
-    res.json({ message: 'Campaign deleted successfully' });
+    res.json({
+      status: 1,
+      message: "Campaign deleted successfully",
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error deleting campaign' });
+
+    // Check if the error is related to a foreign key constraint violation
+    if (error.name === "SequelizeForeignKeyConstraintError") {
+      return res.status(400).json({
+        status: 0,
+        error: "Unable to delete campaign",
+        message:
+          "This campaign is related to other data. Please delete the related data first before deleting the campaign.",
+      });
+    }
+
+    // Generic error handling
+    res.status(500).json({
+      status: 0,
+      error: "Error deleting campaign",
+    });
   }
 };
 
