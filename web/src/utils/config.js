@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 export const API_URL = "http://localhost:3333/api/";
 // export const Img_Url = "http://localhost:30011/public";
 
-
 export const showToast = (message, type = "default") => {
  
   const options = { autoClose: 5000 };

@@ -16,7 +16,7 @@ const createAttendance = async (req, res) => {
       at_work_time,
       after_work_time,
       before_work_time,
-      productive_time,
+      productive_time, 
       productivity,
       efficiency,
       work_starts,

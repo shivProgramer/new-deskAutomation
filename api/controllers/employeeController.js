@@ -1,8 +1,6 @@
-
-
 const Employee = require("../models/Employee");
 // const bcrypt = require("bcrypt");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { Sequelize } = require("sequelize");
 const errorHandlerMiddleware = require("../middleware/errorHandlerMiddleware");
@@ -86,7 +84,6 @@ exports.createEmployee = async (req, res) => {
   }
 };
 
-
 exports.updateEmployee = async (req, res) => {
   const { id } = req.params;
   const { name, email, group_name, profile_url } = req.body;
@@ -145,7 +142,9 @@ exports.toggleEmployeeStatus = async (req, res) => {
     }
 
     // Toggle status logic, if needed (but the model has no status field anymore)
-    res.status(200).json({ message: "Employee status change logic needs to be defined" });
+    res
+      .status(200)
+      .json({ message: "Employee status change logic needs to be defined" });
   } catch (error) {
     res.status(500).json({ message: "Error toggling employee status", error });
   }
@@ -162,7 +161,6 @@ exports.deleteEmployee = async (req, res) => {
       return res.status(404).json({ message: "Employee not found" });
     }
 
-    // Deleting employee logic: removing instead of a soft-delete with "status"
     await employee.destroy();
     res.status(200).json({ message: "Employee deleted successfully" });
   } catch (error) {
@@ -174,7 +172,6 @@ exports.loginEmployee = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find employee by email
     const employee = await Employee.findOne({
       where: { email },
     });
@@ -182,13 +179,11 @@ exports.loginEmployee = async (req, res) => {
       return res.status(404).json({ error: "Employee not found." });
     }
 
-    // If password matching is necessary, ensure password is hashed and exists in model
     const isPasswordValid = await bcrypt.compare(password, employee.password);
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid password." });
     }
 
-    // Generate JWT (if needed for employee)
     const token = jwt.sign(
       { employeeId: employee.desk_employee_id, email: employee.email },
       process.env.JWT_SECRET,
@@ -201,4 +196,3 @@ exports.loginEmployee = async (req, res) => {
     res.status(500).json({ error: "An error occurred during login." });
   }
 };
-

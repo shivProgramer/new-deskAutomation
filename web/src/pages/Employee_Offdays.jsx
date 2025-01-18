@@ -18,9 +18,9 @@ const Employee_Offdays = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     desk_employee_id: 0,
-    off_date: "",
+    off_date: null,
     is_covered: false,
-    covered_date: "",
+    covered_date: null,
     reason: "",
     created_at: "",
     updated_at: "",
@@ -36,9 +36,6 @@ const Employee_Offdays = () => {
     (state) => state.employee_ofday_stroe?.singleEmployeeoffdays
   );
   const loading = useSelector((state) => state?.employee_ofday_stroe?.loading);
-
-
-
   useEffect(() => {
     const now = new Date();
     const date = now.toISOString().split("T")[0];
@@ -56,7 +53,7 @@ const Employee_Offdays = () => {
         covered_date: singledata?.covered_date,
         reason: singledata?.reason,
         created_at:singledata?.created_at,
-        updated_at: singledata?.updated_at,
+        updated_at:currentDateTime,
       });
     }, [singledata]);
 
@@ -99,9 +96,9 @@ const Employee_Offdays = () => {
     setIsUpdate(false);
     setFormData({
       desk_employee_id: 0,
-      off_date: "",
+      off_date: null,
       is_covered: false,
-      covered_date: "",
+      covered_date: null,
       reason: "",
       created_at: currentDateTime,
       updated_at: currentDateTime,

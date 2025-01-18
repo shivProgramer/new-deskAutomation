@@ -19,6 +19,7 @@ import Dme_Roas_slice from "./slice/Dme_Roas_slice"
 import Dme_Team_slice from "./slice/Dme_Team_slice"
 import Dme_Budget_slice from "./slice/Dme_Budget_slice"
 import Employee_offDay_slice from "./slice/Employee_offDay_slice"
+import Holidays_slice from "./slice/Holidays_slice"
 const store = configureStore({
   reducer: {
     auth: Auth_slice,
@@ -41,6 +42,7 @@ const store = configureStore({
     Dme_team_stroe : Dme_Team_slice,
     Dme_budget_stroe : Dme_Budget_slice,
     employee_ofday_stroe : Employee_offDay_slice,
+    Holidays_store : Holidays_slice,
   },
 });
 

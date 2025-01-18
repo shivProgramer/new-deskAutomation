@@ -180,7 +180,7 @@ exports.updateEmployeeOffday = async (req, res) => {
   
     try {
       // Ensure required fields are provided
-      if (!desk_employee_id || !off_date || !is_covered) {
+      if (!desk_employee_id || !off_date) {
         return res.json({ message: "Required fields are missing", status: 0 });
       }
   

@@ -96,7 +96,7 @@ const updateROAS = async (req, res) => {
     const { CampaignID, RevenueGenerated, Spend, UpdatedOn } = req.body;
 
     const sqlQuery = `
-        UPDATE DME_ROAS
+        UPDATE DME_ROAS 
         SET
           CampaignID = :CampaignID,
           RevenueGenerated = :RevenueGenerated,

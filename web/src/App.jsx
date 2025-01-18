@@ -17,6 +17,7 @@ import SalesTransaction from "./pages/SalesTransaction";
 import SalestTeamsTarget from "./pages/SalestTeamsTarget";
 import DME from "./pages/DME";
 import Employee_Offdays from "./pages/Employee_Offdays";
+import Holidays from "./pages/Holidays";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -79,6 +80,10 @@ function App() {
         {
           path: "/employee_offdays",
           element: <Employee_Offdays />,
+        },
+        {
+          path: "/holidays",
+          element: <Holidays />,
         },
       ],
     },
