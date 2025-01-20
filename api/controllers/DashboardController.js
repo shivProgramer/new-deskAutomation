@@ -1,69 +1,123 @@
 const sequelize = require("../db");
+const ProjectCostDetail = require("../models/Project_Cost_Details");
+const DME_Performance = require("../models/DME_Performance");
+const DME_Campaign = require("../models/DME_Campaign");
 
-// const getDashboardData = async (req, res) => {
+// const getallDashboard = async (req, res) => {
 //   try {
-//     // Execute the stored procedure to get the dashboard data
-//     const result = await sequelize.query(
-//       "EXEC GetDashboardBlock", // Your stored procedure name
-//       {
-//         type: sequelize.QueryTypes.SELECT, // Specify the query type as SELECT
-//       }
+//     const [employeePerformanceReport] = await sequelize.query(
+//       "EXEC SP_EnhancedEmployeePerformanceReport_Consolidated"
+//     );
+//     const [salesReportByGroup] = await sequelize.query(
+//       "EXEC SP_Sales_Report_ByGroup 'monthly', 'division'"
 //     );
 
-//     // Return the result from the stored procedure
-//     res.status(200).json({
-//       status: 1,
-//       message: "Dashboard data fetched successfully",
-//       data: result, // `result` contains the data returned by the stored procedure
+//     const last5dataofEmployee = Array.isArray(employeePerformanceReport)
+//       ? employeePerformanceReport.slice(-5)
+//       : [];
+
+//     const last5dataofSalesReport = Array.isArray(salesReportByGroup)
+//       ? salesReportByGroup.slice(-5)
+//       : [];
+
+//     const projectDetails = await ProjectCostDetail.findAll({
+//       order: [["created_at", "DESC"]],
+//       limit: 5,
 //     });
+
+//     console.log("projectDetails ----", projectDetails)
+
+
+//     const dmePerformanceDetails = await DME_Performance.findAll({
+//       order: [["UpdatedOn", "DESC"]],
+//       limit: 5,
+//     });
+
+
+
+//     const response = {
+//       last5dataofEmployee,
+//       last5dataofSalesReport,
+//       projectDetails,
+//       dmePerformanceDetails,
+//     };
+
+//     res.status(200).json(response);
 //   } catch (error) {
-//     console.error("Error fetching dashboard data:", error);
-//     res.status(500).json({
-//       status: 0,
-//       message: "Failed to fetch dashboard data",
-//       error: error.message,
-//     });
+//     console.error("Error fetching data:", error);
+//     res.status(500).json({ error: "An error occurred while fetching data." });
 //   }
 // };
 
-
-const getDashboardData = async (req, res) => {
+const getallDashboard = async (req, res) => {
   try {
-    // Execute the stored procedure to get the dashboard data
-    const result = await sequelize.query(
-      "EXEC GetDashboardBlock", // Your stored procedure name
-      {
-        type: sequelize.QueryTypes.SELECT, // Specify the query type as SELECT
-      }
+    // Fetching Employee Performance Report
+    const [employeePerformanceReport] = await sequelize.query(
+      "EXEC SP_EnhancedEmployeePerformanceReport_Consolidated"
     );
 
-    console.log("result------------" , result)
-    // Separate the data based on your requirement
-    const employeeData = result.filter(item => item.type === 'employee');  // Adjust based on the actual field for employee data
-    const attendanceData = result.filter(item => item.type === 'attendance');  // Adjust based on the actual field for attendance data
-    const otherData = result.filter(item => item.type === 'other');  // Adjust based on the actual field for other data
+    // Fetching Sales Report By Group
+    const [salesReportByGroup] = await sequelize.query(
+      "EXEC SP_Sales_Report_ByGroup 'monthly', 'division'"
+    );
 
-    // Return the separated result in the response
-    res.status(200).json({
-      status: 1,
-      message: "Dashboard data fetched successfully",
-      data: {
-        employeeData,
-        attendanceData,
-        otherData,
-      },
+    // Getting the last 5 entries for Employee and Sales Reports
+    const last5dataofEmployee = Array.isArray(employeePerformanceReport)
+      ? employeePerformanceReport.slice(-5)
+      : [];
+
+    const last5dataofSalesReport = Array.isArray(salesReportByGroup)
+      ? salesReportByGroup.slice(-5)
+      : [];
+
+    // Fetching Project Details
+    const projectDetails = await ProjectCostDetail.findAll({
+      order: [["created_at", "DESC"]],
+      limit: 5,
     });
+
+    // Fetching DME Performance Details with Campaign Names
+    const [dmePerformanceResults] = await sequelize.query(`
+      SELECT TOP 5
+        p.*,
+        c.CampaignName
+      FROM 
+        DME_Performance p
+      LEFT JOIN 
+        DME_Campaign c
+      ON 
+        p.CampaignID = c.CampaignID
+      ORDER BY 
+        p.UpdatedOn DESC
+    `);
+    
+
+    // Structuring DME Performance Details with Campaign
+    // const dmePerformanceDetails = dmePerformanceResults.map((performance) => ({
+    //   ...performance,
+    //   Campaign: {
+    //     Name: performance.CampaignName,
+    //     ID: performance.CampaignID,
+    //   },
+    // }));
+
+    // Preparing Response
+    const response = {
+      last5dataofEmployee,
+      last5dataofSalesReport,
+      projectDetails,
+      dmePerformanceResults,
+    };
+
+    // Sending Response
+    res.status(200).json(response);
   } catch (error) {
-    console.error("Error fetching dashboard data:", error);
-    res.status(500).json({
-      status: 0,
-      message: "Failed to fetch dashboard data",
-      error: error.message,
-    });
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "An error occurred while fetching data." });
   }
 };
 
 
 module.exports = {
-  getDashboardData,
+  getallDashboard,
 };

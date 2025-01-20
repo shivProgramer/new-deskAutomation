@@ -1,24 +1,25 @@
 // GetDashboardBlock
-
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../components/axiosInstance";
 const initialState = {
   loading: false,
   error: null,
-  allDalyReports: [],
+  alldashboardData: [],
 };
 
-export const getAllDalyReports = createAsyncThunk(
-  "getAllDalyReports",
+export const getallDashboard = createAsyncThunk(
+  "getallDashboard",
   async (thunkAPI) => {
     try {
-      const response = await axiosInstance.get(`daly-reports`);
+      const response = await axiosInstance.get(`dashboard`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
   }
 );
+
+
 
 const Dashboard_slice = createSlice({
   name: "Dashboard_slice",
@@ -33,15 +34,15 @@ const Dashboard_slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllDalyReports.pending, (state) => {
+      .addCase(getallDashboard.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllDalyReports.fulfilled, (state, action) => {
+      .addCase(getallDashboard.fulfilled, (state, action) => {
         state.loading = false;
-        state.allDalyReports = action.payload;
+        state.alldashboardData = action.payload;
       })
-      .addCase(getAllDalyReports.rejected, (state, action) => {
+      .addCase(getallDashboard.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

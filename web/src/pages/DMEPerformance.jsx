@@ -54,6 +54,8 @@ const DMEPerformance = () => {
   const DmeCompaginAllData = useSelector(
     (state) => state?.Dme_performance_stroe?.allDmePerformanceData
   );
+
+  
   const singledata = useSelector(
     (state) => state.Dme_performance_stroe?.singleDmePerfromance
   );

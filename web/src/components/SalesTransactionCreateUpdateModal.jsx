@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { getAlEmployee } from "../redux/slice/Emplopyee_slice";
 import { useDispatch, useSelector } from "react-redux";
-
+import { getAllProjects } from "../redux/slice/Project_cost_slice";
+import Select from "react-select";
 const SalesTransactionCreateUpdateModal = ({
   isOpen,
   onClose,
@@ -11,11 +12,31 @@ const SalesTransactionCreateUpdateModal = ({
   handleSubmit,
 }) => {
   if (!isOpen) return null;
+
   const dispatch = useDispatch();
   const allEmployee = useSelector((state) => state.employee?.allEmployee);
+  const projects = useSelector((state) => state.projects?.allProjects);
+
+  // Convert projects to react-select's required format
+  const projectOptions = projects?.map((project) => ({
+    value: project.project_name,
+    label: project.project_name,
+  }));
+
+  const handleSelectChange = (selectedOption) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      ProjectName: selectedOption ? selectedOption.value : "",
+    }));
+  };
+
   useEffect(() => {
     dispatch(getAlEmployee());
+    dispatch(getAllProjects());
   }, []);
+
+  console.log("projects --1111", projects);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -164,18 +185,47 @@ const SalesTransactionCreateUpdateModal = ({
               </select>
             </div>
 
-            {/* Project Name */}
-            <div className="mb-4 col-span-2">
+            {/* <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
-                Project Name
+                Project Name <span className="text-red-600"> * </span>
               </label>
-              <input
-                type="text"
+              <select
                 name="ProjectName"
                 value={formData.ProjectName || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter project name"
+                required
+              >
+                <option value="" className="">
+                  Select an project
+                </option>
+                {projects.map((project) => (
+                  <option
+                    key={project?.project_name}
+                    value={project?.project_name}
+                  >
+                    {project.project_name}
+                  </option>
+                ))}
+              </select>
+            </div> */}
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">
+                Project Name <span className="text-red-600"> * </span>
+              </label>
+              <Select
+                options={projectOptions}
+                onChange={handleSelectChange}
+                value={
+                  projectOptions.find(
+                    (option) => option.value === formData.ProjectName
+                  ) || null
+                }
+                placeholder="Select a project"
+                isClearable
+                className="w-full"
+                classNamePrefix="react-select"
               />
             </div>
 

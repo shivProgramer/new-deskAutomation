@@ -56,6 +56,7 @@ app.use("/api/holidays", holidayRoutes);
 app.get("/tester", (req, res) => {
   res.send("Hello World!");
 });
+
 sequelize
   .sync()
   .then(() => {
