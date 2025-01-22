@@ -295,8 +295,8 @@ const Attendance = () => {
   return (
     <>
       {loading && <Loader loading={loading} />}
-      <div className="min-h-screen bg-gray-50 p-0 md:p-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-100 rounded-md shadow-md">
+      <div className="min-h-screen bg-gray-50 p-0 md:p-2">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 rounded-md ">
           {/* Left Side: Create Project Button */}
           {/* <button
             onClick={handleOpenModal}
@@ -315,7 +315,7 @@ const Attendance = () => {
                 <input
                   type="date"
                   id="date"
-                  class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+                  class="px-4 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
                   onChange={handleSearchBydate}
                 />
               </div>
@@ -326,11 +326,11 @@ const Attendance = () => {
                 value={searchTerm}
                 onChange={handleSearchInputChange}
                 placeholder="Search attendance..."
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
+                className="px-4 py-1 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
               />
               <button
                 onClick={onClear}
-                className="px-4 py-2 ml-4 bg-red-700 hover:bg-red-800 text-white rounded-md"
+                className="px-4 py-1 ml-4 bg-red-700 hover:bg-red-800 text-white rounded-md"
               >
                 Clear
               </button>

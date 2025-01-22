@@ -27,7 +27,7 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full z-50 bg-gradient-to-r from-[#1F2937] via-[#2e343b] to-[#2a323d] text-white transition-transform transform ${
+      className={`fixed top-0 left-0 h-full z-50 bg-gray-800 text-white transition-transform transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } md:translate-x-0 w-64`}
     >

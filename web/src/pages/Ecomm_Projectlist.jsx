@@ -106,7 +106,7 @@ const Ecomm_Projectlist = () => {
   return (
     <>
       {loading && <Loader loading={loading} />}
-      <div className=" p-2 md:p-4  ">
+      <div className=" p-2 md:p-2  ">
         <h1 className="font-medium text-2xl text-gray-600 ">
           {" "}
           E-commerce Project List{" "}

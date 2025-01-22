@@ -136,7 +136,7 @@ const ProjectCreateUpdateModel = ({
                 value={formData.current_cost || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter current cost"
+                
               />
             </div>
             <div className="">
@@ -146,10 +146,10 @@ const ProjectCreateUpdateModel = ({
               <input
                 type="number"
                 name="Paid_amount"
-                value={formData.Paid_amount || 0}
+                value={formData.Paid_amount || ""}
                 onChange={handleInputChange}
                 className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-                placeholder="Enter current cost"
+         
               />
             </div>
           </div>
@@ -160,11 +160,38 @@ const ProjectCreateUpdateModel = ({
             <input
               type="number"
               name="actual_cost"
-              value={formData.actual_cost || 0}
+              value={formData.actual_cost || ""}
               onChange={handleInputChange}
               className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
-              placeholder="Enter actual cost"
+            
             />
+          </div>
+
+          <div className="flex justify-between items-center gap-4 mb-4">
+            <div className="">
+              <label className="block text-sm font-medium mb-1">
+                Max Allowed Time Overall
+              </label>
+              <input
+                type="number"
+                name="Max_Allowed_Time_Overall"
+                value={formData.Max_Allowed_Time_Overall || ""}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+              />
+            </div>
+            <div className="">
+              <label className="block text-sm font-medium mb-1">
+                Max Allowed Time Per Month
+              </label>
+              <input
+                type="number"
+                name="Max_Allowed_Time_Per_Month"
+                value={formData.Max_Allowed_Time_Per_Month || ""}
+                onChange={handleInputChange}
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 p-2 border"
+              />
+            </div>
           </div>
 
           <div className="flex justify-between items-center mb-4 ">

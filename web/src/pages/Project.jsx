@@ -22,7 +22,6 @@ const Project = () => {
   const [searchTerm, setSearchTerm] = useState();
   const [filterData, setFilterData] = useState();
 
-
   // use selector -----------
 
   const projects = useSelector((state) => state.projects?.allProjects);
@@ -40,7 +39,9 @@ const Project = () => {
       project_manager_emails: singledata?.project_manager_emails,
       start_date: singledata?.start_date,
       end_date: singledata?.end_date,
-      Paid_amount: singledata?.Paid_amount,
+      Max_Allowed_Time_Overall: singledata?.Max_Allowed_Time_Overall,
+      Max_Allowed_Time_Per_Month: singledata?.Max_Allowed_Time_Per_Month,
+      Paid_amount: singledata?.Paid_amount || 0,
       duration: singledata?.IsMonthly === true ? "monthly" : "one time",
     });
   }, [singledata]);
@@ -112,8 +113,8 @@ const Project = () => {
   };
 
   const columns = [
+    { label: "Id", key: "id" },
     { label: "Project Id", key: "project_id" },
-
     { label: "Name", key: "name" },
     { label: "Current Cost", key: "current_cost" },
     { label: "Budget", key: "budget" },
@@ -122,10 +123,13 @@ const Project = () => {
     { label: "Start Date", key: "start_date" },
     { label: "End Date", key: "end_date" },
     { label: "Duration", key: "duration" },
+    { label: "Max Allowed Time Overall", key: "Max_Allowed_Time_Overall" },
+    { label: "Max Allowed Time Per Month", key: "Max_Allowed_Time_Per_Month" },
     { label: "Role", key: "role" },
   ];
 
   const data = filterData?.map((project, index) => ({
+    id: index + 1,
     project_id: project?.project_id,
     name: project?.project_name,
     current_cost: "₹ " + (project?.current_cost || 0),
@@ -136,6 +140,8 @@ const Project = () => {
     end_date: project?.end_date || "No Date",
     role: project?.is_critical ? "Critical" : "Non-Critical",
     duration: project?.IsMonthly === true ? "monthly" : "one time",
+    Max_Allowed_Time_Overall: project?.Max_Allowed_Time_Overall || "N/A",
+    Max_Allowed_Time_Per_Month: project?.Max_Allowed_Time_Per_Month || "N/A",
     p_id: project?.project_id,
   }));
 
@@ -170,8 +176,8 @@ const Project = () => {
   return (
     <>
       {loading && <Loader loading={loading} />}
-      <div className="min-h-screen bg-gray-50 p-0 md:p-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-100 rounded-md shadow-md">
+      <div className="min-h-screen bg-gray-50 p-0 md:p-2">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center rounded-md ">
           {/* Left Side: Create Project Button */}
           {/* <button
             onClick={handleCreate}
@@ -188,11 +194,11 @@ const Project = () => {
               value={searchTerm}
               onChange={handleSearchInputChange}
               placeholder="Search projects..."
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
+              className="px-4 py-1 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
             />
             <button
               onClick={onClear}
-              className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-md"
+              className="px-4 py-1 bg-red-700 hover:bg-red-800 text-white rounded-md"
             >
               Clear
             </button>

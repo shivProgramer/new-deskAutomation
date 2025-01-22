@@ -18,6 +18,8 @@ const getProjects = async (req, res) => {
         "start_date",
         "end_date",
         "Paid_amount",
+        "Max_Allowed_Time_Overall",
+        "Max_Allowed_Time_Per_Month",
       ],
     });
     res.status(200).json(projects);
@@ -76,7 +78,59 @@ async function createProject(req, res) {
   }
 }
 
+// const updateProject = async (req, res) => {
+//   const { id } = req.params;
+//   const {
+//     project_name,
+//     budget,
+//     current_cost,
+//     actual_cost,
+//     is_critical,
+//     IsMonthly,
+//     project_manager_emails,
+//     start_date,
+//     end_date,
+//     Paid_amount,
+//   } = req.body;
 
+//   try {
+//     const project = await ProjectCostDetail.findOne({
+//       where: { project_id: id },
+//     });
+
+//     if (!project) {
+//       return res.status(404).json({ message: "Project not found" });
+//     }
+
+//     // Update only provided fields
+//     if (project_name !== undefined) project.project_name = project_name;
+//     if (budget !== undefined) project.budget = budget;
+//     if (current_cost !== undefined) project.current_cost = current_cost;
+//     if (actual_cost !== undefined) project.actual_cost = actual_cost;
+//     if (is_critical !== undefined) project.is_critical = is_critical;
+//     if (IsMonthly !== undefined) project.IsMonthly = IsMonthly;
+//     if (project_manager_emails !== undefined)
+//       project.project_manager_emails = project_manager_emails;
+
+//     if (start_date === null) project.start_date = null;
+//     else if (start_date !== undefined)
+//       project.start_date = new Date(start_date);
+
+//     if (end_date === null) project.end_date = null;
+//     else if (end_date !== undefined) project.end_date = new Date(end_date);
+
+//     if (Paid_amount !== undefined)
+//       project.Paid_amount = parseFloat(Paid_amount);
+
+//     await project.save();
+//     res.status(200).json({ message: "Project updated successfully", project });
+//   } catch (error) {
+//     console.error("Error updating project:", error);
+//     res.status(500).json({ message: "Failed to update project" });
+//   }
+// };
+
+// Delete a project by ID
 
 const updateProject = async (req, res) => {
   const { id } = req.params;
@@ -91,6 +145,8 @@ const updateProject = async (req, res) => {
     start_date,
     end_date,
     Paid_amount,
+    Max_Allowed_Time_Overall,
+    Max_Allowed_Time_Per_Month,
   } = req.body;
 
   try {
@@ -112,15 +168,46 @@ const updateProject = async (req, res) => {
     if (project_manager_emails !== undefined)
       project.project_manager_emails = project_manager_emails;
 
-    if (start_date === null) project.start_date = null;
+    if (start_date === null || start_date === 0) project.start_date = null;
     else if (start_date !== undefined)
       project.start_date = new Date(start_date);
 
-    if (end_date === null) project.end_date = null;
+    if (end_date === null || end_date === 0) project.end_date = null;
     else if (end_date !== undefined) project.end_date = new Date(end_date);
 
-    if (Paid_amount !== undefined)
-      project.Paid_amount = parseFloat(Paid_amount);
+    if (Paid_amount === null || Paid_amount === 0) {
+      project.Paid_amount = null;
+    } else if (Paid_amount !== undefined) {
+      const parsedPaidAmount = parseFloat(Paid_amount);
+      if (isNaN(parsedPaidAmount)) {
+        return res.status(400).json({ message: "Invalid Paid_amount value" });
+      }
+      project.Paid_amount = parsedPaidAmount;
+    }
+
+    if (Max_Allowed_Time_Overall === null || Max_Allowed_Time_Overall === 0) {
+      project.Max_Allowed_Time_Overall = null;
+    } else if (Max_Allowed_Time_Overall !== undefined) {
+      const parsedMaxOverall = parseInt(Max_Allowed_Time_Overall, 10);
+      if (isNaN(parsedMaxOverall)) {
+        return res
+          .status(400)
+          .json({ message: "Invalid Max_Allowed_Time_Overall value" });
+      }
+      project.Max_Allowed_Time_Overall = parsedMaxOverall;
+    }
+
+    if (Max_Allowed_Time_Per_Month === null || Max_Allowed_Time_Per_Month === 0) {
+      project.Max_Allowed_Time_Per_Month = null;
+    } else if (Max_Allowed_Time_Per_Month !== undefined) {
+      const parsedMaxPerMonth = parseInt(Max_Allowed_Time_Per_Month, 10);
+      if (isNaN(parsedMaxPerMonth)) {
+        return res
+          .status(400)
+          .json({ message: "Invalid Max_Allowed_Time_Per_Month value" });
+      }
+      project.Max_Allowed_Time_Per_Month = parsedMaxPerMonth;
+    }
 
     await project.save();
     res.status(200).json({ message: "Project updated successfully", project });
@@ -130,7 +217,8 @@ const updateProject = async (req, res) => {
   }
 };
 
-// Delete a project by ID
+
+
 const deleteProject = async (req, res) => {
   const { id } = req.params;
   try {

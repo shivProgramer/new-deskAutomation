@@ -103,13 +103,13 @@ const MenuWithData = () => {
       <div className="flex flex-col bg-gray-50 z-10">
         {/* Menu Section - Grid Layout */}
 
-        <div className="bg-gray-100 text-gray-600 p-6 rounded-b-xl shadow-lg z-10  max-w-2xl md:max-w-5xl xl:max-w-[100rem]">
+        <div className="bg-gray-100 text-gray-600 p-2 rounded-b-xl shadow-lg z-10  max-w-2xl md:max-w-5xl xl:max-w-[100rem]">
           <button
             onClick={() => {
               setModalOpen(true);
               setFormData({ Name: "", SP: "" });
             }}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md mb-4 hover:bg-gray-800"
+            className="px-4 py-1 bg-green-600 text-white rounded-md mb-4 hover:bg-green-700"
           >
             {" "}
             Create New{" "}
@@ -119,9 +119,9 @@ const MenuWithData = () => {
             {allAdhocReport?.map((item, index) => (
               <div
                 key={index}
-                className={`cursor-pointer px-4 py-4 rounded-lg bg-white shadow-md transition-all duration-200 ease-in-out transform ${
+                className={`cursor-pointer border-t-[1px] border-green-500 px-2 py-2 rounded-lg bg-white shadow-md transition-all duration-200 ease-in-out transform ${
                   selectedItem === item.Name
-                    ? "bg-blue-100 text-blue-800"
+                    ? "bg-yellow-50 text-blue-600"
                     : "hover:bg-gray-200 hover:text-black"
                 }`}
                 onClick={() => handleItemClick(item.Name)}

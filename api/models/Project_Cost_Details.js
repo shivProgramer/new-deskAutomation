@@ -33,6 +33,14 @@ ProjectCostDetail.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    Max_Allowed_Time_Overall: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    Max_Allowed_Time_Per_Month: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     project_manager_emails: {
       type: DataTypes.STRING(500),
       allowNull: true,

@@ -17,22 +17,22 @@ const DME = () => {
   };
 
   const cardStyles = (cardName) => {
-    return `p-3 rounded-lg shadow-lg transition-all duration-300 transform ease-in-out cursor-pointer flex justify-between items-center ${
+    return `p-2 rounded-lg shadow-lg transition-all duration-300 transform ease-in-out cursor-pointer flex justify-between items-center ${
       activeCard === cardName
-        ? "bg-gradient-to-r from-[#1F2937] via-[#4B5563] to-[#2a323d] text-white shadow-xl scale-105"
-        : "bg-white text-gray-800 hover:bg-gray-100 shadow-md"
+        ? "bg-yellow-50 text-blue-600 border-t-[1px] border-green-500 shadow-xl scale-105"
+        : "bg-white border-t-[1px] border-green-500 text-gray-600 hover:bg-gray-100 shadow-md"
     }`;
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="max-w-2xl md:max-w-5xl xl:max-w-[100rem] mx-auto p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 bg-gray-100 shadow-md py-5 px-6">
         {/* DME_Campaign Card */}
         <div
           className={cardStyles("Campaign")}
           onClick={() => handleCardClick("Campaign")}
         >
-          <span className="text-md font-semibold">Campaign</span>
+          <span className="text-base font-medium ">Campaign</span>
           <FaEye className="text-green-300 cursor-pointer" />
         </div>
         {/* DME_Budget Card */}
@@ -40,7 +40,7 @@ const DME = () => {
           className={cardStyles("Budget")}
           onClick={() => handleCardClick("Budget")}
         >
-          <span className="text-md font-semibold">Budget</span>
+          <span className="text-base font-medium ">Budget</span>
           <FaEye className="text-green-300 cursor-pointer" />
         </div>
 
@@ -49,7 +49,7 @@ const DME = () => {
           className={cardStyles("Performance")}
           onClick={() => handleCardClick("Performance")}
         >
-          <span className="text-md font-semibold">Performance</span>
+          <span className="text-base font-medium ">Performance</span>
           <FaEye className="text-green-300 cursor-pointer" />
         </div>
 
@@ -58,7 +58,7 @@ const DME = () => {
           className={cardStyles("RewardRules")}
           onClick={() => handleCardClick("RewardRules")}
         >
-          <span className="text-md font-semibold">Reward Rules</span>
+          <span className="text-base font-medium ">Reward Rules</span>
           <FaEye className="text-green-300 cursor-pointer" />
         </div>
 
@@ -67,7 +67,7 @@ const DME = () => {
           className={cardStyles("Team")}
           onClick={() => handleCardClick("Team")}
         >
-          <span className="text-md font-semibold">Team</span>
+          <span className="text-base font-medium ">Team</span>
           <FaEye className="text-green-300 cursor-pointer" />
         </div>
         {/* DME_ROAS Card */}
@@ -75,7 +75,7 @@ const DME = () => {
           className={cardStyles("ROAS")}
           onClick={() => handleCardClick("ROAS")}
         >
-          <span className="text-md font-semibold">ROAS</span>
+          <span className="text-base font-medium ">ROAS</span>
           <FaEye className="text-green-300 cursor-pointer" />
         </div>
         {/* DME_Analysis Card */}

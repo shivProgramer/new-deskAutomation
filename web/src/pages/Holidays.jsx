@@ -146,11 +146,11 @@ const Holidays = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-50 p-0 md:p-8">
-      <div className="flex justify-between items-center bg-gray-100 p-4 rounded-md shadow-md">
+    <div className="min-h-screen  p-0 md:p-2">
+      <div className="flex justify-between items-center bg-gray-100 p-2 rounded-md ">
         <button
           onClick={openModal}
-          className="px-4 py-2 bg-[#1F2937] hover:bg-[#151c27] text-white rounded-md"
+          className="px-4 py-1 bg-green-600 hover:bg-green-607 text-white rounded-md"
         >
           Add Holiday
         </button>
@@ -160,12 +160,12 @@ const Holidays = () => {
             value={searchTerm}
             onChange={handleSearch}
             placeholder="Search by date or description"
-            className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <button
             onClick={clearSearch}
-            className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-md"
+            className="px-4 py-1 bg-red-700 hover:bg-red-800 text-white rounded-md"
           >
             Clear
           </button>

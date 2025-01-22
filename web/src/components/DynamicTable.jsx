@@ -34,7 +34,7 @@ const DynamicTable = ({
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 shadow-sm">
       <table className="min-w-full border-collapse border border-gray-200 text-left">
         <thead className="bg-gray-100">
           <tr>
@@ -148,7 +148,7 @@ const DynamicTable = ({
       <div className="flex items-center justify-between mt-4">
         <button
           onClick={handlePreviousPage}
-          className={`px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300 ${
+          className={`px-4 py-1 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300 ${
             currentPage === 1 && "opacity-50 cursor-not-allowed"
           }`}
           disabled={currentPage === 1}
@@ -160,7 +160,7 @@ const DynamicTable = ({
         </span>
         <button
           onClick={handleNextPage}
-          className={`px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300 ${
+          className={`px-4 py-1 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300 ${
             currentPage === totalPages && "opacity-50 cursor-not-allowed"
           }`}
           disabled={currentPage === totalPages}

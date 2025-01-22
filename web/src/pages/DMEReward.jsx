@@ -233,11 +233,11 @@ const DMEReward = () => {
   return (
     <>
     {loading && <Loader loading={loading} />}
-    <div className="bg-gray-50 p-0 md:p-4">
+    <div className="bg-gray-50 p-0 md:p-2">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 bg-gray-100 rounded-md shadow-md">
         <button
           onClick={openModal}
-          className="px-4 py-1 bg-[#1F2937] hover:bg-[#151c27] text-white rounded-md mb-4 md:mb-0"
+          className="px-4 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md mb-4 md:mb-0"
         >
           Create Reward Rule
         </button>

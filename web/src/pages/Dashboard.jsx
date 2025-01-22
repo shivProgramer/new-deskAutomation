@@ -45,7 +45,7 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {dataOfDashboard?.last5dataofEmployee?.map((emp, index) => (
+                    {dataOfDashboard?.top5DataOfEmployee?.map((emp, index) => (
                       <tr
                         key={index}
                         className="hover:bg-gray-50 transition-colors duration-200"
@@ -67,7 +67,7 @@ const Dashboard = () => {
           {/* Card 3 */}
           <div className="bg-white shadow-lg rounded-lg col-span-2 overflow-hidden border border-gray-200">
           <div className=" text-gray-600 p-2">
-          <h2 className="text-base font-bold  text-shadow-sm text-green-600 "> Projects </h2>
+          <h2 className="text-base font-bold  text-shadow-sm text-green-600 "> Compare Emp Eff this month </h2>
             </div>
             <div className="p-2">
               <div className="overflow-x-auto">
@@ -75,59 +75,51 @@ const Dashboard = () => {
                   <thead className="bg-gray-100">
                     <tr>
                       <th className="px-3 py-1.5 text-left">ID</th>
-                      <th className="px-3 py-1.5 text-left">Project Id</th>
-                      <th className="px-3 py-1.5 text-left">Name</th>
-                      <th className="px-3 py-1.5 text-left"> Current Cost</th>
-                      <th className="px-3 py-1.5 text-left"> Budget</th>
-                      <th className="px-3 py-1.5 text-left"> Actual Cost</th>
-                      <th className="px-3 py-1.5 text-left"> Paid Amount</th>
-                      <th className="px-3 py-1.5 text-left"> Start Date </th>
-                      <th className="px-3 py-1.5 text-left"> End Date </th>
-                      <th className="px-3 py-1.5 text-left"> Duration </th>
-                      <th className="px-3 py-1.5 text-left"> Role</th>
+                      <th className="px-3 py-1.5 text-left">EmployeeName</th>
+                      <th className="px-3 py-1.5 text-left">TotalWorkHours</th>
+                      <th className="px-3 py-1.5 text-left"> TotalProjectHours</th>
+                      <th className="px-3 py-1.5 text-left"> NonProjectHours</th>
+                      <th className="px-3 py-1.5 text-left"> CostPerHour</th>
+                      <th className="px-3 py-1.5 text-left"> ProjectCost</th>
+                      <th className="px-3 py-1.5 text-left"> NonProjectCost</th>
+                      <th className="px-3 py-1.5 text-left"> TotalCompensation</th>
+  
+                   
+                    
                     </tr>
                   </thead>
                   <tbody>
-                    {dataOfDashboard?.projectDetails?.map((project, index) => (
+                    {dataOfDashboard?.CmpEmpEffthismonth?.map((cmp, index) => (
                       <tr
                         key={index}
                         className="hover:bg-gray-50 transition-colors duration-200"
                       >
                         <td className="px-3 py-1.5">{index + 1}</td>
-
                         <td className="px-3 py-1.5">
-                          {project?.project_id || "N/A"}
+                          {cmp?.EmployeeName || "N/A"}
                         </td>
                         <td className="px-3 py-1.5">
-                          {project?.project_name || "N/A"}
+                          {cmp?.TotalWorkHours || "N/A"}
                         </td>
                         <td className="px-3 py-1.5">
-                          {project?.current_cost || "N/A"}
+                          {cmp?.TotalProjectHours || "N/A"}
                         </td>
                         <td className="px-3 py-1.5">
-                          {project?.budget || "N/A"}
+                          {cmp?.NonProjectHours || "N/A"}
                         </td>
                         <td className="px-3 py-1.5">
-                          {project?.actual_cost || "N/A"}
+                          {cmp?.CostPerHour || "N/A"}
                         </td>
                         <td className="px-3 py-1.5">
-                          {project?.Paid_amount || "N/A"}
+                          {cmp?.ProjectCost || "N/A"}
                         </td>
                         <td className="px-3 py-1.5">
-                          {project?.start_date || "N/A"}
-                        </td>
+                          {cmp?.NonProjectCost || "N/A"}
+                        </td>  
                         <td className="px-3 py-1.5">
-                          {project?.end_date || "N/A"}
-                        </td>
-
-                        <td className="px-3 py-1.5">
-                          {project?.IsMonthly === true
-                            ? "monthly"
-                            : "one time" || "N/A"}
-                        </td>
-                        <td className="px-3 py-1.5">
-                          {project?.is_critical ? "Critical" : "Non-Critical"}
-                        </td>
+                          {cmp?.TotalCompensation || "N/A"}
+                        </td> 
+                                          
                       </tr>
                     ))}
                   </tbody>
@@ -154,7 +146,7 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {dataOfDashboard?.last5dataofSalesReport?.map(
+                    {dataOfDashboard?.top5DataOfSalesReport?.map(
                       (sales, index) => (
                         <tr
                           key={index}

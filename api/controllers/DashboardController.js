@@ -27,13 +27,10 @@ const DME_Campaign = require("../models/DME_Campaign");
 
 //     console.log("projectDetails ----", projectDetails)
 
-
 //     const dmePerformanceDetails = await DME_Performance.findAll({
 //       order: [["UpdatedOn", "DESC"]],
 //       limit: 5,
 //     });
-
-
 
 //     const response = {
 //       last5dataofEmployee,
@@ -61,13 +58,21 @@ const getallDashboard = async (req, res) => {
       "EXEC SP_Sales_Report_ByGroup 'monthly', 'division'"
     );
 
+    const [CompareEmpEffthismonth] = await sequelize.query(
+      "GetEmployeeWorkHoursComparison"
+    );
+
     // Getting the last 5 entries for Employee and Sales Reports
-    const last5dataofEmployee = Array.isArray(employeePerformanceReport)
-      ? employeePerformanceReport.slice(-5)
+    const top5DataOfEmployee = Array.isArray(employeePerformanceReport)
+      ? employeePerformanceReport.slice(0, 5)
       : [];
 
-    const last5dataofSalesReport = Array.isArray(salesReportByGroup)
-      ? salesReportByGroup.slice(-5)
+    const top5DataOfSalesReport = Array.isArray(salesReportByGroup)
+      ? salesReportByGroup.slice(0, 5)
+      : [];
+
+      const CmpEmpEffthismonth = Array.isArray(CompareEmpEffthismonth)
+      ? CompareEmpEffthismonth.slice(0, 5)
       : [];
 
     // Fetching Project Details
@@ -90,23 +95,14 @@ const getallDashboard = async (req, res) => {
       ORDER BY 
         p.UpdatedOn DESC
     `);
-    
-
-    // Structuring DME Performance Details with Campaign
-    // const dmePerformanceDetails = dmePerformanceResults.map((performance) => ({
-    //   ...performance,
-    //   Campaign: {
-    //     Name: performance.CampaignName,
-    //     ID: performance.CampaignID,
-    //   },
-    // }));
 
     // Preparing Response
     const response = {
-      last5dataofEmployee,
-      last5dataofSalesReport,
+      top5DataOfEmployee,
+      top5DataOfSalesReport,
       projectDetails,
       dmePerformanceResults,
+      CmpEmpEffthismonth,
     };
 
     // Sending Response
@@ -116,7 +112,6 @@ const getallDashboard = async (req, res) => {
     res.status(500).json({ error: "An error occurred while fetching data." });
   }
 };
-
 
 module.exports = {
   getallDashboard,

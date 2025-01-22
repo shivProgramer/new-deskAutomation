@@ -210,11 +210,11 @@ const handleUpdate = async (ele) => {
   return (
     <>
      {loading && <Loader loading={loading} />}
-      <div className="min-h-screen bg-gray-50 p-0 md:p-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-100 rounded-md shadow-md">
+      <div className="min-h-screen  p-0 md:p-2">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2 bg-gray-100 rounded-md ">
           <button
             onClick={openModal}
-            className="px-4 py-2 bg-[#1F2937] hover:bg-[#151c27] text-white rounded-md mb-4 md:mb-0"
+            className="px-4 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md mb-2 md:mb-0"
           >
             Create Off Day
           </button>
@@ -224,11 +224,11 @@ const handleUpdate = async (ele) => {
               value={searchTerm}
               onChange={handleSearchInputChange}
               placeholder="Search Off Day..."
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
+              className="px-4 py-1 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 w-full md:w-64"
             />
             <button
               onClick={onClear}
-              className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-md"
+              className="px-4 py-1 bg-red-700 hover:bg-red-800 text-white rounded-md"
             >
               Clear
             </button>

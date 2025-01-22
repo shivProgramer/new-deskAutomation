@@ -9,7 +9,7 @@ const Layout = () => {
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-[100vh] bg-gray-100">
       {/* Sidebar */}
       <Sidebar isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
 
