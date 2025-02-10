@@ -18,6 +18,7 @@ import SalestTeamsTarget from "./pages/SalestTeamsTarget";
 import DME from "./pages/DME";
 import Employee_Offdays from "./pages/Employee_Offdays";
 import Holidays from "./pages/Holidays";
+import ProjectTasksEmployee from "./pages/ProjectTasksEmployee";
 
 
 function App() {
@@ -86,7 +87,10 @@ function App() {
           path: "/holidays",
           element: <Holidays />,
         },
-       
+        {
+          path: "/task-employee",
+          element: <ProjectTasksEmployee />,
+        },
       ],
     },
     {

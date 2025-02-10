@@ -34,8 +34,8 @@ const DynamicTable = ({
   };
 
   return (
-    <div className="p-4 shadow-sm">
-      <table className="min-w-full border-collapse border border-gray-200 text-left">
+    <div className="p-4 shadow-lg ">
+      <table className="min-w-full border-collapse border  text-left border-l-2 border-green-500 ">
         <thead className="bg-gray-100">
           <tr>
             {columns.map((col) => (

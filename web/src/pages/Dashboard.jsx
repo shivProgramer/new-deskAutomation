@@ -25,7 +25,7 @@ const Dashboard = () => {
         <hr />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 mt-3">
           {/* Card 1 */}
-          <div className="bg-white shadow-lg rounded-lg col-span-2 overflow-hidden border border-gray-200">
+          <div className="bg-white shadow-lg rounded-lg border-l-2 border-green-500 col-span-2 overflow-hidden  ">
             <div className=" text-gray-600 p-2">
               <h2 className="text-base font-bold  text-shadow-sm text-green-600 ">
                 Latest Employee Leader Board
@@ -65,7 +65,7 @@ const Dashboard = () => {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white shadow-lg rounded-lg col-span-2 overflow-hidden border border-gray-200">
+          <div className="bg-white shadow-lg rounded-lg col-span-2 overflow-hidden border-l-2 border-green-500 ">
           <div className=" text-gray-600 p-2">
           <h2 className="text-base font-bold  text-shadow-sm text-green-600 "> Compare Emp Eff this month </h2>
             </div>
@@ -129,7 +129,7 @@ const Dashboard = () => {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+          <div className="bg-white shadow-lg rounded-lg overflow-hidden border-l-2 border-green-500">
           <div className=" text-gray-600 p-2">
           <h2 className="text-base font-bold  text-shadow-sm text-green-600 "> Sales by Division</h2>
             </div>
@@ -171,7 +171,7 @@ const Dashboard = () => {
           </div>
 
           {/* Card 4 */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+          <div className="bg-white shadow-lg rounded-lg overflow-hidden border-l-2 border-green-500">
           <div className=" text-gray-600 p-2">
           <h2 className="text-base font-bold  text-shadow-sm text-green-600 "> DME Performance</h2>
             </div>

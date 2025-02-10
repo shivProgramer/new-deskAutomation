@@ -49,6 +49,35 @@ const getProjectById = async (req, res) => {
 };
 
 // Create a new project
+// async function createProject(req, res) {
+//   try {
+//     const {
+//       project_name,
+//       budget,
+//       current_cost,
+//       actual_cost,
+//       is_critical,
+//       project_manager_emails,
+//     } = req.body;
+
+//     const newProject = await ProjectCostDetail.create({
+//       project_name,
+//       budget,
+//       current_cost,
+//       actual_cost,
+//       is_critical,
+//       project_manager_emails,
+//     });
+
+//     res
+//       .status(201)
+//       .json({ message: "Project created successfully", project: newProject });
+//   } catch (error) {
+//     console.error("Error creating project:", error);
+//     res.status(500).json({ error: "Error creating project" });
+//   }
+// }
+
 async function createProject(req, res) {
   try {
     const {
@@ -57,80 +86,53 @@ async function createProject(req, res) {
       current_cost,
       actual_cost,
       is_critical,
+      IsMonthly,
       project_manager_emails,
+      start_date,
+      end_date,
+      Paid_amount,
+      Max_Allowed_Time_Overall,
+      Max_Allowed_Time_Per_Month,
     } = req.body;
 
+    // Validate numerical fields before inserting
+    const parsedBudget = budget !== undefined ? parseFloat(budget) : null;
+    const parsedCurrentCost = current_cost !== undefined ? parseFloat(current_cost) : null;
+    const parsedActualCost = actual_cost !== undefined ? parseFloat(actual_cost) : null;
+    const parsedPaidAmount = Paid_amount !== undefined ? parseFloat(Paid_amount) : null;
+    const parsedMaxOverall = Max_Allowed_Time_Overall !== undefined ? parseInt(Max_Allowed_Time_Overall, 10) : null;
+    const parsedMaxPerMonth = Max_Allowed_Time_Per_Month !== undefined ? parseInt(Max_Allowed_Time_Per_Month, 10) : null;
+
+    // Validate date fields
+    const formattedStartDate = start_date ? new Date(start_date) : null;
+    const formattedEndDate = end_date ? new Date(end_date) : null;
+
+    // Create new project
     const newProject = await ProjectCostDetail.create({
       project_name,
-      budget,
-      current_cost,
-      actual_cost,
+      budget: isNaN(parsedBudget) ? null : parsedBudget,
+      current_cost: isNaN(parsedCurrentCost) ? null : parsedCurrentCost,
+      actual_cost: isNaN(parsedActualCost) ? null : parsedActualCost,
       is_critical,
+      IsMonthly,
       project_manager_emails,
+      start_date: formattedStartDate,
+      end_date: formattedEndDate,
+      Paid_amount: isNaN(parsedPaidAmount) ? null : parsedPaidAmount,
+      Max_Allowed_Time_Overall: isNaN(parsedMaxOverall) ? null : parsedMaxOverall,
+      Max_Allowed_Time_Per_Month: isNaN(parsedMaxPerMonth) ? null : parsedMaxPerMonth,
     });
 
-    res
-      .status(201)
-      .json({ message: "Project created successfully", project: newProject });
+    res.status(201).json({
+      message: "Project created successfully",
+      project: newProject,
+    });
   } catch (error) {
     console.error("Error creating project:", error);
     res.status(500).json({ error: "Error creating project" });
   }
 }
 
-// const updateProject = async (req, res) => {
-//   const { id } = req.params;
-//   const {
-//     project_name,
-//     budget,
-//     current_cost,
-//     actual_cost,
-//     is_critical,
-//     IsMonthly,
-//     project_manager_emails,
-//     start_date,
-//     end_date,
-//     Paid_amount,
-//   } = req.body;
-
-//   try {
-//     const project = await ProjectCostDetail.findOne({
-//       where: { project_id: id },
-//     });
-
-//     if (!project) {
-//       return res.status(404).json({ message: "Project not found" });
-//     }
-
-//     // Update only provided fields
-//     if (project_name !== undefined) project.project_name = project_name;
-//     if (budget !== undefined) project.budget = budget;
-//     if (current_cost !== undefined) project.current_cost = current_cost;
-//     if (actual_cost !== undefined) project.actual_cost = actual_cost;
-//     if (is_critical !== undefined) project.is_critical = is_critical;
-//     if (IsMonthly !== undefined) project.IsMonthly = IsMonthly;
-//     if (project_manager_emails !== undefined)
-//       project.project_manager_emails = project_manager_emails;
-
-//     if (start_date === null) project.start_date = null;
-//     else if (start_date !== undefined)
-//       project.start_date = new Date(start_date);
-
-//     if (end_date === null) project.end_date = null;
-//     else if (end_date !== undefined) project.end_date = new Date(end_date);
-
-//     if (Paid_amount !== undefined)
-//       project.Paid_amount = parseFloat(Paid_amount);
-
-//     await project.save();
-//     res.status(200).json({ message: "Project updated successfully", project });
-//   } catch (error) {
-//     console.error("Error updating project:", error);
-//     res.status(500).json({ message: "Failed to update project" });
-//   }
-// };
-
-// Delete a project by ID
 
 const updateProject = async (req, res) => {
   const { id } = req.params;
@@ -217,8 +219,6 @@ const updateProject = async (req, res) => {
   }
 };
 
-
-
 const deleteProject = async (req, res) => {
   const { id } = req.params;
   try {
@@ -237,8 +237,6 @@ const deleteProject = async (req, res) => {
     res.status(500).json({ message: "Failed to delete project" });
   }
 };
-
-// Search projects by filters: status, date, stakeholder, or budget
 const searchProjects = async (req, res) => {
   try {
     const {
@@ -349,7 +347,6 @@ const searchProjects = async (req, res) => {
       .json({ message: "Error fetching projects", error: error.message });
   }
 };
-
 module.exports = {
   getProjects,
   getProjectById,

@@ -25,7 +25,7 @@ const DME_TeamRoutes = require("./routes/DME_TeamRoutes.js");
 const DME_BudgetRoutes = require("./routes/DME_BudgetRoutes.js");
 const employeeOffdayRoutes = require("./routes/EmployeeOffdayRoutes.js");
 const holidayRoutes = require("./routes/holidayRoutes.js");
-
+const projectTasksEmployeeRoutes = require("./routes/projectTasksEmployeeRoutes.js"); 
 const dashboardRoutes = require("./routes/dashboardRoutes.js");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -52,6 +52,7 @@ app.use('/api/dme/teams', DME_TeamRoutes);
 app.use('/api/dme/budgets', DME_BudgetRoutes);
 app.use("/api/employee-offdays", employeeOffdayRoutes);
 app.use("/api/holidays", holidayRoutes);
+app.use("/api/task-employee", projectTasksEmployeeRoutes);
 // Define a simple test route
 app.get("/tester", (req, res) => {
   res.send("Hello World!");

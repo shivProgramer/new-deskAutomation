@@ -14,6 +14,7 @@ import { SiGooglemarketingplatform } from "react-icons/si";
 import { GoProjectSymlink } from "react-icons/go";
 import { FaCalendarDay } from "react-icons/fa";
 import { MdHolidayVillage } from "react-icons/md";
+import { SiTask } from "react-icons/si";
 const Sidebar = ({ isOpen, toggleDrawer }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
@@ -63,8 +64,8 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           className={({ isActive }) =>
             `py-2.5 my-1 pl-10 cursor-pointer flex gap-4 items-center ${
               isActive
-                ? "bg-gray-500 text-white border-l-2 border-green-500" // Active styles (blue background)
-                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white" // Hover styles
+                ? "bg-gray-500 text-white border-l-2 border-green-500"
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white" 
             }`
           }
           onClick={handleDropdown}
@@ -77,8 +78,8 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           className={({ isActive }) =>
             `py-2.5 my-1 pl-10 cursor-pointer flex gap-4 items-center ${
               isActive
-                ? "bg-gray-500 text-white border-l-2 border-green-500" // Active styles (blue background)
-                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white" // Hover styles
+                ? "bg-gray-500 text-white border-l-2 border-green-500" 
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white" 
             }`
           }
           onClick={handleDropdown}
@@ -273,6 +274,20 @@ const Sidebar = ({ isOpen, toggleDrawer }) => {
           <MdHolidayVillage className="text-green-500" /> Holidays
         </NavLink>
         
+        <NavLink
+          to="/task-employee"
+          className={({ isActive }) =>
+            `py-2.5 my-1 pl-10 cursor-pointer flex gap-4 items-center ${
+              isActive
+                ? "bg-gray-500 text-white border-l-2 border-green-500"
+                : "hover:bg-gray-700 hover:border-l-2 hover:border-green-500 text-white"
+            }`
+          }
+          onClick={handleDropdown}
+        >
+          <SiTask className="text-green-500" /> Project Task Employee
+        </NavLink>
+
 
       </ul>
       <button

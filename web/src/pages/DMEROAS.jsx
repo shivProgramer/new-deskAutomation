@@ -190,7 +190,6 @@ const DMEROAS = () => {
     RevenueGenerated: ele?.RevenueGenerated || "N/A",
     Spend: ele?.Spend || "N/A",
     roas: ele?.ROAS || "N/A",
-
     rs_id: ele?.ROASID,
   }));
 

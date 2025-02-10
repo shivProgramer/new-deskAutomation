@@ -112,14 +112,75 @@ const Project = () => {
     setSearchTerm("");
   };
 
+  // const columns = [
+  //   { label: "Id", key: "id" },
+  //   { label: "Project Id", key: "project_id" },
+  //   { label: "financial data", key: "financial_data" },
+  //   // { label: "Name", key: "name" },
+  //   // { label: "Current Cost", key: "current_cost" },
+  //   // { label: "Budget", key: "budget" },
+  //   // { label: "Actual Cost", key: "actual_cost" },
+  //   // { label: "Paid Amount", key: "paid_amount" },
+  //   { label: "Start Date", key: "start_date" },
+  //   { label: "End Date", key: "end_date" },
+  //   { label: "Duration", key: "duration" },
+  //   { label: "Max Allowed Time Overall", key: "Max_Allowed_Time_Overall" },
+  //   { label: "Max Allowed Time Per Month", key: "Max_Allowed_Time_Per_Month" },
+  //   { label: "Role", key: "role" },
+  // ];
+
+  // const data = filterData?.map((project, index) => ({
+  //   id: index + 1,
+  //   project_id: project?.project_id,
+  //   name: project?.project_name,
+  //   current_cost: "₹ " + (project?.current_cost || 0),
+  //   budget: "₹ " + (project?.budget || 0),
+  //   actual_cost: "₹ " + (project?.actual_cost || 0),
+  //   paid_amount: "₹ " + (project?.Paid_amount || 0),
+  //   start_date: project?.start_date || "No Date",
+  //   end_date: project?.end_date || "No Date",
+  //   role: project?.is_critical ? "Critical" : "Non-Critical",
+  //   duration: project?.IsMonthly === true ? "monthly" : "one time",
+  //   Max_Allowed_Time_Overall: project?.Max_Allowed_Time_Overall || "N/A",
+  //   Max_Allowed_Time_Per_Month: project?.Max_Allowed_Time_Per_Month || "N/A",
+  //   p_id: project?.project_id,
+  // }));
+
+  // const data = filterData?.map((project, index) => ({
+  //   id: index + 1,
+  //   project_id: project?.project_id,
+  //   financial_data: `Name: ${project?.project_name}, Current Cost: ${project?.current_cost}, Budget: ${project?.budget || 0}, Actual Cost: ${project?.actual_cost || 0}, Paid Amount: ${project?.Paid_amount}`,
+  //   start_date: project?.start_date || "No Date",
+  //   end_date: project?.end_date || "No Date",
+  //   role: project?.is_critical ? "Critical" : "Non-Critical",
+  //   duration: project?.IsMonthly === true ? "monthly" : "one time",
+  //   Max_Allowed_Time_Overall: project?.Max_Allowed_Time_Overall || "N/A",
+  //   Max_Allowed_Time_Per_Month: project?.Max_Allowed_Time_Per_Month || "N/A",
+  //   p_id: project?.project_id,
+  // }));
+
+  const FinancialData = ({ project }) => {
+    return (
+      <div>
+        <span className="font-normal text-green-500">Name:</span>{" "}
+        <span className="text-gray-600">{project?.project_name}</span>,{" "}
+        <span className="font-normal text-green-500">Current Cost:</span>{" "}
+        <span className="text-gray-600">{project?.current_cost || 0}</span>,{" "}
+        <span className="font-normal text-green-500">Budget:</span>{" "}
+        <span className="text-gray-600">{project?.budget || 0}</span>,{" "}
+        <span className="font-normal text-green-500">Actual Cost:</span>{" "}
+        <span className="text-gray-600">{project?.actual_cost || 0}</span>,{" "}
+        <span className="font-normal text-green-500">Paid Amount:</span>{" "}
+        <span className="text-gray-600">{project?.Paid_amount}</span>
+      </div>
+    );
+  };
+
+  // Usage in a table
   const columns = [
     { label: "Id", key: "id" },
     { label: "Project Id", key: "project_id" },
-    { label: "Name", key: "name" },
-    { label: "Current Cost", key: "current_cost" },
-    { label: "Budget", key: "budget" },
-    { label: "Actual Cost", key: "actual_cost" },
-    { label: "Paid Amount", key: "paid_amount" },
+    { label: "Financial Data", key: "financial_data" },
     { label: "Start Date", key: "start_date" },
     { label: "End Date", key: "end_date" },
     { label: "Duration", key: "duration" },
@@ -131,28 +192,21 @@ const Project = () => {
   const data = filterData?.map((project, index) => ({
     id: index + 1,
     project_id: project?.project_id,
-    name: project?.project_name,
-    current_cost: "₹ " + (project?.current_cost || 0),
-    budget: "₹ " + (project?.budget || 0),
-    actual_cost: "₹ " + (project?.actual_cost || 0),
-    paid_amount: "₹ " + (project?.Paid_amount || 0),
-    start_date: project?.start_date || "No Date",
-    end_date: project?.end_date || "No Date",
+    financial_data: <FinancialData project={project} />, // JSX component
+    start_date: project?.start_date || "N/A",
+    end_date: project?.end_date || "N/A",
     role: project?.is_critical ? "Critical" : "Non-Critical",
     duration: project?.IsMonthly === true ? "monthly" : "one time",
     Max_Allowed_Time_Overall: project?.Max_Allowed_Time_Overall || "N/A",
     Max_Allowed_Time_Per_Month: project?.Max_Allowed_Time_Per_Month || "N/A",
     p_id: project?.project_id,
   }));
-
   const [isModalOpendelete, setIsModalOpendelete] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
-
   const handleDelete = (row) => {
     setRowToDelete(row);
     setIsModalOpendelete(true);
   };
-
   const confirmDelete = async () => {
     if (rowToDelete) {
       try {
@@ -172,7 +226,6 @@ const Project = () => {
       }
     }
   };
-
   return (
     <>
       {loading && <Loader loading={loading} />}
@@ -181,7 +234,7 @@ const Project = () => {
           {/* Left Side: Create Project Button */}
           {/* <button
             onClick={handleCreate}
-            className="px-4 py-2 bg-[#1F2937] hover:bg-[#151c27] text-white rounded-md mb-4 md:mb-0"
+            className="px-4 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md mb-2 md:mb-0"
           >
             Create Project
           </button> */}
